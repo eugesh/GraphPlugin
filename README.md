@@ -1,0 +1,1 @@
+Universal Qt plugin for graph plotting
