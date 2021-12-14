@@ -1,0 +1,34 @@
+{
+    "values" : [
+        {
+            "name": "sv",
+            "description": "sound velocity",
+            "measure_unit": "m/s",
+            "measure_unit_rus": "м/с"
+        },
+        {
+            "name": "tc",
+            "description": "temperature",
+            "measure_unit": "C",
+            "measure_unit_rus": "Ц"
+        },
+        {
+            "name": "ts",
+            "description": "time",
+            "measure_unit": "s",
+            "measure_unit_rus": "с"
+        },
+        {
+            "name": "ps",
+            "description": "pressure",
+            "measure_unit": "Pa",
+            "measure_unit_rus": "Па"
+        },
+        {
+            "name": "vo",
+            "description": "voltage",
+            "measure_unit": "V",
+            "measure_unit_rus": "В"
+        }
+    ]
+}
