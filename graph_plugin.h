@@ -60,6 +60,7 @@
 
 class GraphMainWindow;
 class GraphPluginTableModel;
+struct MeasuredValueDescrition;
 
 class GraphPlugin : public QObject, GraphInterface
 {
@@ -76,17 +77,20 @@ public:
     //!<
     virtual void addData(const MeasuredValue &value) override;
     //!<
-    virtual QToolBar *toolBar() override;
+    virtual QToolBar *toolBar() const override;
     //!< All QDockWidgets which must be added to superior MainWindow
-    virtual QList<QDockWidget*> dockWindows() override;
+    virtual QList<QDockWidget*> dockWindows() const override;
     //!<
     virtual void setMainWindow(QMainWindow *mw) override;
 
 private:
-    // Values types,
+    // Values types, measurement units
+    bool loadValuesJSON(const QString &pathToJSON);
     bool loadConfig(const QString &pathToJSON);
-    // SI measuring units
+    // Common SI measuring units
     bool loadSI(const QString &pathToJSON);
+    // Read each JSON for graph plot window
+    bool loadGraphJSON(const QString &pathToJSON);
 
 private:
     // Pointer to superior MainWindow
@@ -102,7 +106,15 @@ private:
 
     // Data Dispatcher
     //!< Timestamp -> value, one key - multple values
+    // Data config
     int m_ringBufferSize;
+    QList<MeasuredValueDescrition> m_mvdesc_struct;
+    //!< Unique Names of values
+    QList<QString> m_valueNames;
+    //!< Values descriptions
+    QList<QString> m_valueDescs;
+
+    // Received Data
     QMap<int64_t, QString> m_dataMap;
     QList<int64_t> m_timeStamps;
 };

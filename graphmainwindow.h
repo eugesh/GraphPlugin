@@ -10,6 +10,42 @@ namespace Ui {
 class GraphMainWindow;
 }
 
+enum GraphDir {
+    LEFT,
+    UP,
+    RIGHT,
+    DOWN
+};
+
+enum GraphUpdateMode {
+    SHOW_ALL,
+    SHOW_LAST_N,
+    DONT_UPDATE
+};
+
+enum GraphScaleType {
+    LIN,
+    LOG
+};
+
+struct GraphProperties {
+    QString name;
+    QString x_name;
+    QString y_name;
+    QString x_unit;
+    QString y_unit;
+    QString x_phisical_quantity;
+    QString y_phisical_quantity;
+    GraphDir x_dir;
+    GraphDir y_dir;
+    unsigned int total_N;
+    unsigned int last_N_limit;
+    GraphUpdateMode update_mode;
+    GraphScaleType x_scale;
+    GraphScaleType y_scale;
+    Qt::GlobalColor color;
+};
+
 class GraphMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -36,6 +72,7 @@ private:
     QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     QMap<QString, QString> m_valueNameXY;
+    GraphProperties m_properties;
 };
 
 #endif // GRAPHMAINWINDOW_H

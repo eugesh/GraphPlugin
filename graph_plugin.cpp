@@ -1,53 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "graph_plugin.h"
 #include "graphmainwindow.h"
 #include "graphplugintablemodel.h"
@@ -55,6 +5,17 @@
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QToolBar>
+
+static const char* graphConfigsFolder = "graphs";
+static const char* pluginConfigsFolder = "config";
+static const char* SIConfigsFolder = "si";
+
+struct MeasuredValueDescrition {
+    QString name;
+    QString desc;
+    QString unit;
+    QString unit_rus;
+};
 
 GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
   , m_mainWindow(mw)
@@ -64,19 +25,56 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
     // Read JSON with ToolBar description (content, icons)
     m_toolbar = new QToolBar(mw);
 
-    // Read JSON files with Graph Plot Windows description
+    auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
+    loadValuesJSON(path);
 
+    // Read all JSON files with Graph Plot Windows descriptions
+    QDir graphConfigsDir(graphConfigsFolder);
+    for (auto name : graphConfigsDir.entryList({"*.json"})) {
+        auto path = QString("%1/%2").arg(graphConfigsFolder).arg(name);
+        loadGraphJSON(path);
+    }
     // Read JSON for Score Board description
 
     // Read JSON for Table and it's model
     m_tableModel = new GraphPluginTableModel(this);
-    for (auto mainWindow : m_graphsMainWins)
-    connect(m_tableModel, &GraphPluginTableModel::packetFormed, mainWindow, &GraphMainWindow::addData);
+
+    for (auto graphMainWindow : m_graphsMainWins)
+        connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphMainWindow, &GraphMainWindow::addData);
 }
 
 GraphPlugin::~GraphPlugin()
 {
 
+}
+
+bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
+{
+    QFile loadFile(pathToJSON);
+
+    MeasuredValueDescrition mvdesc_struct;
+
+    if (! loadFile.open(QIODevice::ReadOnly)) {
+        qCritical() << "Input file " << pathToJSON << " wasn't opened on read";
+        return false;
+    }
+
+    QByteArray loadData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
+
+    QJsonArray valuesArray = loadDoc.object()["values"].toArray();
+
+    for (int i = 0; i < valuesArray.size(); ++i) {
+        QJsonObject valueObject = valuesArray[i].toObject();
+        mvdesc_struct.name = valueObject["name"].toString();
+        mvdesc_struct.desc = valueObject["description"].toString();
+        mvdesc_struct.unit = valueObject["measure_unit"].toString();
+        mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
+        m_mvdesc_struct.push_back(mvdesc_struct);
+    }
+
+    return true;
 }
 
 bool GraphPlugin::loadConfig(const QString &pathToJSON)
@@ -86,7 +84,21 @@ bool GraphPlugin::loadConfig(const QString &pathToJSON)
 
 bool GraphPlugin::loadSI(const QString &pathToJSON)
 {
-return true;
+    return true;
+}
+
+bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
+{
+    QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
+
+    GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
+
+    dock_widget->setWidget(graphWindow);
+
+    m_graphsDocks.append(dock_widget);
+    m_graphsMainWins.append(graphWindow);
+
+    return true;
 }
 
 QString GraphPlugin::echo(const QString &message)
@@ -99,12 +111,12 @@ void GraphPlugin::addData(const MeasuredValue &value)
     m_dataMap[value.timestamp] = value.name;
 }
 
-QToolBar* GraphPlugin::toolBar()
+QToolBar* GraphPlugin::toolBar() const
 {
     return m_toolbar;
 }
 
-QList<QDockWidget*> GraphPlugin::dockWindows()
+QList<QDockWidget*> GraphPlugin::dockWindows() const
 {
     QList<QDockWidget*> list;
 
