@@ -51,29 +51,65 @@
 #ifndef ECHOPLUGIN_H
 #define ECHOPLUGIN_H
 
-#include <QObject>
-#include <QtPlugin>
 #include "graph_interface.h"
 
-//! [0]
-class GraphPlugin : public GraphInterface
+#include <QMainWindow>
+#include <QMap>
+#include <QObject>
+#include <QtPlugin>
+
+class GraphMainWindow;
+class GraphPluginTableModel;
+
+class GraphPlugin : public QObject, GraphInterface
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.Examples.GraphInterface" FILE "graph_plugin.json")
     Q_INTERFACES(GraphInterface)
 
 public:
-    // virtual QObject* getObject() override { return this; }
+    //!< May be created from QMainWindow only
+    explicit GraphPlugin(QMainWindow *mw = nullptr);
+    ~GraphPlugin() override;
+
     QString echo(const QString &message) override;
+    //!<
     virtual void addData(const MeasuredValue &value) override;
-    virtual QToolBar* toolBar() override;
+    //!<
+    virtual QToolBar *toolBar() override;
+    //!< All QDockWidgets which must be added to superior MainWindow
     virtual QList<QDockWidget*> dockWindows() override;
+    //!<
     virtual void setMainWindow(QMainWindow *mw) override;
-//signals:
-  //  void newDockWindow(QDockWidget*);
+
 private:
-    QMainWindow* m_mainWindow;
+    // Values types,
+    bool loadConfig(const QString &pathToJSON);
+    // SI measuring units
+    bool loadSI(const QString &pathToJSON);
+
+private:
+    // Pointer to superior MainWindow
+    QMainWindow *m_mainWindow;
+    // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
+    QList<QDockWidget*> m_graphsDocks;
+    QList<GraphMainWindow*> m_graphsMainWins;
+    QDockWidget *m_tableDock;
+    QDockWidget *m_scoreBoardDock;
+    QToolBar *m_toolbar;
+    GraphPluginTableModel *m_tableModel;
+    // QList<GraphMainWindow*> m_graphMainWins;
+
+    // Data Dispatcher
+    //!< Timestamp -> value, one key - multple values
+    int m_ringBufferSize;
+    QMap<int64_t, QString> m_dataMap;
+    QList<int64_t> m_timeStamps;
 };
-//! [0]
+
+
+//signals:
+//  void newDockWindow(QDockWidget*);
+// virtual QObject* getObject() override { return this; }
 
 #endif

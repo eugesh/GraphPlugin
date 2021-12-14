@@ -49,34 +49,68 @@
 ****************************************************************************/
 
 #include "graph_plugin.h"
+#include "graphmainwindow.h"
+#include "graphplugintablemodel.h"
 
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QToolBar>
 
+GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
+  , m_mainWindow(mw)
+{
+    // Read JSON with input data description (measuring values types)
 
-//! [0]
+    // Read JSON with ToolBar description (content, icons)
+    m_toolbar = new QToolBar(mw);
+
+    // Read JSON files with Graph Plot Windows description
+
+    // Read JSON for Score Board description
+
+    // Read JSON for Table and it's model
+    m_tableModel = new GraphPluginTableModel(this);
+    for (auto mainWindow : m_graphsMainWins)
+    connect(m_tableModel, &GraphPluginTableModel::packetFormed, mainWindow, &GraphMainWindow::addData);
+}
+
+GraphPlugin::~GraphPlugin()
+{
+
+}
+
+bool GraphPlugin::loadConfig(const QString &pathToJSON)
+{
+    return true;
+}
+
+bool GraphPlugin::loadSI(const QString &pathToJSON)
+{
+return true;
+}
+
 QString GraphPlugin::echo(const QString &message)
 {
     return message;
 }
-//! [0]
 
 void GraphPlugin::addData(const MeasuredValue &value)
 {
-
+    m_dataMap[value.timestamp] = value.name;
 }
 
 QToolBar* GraphPlugin::toolBar()
 {
-    QToolBar* toolbar;
-
-    return toolbar;
+    return m_toolbar;
 }
 
 QList<QDockWidget*> GraphPlugin::dockWindows()
 {
     QList<QDockWidget*> list;
+
+    list.append(m_graphsDocks);
+    list.append(m_tableDock);
+    list.append(m_scoreBoardDock);
 
     return list;
 }
