@@ -8,7 +8,7 @@ QT             += core gui widgets printsupport
 
 TARGET          = $$qtLibraryTarget(graph_plugin)
 TEMPLATE        = lib
-DESTDIR         = ../plugins
+DESTDIR         = ../sv_tools/plugins
 CONFIG         += plugin
 INCLUDEPATH    += ../sv_tools
 INCLUDEPATH    += ../QCustomPlot
@@ -34,8 +34,4 @@ FORMS += \
     graphmainwindow.ui
 
 # install
-top_builddir=$$shadowed($$PWD)
-target.path = $$top_builddir/sv_tools/plugins
-INSTALLS += target
 
-CONFIG += install_ok  # Do not cargo-cult this!
