@@ -65,8 +65,10 @@ bool GraphMainWindow::readJSON(const QString &path)
     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
 
     QString name;
-    if (loadDoc.object().contains("name"))
+    if (loadDoc.object().contains("name")) {
         name = loadDoc.object()["name"].toObject()["name"].toString();
+        setObjectName(name);
+    }
     //QString name = loadDoc.object()["name"].toObject()["name"].toString();
     //name = loadDoc["name"]["name"].toString();
 
@@ -75,21 +77,23 @@ bool GraphMainWindow::readJSON(const QString &path)
 
     for (int i = 0; i < plotsArray.size(); ++i) {
         QJsonObject plotObject = plotsArray[i].toObject();
-        m_properties.name = plotObject["name"].toString();
-        m_properties.x_name = plotObject["x_name"].toString();
-        m_properties.y_name = plotObject["y_name"].toString();
-        m_properties.x_unit = plotObject["x_unit"].toString();
-        m_properties.y_unit = plotObject["y_unit"].toString();
-        m_properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
-        m_properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
-        m_properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
-        m_properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
-        m_properties.total_N = plotObject["total_N"].toInt();
-        m_properties.last_N_limit = plotObject["last_N_limit"].toInt();
-        m_properties.update_mode = static_cast<GraphUpdateMode>(plotObject["update_mode"].toInt());
-        m_properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
-        m_properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
-        m_properties.color = static_cast<Qt::GlobalColor>(plotObject["color"].toInt());
+        GraphProperties properties;
+        properties.name = plotObject["name"].toString();
+        properties.x_name = plotObject["x_name"].toString();
+        properties.y_name = plotObject["y_name"].toString();
+        properties.x_unit = plotObject["x_unit"].toString();
+        properties.y_unit = plotObject["y_unit"].toString();
+        properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
+        properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
+        properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
+        properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
+        properties.total_N = plotObject["total_N"].toInt();
+        properties.last_N_limit = plotObject["last_N_limit"].toInt();
+        properties.update_mode = static_cast<GraphUpdateMode>(plotObject["update_mode"].toInt());
+        properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
+        properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
+        properties.color = static_cast<Qt::GlobalColor>(plotObject["color"].toInt());
+        m_properties[properties.name] = properties;
     }
 
     return true;

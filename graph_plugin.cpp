@@ -25,6 +25,19 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
     // Read JSON with ToolBar description (content, icons)
     m_toolbar = new QToolBar(mw);
 
+    m_tableModel = new GraphPluginTableModel(this);
+
+    for (auto graphMainWindow : m_graphsMainWins)
+        connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphMainWindow, &GraphMainWindow::addData);
+}
+
+GraphPlugin::~GraphPlugin()
+{
+
+}
+
+bool GraphPlugin::loadJSONs()
+{
     auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
     loadValuesJSON(path);
 
@@ -37,15 +50,8 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
     // Read JSON for Score Board description
 
     // Read JSON for Table and it's model
-    m_tableModel = new GraphPluginTableModel(this);
 
-    for (auto graphMainWindow : m_graphsMainWins)
-        connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphMainWindow, &GraphMainWindow::addData);
-}
-
-GraphPlugin::~GraphPlugin()
-{
-
+    return true;
 }
 
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
@@ -97,6 +103,8 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 
     m_graphsDocks.append(dock_widget);
     m_graphsMainWins.append(graphWindow);
+
+    m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 
     return true;
 }

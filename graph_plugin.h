@@ -83,6 +83,8 @@ public:
     //!<
     virtual void setMainWindow(QMainWindow *mw) override;
 
+    bool loadJSONs();
+
 private:
     // Values types, measurement units
     bool loadValuesJSON(const QString &pathToJSON);
