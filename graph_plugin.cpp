@@ -1,5 +1,6 @@
 #include "graph_plugin.h"
 #include "graphmainwindow.h"
+#include "graphpluginconfig.h"
 #include "graphplugintablemodel.h"
 #include "graphtableview.h"
 
@@ -38,6 +39,12 @@ GraphPlugin::~GraphPlugin()
 
 bool GraphPlugin::loadJSONs()
 {
+    // Load SI units and prefixes
+    auto prefPath = QString("%1/%2").arg(SIConfigsFolder).arg("prefixes.json");
+    auto siPath = QString("%1/%2").arg(SIConfigsFolder).arg("aux-units.json");
+    m_config = new GraphPluginConfig(siPath, prefPath);
+
+    // Load used in project values
     auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
     loadValuesJSON(path);
 

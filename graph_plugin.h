@@ -59,6 +59,7 @@
 #include <QtPlugin>
 
 class GraphMainWindow;
+class GraphPluginConfig;
 class GraphPluginTableModel;
 class GraphTableView;
 struct MeasuredValueDescrition;
@@ -116,6 +117,9 @@ private:
     // QTableView *m_tableView;
     GraphTableView *m_tableView;
     // QList<GraphMainWindow*> m_graphMainWins;
+
+    // Config
+    GraphPluginConfig *m_config;
 
     // Data Dispatcher
     //!< Timestamp -> value, one key - multple values

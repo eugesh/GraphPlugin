@@ -22,6 +22,7 @@ SOURCES += \
     addonplotdialog.cpp \
     graph_plugin.cpp \
     graphmainwindow.cpp \
+    graphpluginconfig.cpp \
     graphplugintablemodel.cpp \
     ../QCustomPlot/qcustomplot.cpp \
     graphtableview.cpp
@@ -31,6 +32,7 @@ HEADERS += \
     common.h \
     graph_plugin.h \
     graphmainwindow.h \
+    graphpluginconfig.h \
     graphplugintablemodel.h \
     ../QCustomPlot/qcustomplot.h \
     graphtableview.h

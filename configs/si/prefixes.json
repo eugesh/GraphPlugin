@@ -9,51 +9,51 @@
     },
     "tera":{
         "symbol": "T",
-        "multiplier": "10e12"
+        "multiplier": 1e12
     },
     "giga":{
         "symbol": "G",
-        "multiplier": "10e9"
+        "multiplier": 1e9
     },
     "mega":{
         "symbol": "M",
-        "multiplier": "10e6"
+        "multiplier": 1e6
     },
     "kilo":{
         "symbol": "k",
-        "multiplier": "10e3"
+        "multiplier": 1e3
     },
     "hecto":{
         "symbol": "h",
-        "multiplier": "10e2"
+        "multiplier": 1e2
     },
     "deka":{
         "symbol": "da",
-        "multiplier": "10"
+        "multiplier": 10
     },
     "deci":{
         "symbol": "d",
-        "multiplier": "10e-1"
+        "multiplier": 1e-1
     },
     "centi":{
         "symbol": "c",
-        "multiplier": "10e-2"
+        "multiplier": 1e-2
     },
     "milli":{
         "symbol": "m",
-        "multiplier": "10e-3"
+        "multiplier": 1e-3
     },
     "micro":{
         "symbol": "u",
-        "multiplier": "10e-6"
+        "multiplier": 1e-6
     },
     "nano":{
         "symbol": "n",
-        "multiplier": "10e-9"
+        "multiplier": 1e-9
     },
     "pico":{
         "symbol": "p",
-        "multiplier": "10e-12"
+        "multiplier": 1e-12
     },
     "femto":{
     },

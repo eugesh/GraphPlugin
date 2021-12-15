@@ -3,30 +3,35 @@
         {
             "name": "sv",
             "description": "sound velocity",
+            "physicalQuantity": "velocity",
             "measure_unit": "m/s",
             "measure_unit_rus": "м/с"
         },
         {
             "name": "tc",
             "description": "temperature",
+            "physicalQuantity": "temperature",
             "measure_unit": "C",
             "measure_unit_rus": "Ц"
         },
         {
             "name": "ts",
             "description": "time",
+            "physicalQuantity": "time",
             "measure_unit": "s",
             "measure_unit_rus": "с"
         },
         {
             "name": "ps",
             "description": "pressure",
+            "physicalQuantity": "pressure",
             "measure_unit": "Pa",
             "measure_unit_rus": "Па"
         },
         {
             "name": "vo",
             "description": "voltage",
+            "physicalQuantity": "voltage",
             "measure_unit": "V",
             "measure_unit_rus": "В"
         }

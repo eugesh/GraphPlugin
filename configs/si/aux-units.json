@@ -68,7 +68,7 @@
                 "type": "customary",
                 "systems": ["legacyMetric"],
                 "multiplier": 133.3224
-            },
+            }
         }
     },
     "temperature":{
@@ -89,7 +89,6 @@
                 "symbol": "°C",
                 "type": "si",
                 "systems": ["siCommon"],
-                "tags": ["cooking"],
                 "offset": -273.15
             },
             "fahrenheit": {
@@ -98,10 +97,9 @@
                 "symbol": "°F",
                 "type": "customary",
                 "systems": ["englishUnits", "imperial", "usCustomary"],
-                "tags": ["cooking"],
                 "multiplier": 1.8,
                 "offset": -459.67
-            },
+            }
         }
     },
     "time": {
@@ -179,7 +177,7 @@
                 "systems": ["siCommon", "imperial", "usCustomary", "englishUnits"],
                 "multiplier": 31557600,
                 "notes": "365.25 days of 86400 seconds"
-            },
+            }
         }
     },
     "speed": {
@@ -361,5 +359,5 @@
         "vector": true,
         "inheritedUnits": "speed",
         "units": {}
-    },
+    }
 }
