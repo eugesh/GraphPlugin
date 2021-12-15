@@ -1,36 +1,37 @@
 {
+    "description" : "Названия физических величин, применямых в основном ПО.",
     "values" : [
         {
-            "name": "sv",
-            "description": "sound velocity",
+            "name": "soundVelocity",
+            "description": "Sound velocity",
             "physicalQuantity": "velocity",
             "measure_unit": "m/s",
             "measure_unit_rus": "м/с"
         },
         {
-            "name": "tc",
-            "description": "temperature",
+            "name": "temperature",
+            "description": "Temperature",
             "physicalQuantity": "temperature",
             "measure_unit": "C",
             "measure_unit_rus": "Ц"
         },
         {
-            "name": "ts",
-            "description": "time",
+            "name": "time",
+            "description": "Time",
             "physicalQuantity": "time",
             "measure_unit": "s",
             "measure_unit_rus": "с"
         },
         {
-            "name": "ps",
-            "description": "pressure",
+            "name": "pressure",
+            "description": "Pressure",
             "physicalQuantity": "pressure",
             "measure_unit": "Pa",
             "measure_unit_rus": "Па"
         },
         {
-            "name": "vo",
-            "description": "voltage",
+            "name": "voltage",
+            "description": "Voltage",
             "physicalQuantity": "voltage",
             "measure_unit": "V",
             "measure_unit_rus": "В"

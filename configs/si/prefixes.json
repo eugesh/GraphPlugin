@@ -13,14 +13,20 @@
     },
     "giga":{
         "symbol": "G",
+        "name_ru": "Гига",
+        "symbol_ru": "Г",
         "multiplier": 1e9
     },
     "mega":{
         "symbol": "M",
+        "name_ru": "мега",
+        "symbol_ru": "М",
         "multiplier": 1e6
     },
     "kilo":{
         "symbol": "k",
+        "name_ru": "кило",
+        "symbol_ru": "к",
         "multiplier": 1e3
     },
     "hecto":{
@@ -33,26 +39,38 @@
     },
     "deci":{
         "symbol": "d",
+        "name_ru": "деци",
+        "symbol_ru": "дц",
         "multiplier": 1e-1
     },
     "centi":{
         "symbol": "c",
+        "name_ru": "санти",
+        "symbol_ru": "с",
         "multiplier": 1e-2
     },
     "milli":{
         "symbol": "m",
+        "name_ru": "милли",
+        "symbol_ru": "м",
         "multiplier": 1e-3
     },
     "micro":{
         "symbol": "u",
+        "name_ru": "микро",
+        "symbol_ru": "мк",
         "multiplier": 1e-6
     },
     "nano":{
         "symbol": "n",
+        "name_ru": "нано",
+        "symbol_ru": "н",
         "multiplier": 1e-9
     },
     "pico":{
         "symbol": "p",
+        "name_ru": "пико",
+        "symbol_ru": "п",
         "multiplier": 1e-12
     },
     "femto":{

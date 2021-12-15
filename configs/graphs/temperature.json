@@ -5,8 +5,8 @@
     "plots": [
         {
             "name": "Temperature",
-            "x_name": "ts",
-            "y_name": "tc",
+            "x_name": "time",
+            "y_name": "temperature",
             "x_title": "Time",
             "y_title": "Temperature",
             "x_unit": "s",
