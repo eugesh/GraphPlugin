@@ -22,13 +22,16 @@ SOURCES += \
     graph_plugin.cpp \
     graphmainwindow.cpp \
     graphplugintablemodel.cpp \
-    ../QCustomPlot/qcustomplot.cpp
+    ../QCustomPlot/qcustomplot.cpp \
+    graphtableview.cpp
 
 HEADERS += \
+    common.h \
     graph_plugin.h \
     graphmainwindow.h \
     graphplugintablemodel.h \
-    ../QCustomPlot/qcustomplot.h
+    ../QCustomPlot/qcustomplot.h \
+    graphtableview.h
 
 FORMS += \
     graphmainwindow.ui

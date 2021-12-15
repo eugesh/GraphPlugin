@@ -1,6 +1,7 @@
 #include "graph_plugin.h"
 #include "graphmainwindow.h"
 #include "graphplugintablemodel.h"
+#include "graphtableview.h"
 
 #include <QDockWidget>
 #include <QMainWindow>
@@ -96,7 +97,8 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 {
     m_tableModel = new GraphPluginTableModel(this);
-    m_tableView = new QTableView;
+    // m_tableView = new QTableView;
+    m_tableView = new GraphTableView(m_mainWindow);
     m_tableView->setModel(m_tableModel);
     m_tableDock = new QDockWidget(m_mainWindow);
     m_tableDock->setWidget(m_tableView);

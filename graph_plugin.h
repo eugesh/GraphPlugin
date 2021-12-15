@@ -60,6 +60,7 @@
 
 class GraphMainWindow;
 class GraphPluginTableModel;
+class GraphTableView;
 struct MeasuredValueDescrition;
 class QTableView;
 
@@ -112,7 +113,8 @@ private:
     // Table
     QDockWidget *m_tableDock;
     GraphPluginTableModel *m_tableModel;
-    QTableView *m_tableView;
+    // QTableView *m_tableView;
+    GraphTableView *m_tableView;
     // QList<GraphMainWindow*> m_graphMainWins;
 
     // Data Dispatcher
