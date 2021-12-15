@@ -1,0 +1,66 @@
+{
+    "yotta":{
+    },
+    "zetta":{
+    },
+    "exa":{
+    },
+    "peta":{
+    },
+    "tera":{
+        "symbol": "T",
+        "multiplier": "10e12"
+    },
+    "giga":{
+        "symbol": "G",
+        "multiplier": "10e9"
+    },
+    "mega":{
+        "symbol": "M",
+        "multiplier": "10e6"
+    },
+    "kilo":{
+        "symbol": "k",
+        "multiplier": "10e3"
+    },
+    "hecto":{
+        "symbol": "h",
+        "multiplier": "10e2"
+    },
+    "deka":{
+        "symbol": "da",
+        "multiplier": "10"
+    },
+    "deci":{
+        "symbol": "d",
+        "multiplier": "10e-1"
+    },
+    "centi":{
+        "symbol": "c",
+        "multiplier": "10e-2"
+    },
+    "milli":{
+        "symbol": "m",
+        "multiplier": "10e-3"
+    },
+    "micro":{
+        "symbol": "u",
+        "multiplier": "10e-6"
+    },
+    "nano":{
+        "symbol": "n",
+        "multiplier": "10e-9"
+    },
+    "pico":{
+        "symbol": "p",
+        "multiplier": "10e-12"
+    },
+    "femto":{
+    },
+    "atto":{
+    },
+    "zepto":{
+    },
+    "yocto":{
+    }
+}
