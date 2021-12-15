@@ -1,0 +1,26 @@
+{
+    "name": {
+        "name": "Temperature"
+    },
+    "plots": [
+        {
+            "name": "Temperature",
+            "x_name": "ts",
+            "y_name": "tc",
+            "x_title": "Time",
+            "y_title": "Temperature",
+            "x_unit": "s",
+            "y_unit": "C",
+            "x_phisical_quantity": "time",
+            "y_phisical_quantity": "temperature",
+            "x_dir": "right",
+            "y_dir": "up",
+            "total_N": "1000",
+            "last_N_limit": "100",
+            "update_mode": "last_n",
+            "x_scale": "lin",
+            "y_scale": "lin",
+            "color": "magenta"
+        }
+    ]
+}

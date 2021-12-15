@@ -36,6 +36,7 @@ struct GraphProperties {
     GraphScaleType y_scale;
     Qt::GlobalColor color;
 };*/
+QColor nameToColorConverter(const QString &name);
 
 QColor nameToColorConverter(const QString &name) {
     if (name.contains("black", Qt::CaseInsensitive))
@@ -175,7 +176,7 @@ void GraphMainWindow::addGraph(const QString &name)
     graphPen.setWidthF(1);
     ui->customPlot->graph()->setPen(graphPen);
     ui->customPlot->replot();
-    m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
+    // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
     m_valueNameYX.insertMulti(m_properties[name].y_name, m_properties[name].x_name);
 
     // QPair<QString, QString> xy = qMakePair<QString, QString> (m_properties[name].x_name, m_properties[name].y_name);
@@ -210,8 +211,12 @@ void GraphMainWindow::saveCSVdialog()
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
     for (MeasuredValue val1 : packet)
-        for (QString val2_name : m_valueNameYX.values(val1.name))
-            for (MeasuredValue val2 : packet)
-                if (val2_name == val2.name)
-                    m_valueGraphMap[qMakePair(val1.name, val2.name)]->addData(val1.value, val2.value);
+        for (QString val2_name : m_valueNameYX.values(val1.name)) {
+            if (val2_name.contains("ts"))
+                m_valueGraphMap[qMakePair(val1.name, tr("ts"))]->addData(val1.timestamp, val1.value);
+            else
+                for (MeasuredValue val2 : packet)
+                    if (val2_name == val2.name)
+                        m_valueGraphMap[qMakePair(val1.name, val2.name)]->addData(val1.value, val2.value);
+        }
 }
