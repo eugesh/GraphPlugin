@@ -12,7 +12,7 @@ class DigitalBoardItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit DigitalBoardItem(const QMap<QString, double> &measUnits, QWidget *parent = nullptr);
+    explicit DigitalBoardItem(const QString &name, const QMap<QString, double> &measUnits, QWidget *parent = nullptr);
     ~DigitalBoardItem();
 
     void setCurrentValue(double val);

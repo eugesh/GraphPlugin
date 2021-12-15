@@ -130,6 +130,9 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     m_boardDock = new QDockWidget(m_mainWindow);
     m_boardDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_boardDock->setWidget(m_digitalBoard);
+    m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
+
+    connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
 
     return true;
 }

@@ -3,11 +3,13 @@
 
 #include <QMap>
 
-DigitalBoardItem::DigitalBoardItem(const QMap<QString, double> &measUnits, QWidget *parent) :
+DigitalBoardItem::DigitalBoardItem(const QString &name, const QMap<QString, double> &measUnits, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DigitalBoardItem)
 {
     ui->setupUi(this);
+
+    ui->label->setText(name);
 
     for (auto unit : measUnits.keys()) {
         ui->comboBox->addItem(unit, measUnits[unit]);

@@ -10,6 +10,7 @@ class DigitalDisplayBoard;
 
 class DigitalBoardItem;
 class GraphPluginConfig;
+struct MeasuredValue;
 struct MeasuredValueDescription;
 
 class DigitalDisplayBoard : public QMainWindow
@@ -27,6 +28,9 @@ public:
     // Apply the last custom settings
     bool initFromJSON(const QString &pathToJSON);
 
+public slots:
+    void addData(const QList<MeasuredValue> &vals);
+
 private:
     bool readJSON();
 
@@ -35,7 +39,7 @@ private:
 
     GraphPluginConfig *m_config;
     QMap<QString, MeasuredValueDescription> m_measValDescMap;
-    QMap<QString, DigitalBoardItem> m_items;
+    QMap<QString, DigitalBoardItem*> m_items;
     QList<QString> m_activeSensorsNames;
 };
 

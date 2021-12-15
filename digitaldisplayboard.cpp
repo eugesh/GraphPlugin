@@ -1,6 +1,7 @@
 #include "common.h"
 #include "digitaldisplayboard.h"
 #include "digitalboarditem.h"
+#include "graph_interface.h"
 #include "graphpluginconfig.h"
 
 #include "ui_digitaldisplayboard.h"
@@ -37,10 +38,16 @@ bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
 {
     for (auto name : m_activeSensorsNames) {
         auto decs = m_measValDescMap[name];
-        auto *item = new DigitalBoardItem(m_config->getMultipliers(name));
-        auto *dock = new QDockWidget();
+
+        auto title = name; //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
+
+        auto *item = new DigitalBoardItem(title, m_config->getMultipliers(name), this);
+        item->setWindowTitle(title);
+        auto *dock = new QDockWidget(this);
+        m_items.insert(name, item);
         dock->setWidget(item);
-        addDockWidget(Qt::DockWidgetArea::AllDockWidgetAreas, dock);
+        dock->setAllowedAreas(Qt::AllDockWidgetAreas);
+        addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
     }
 
     return true;
@@ -50,4 +57,11 @@ bool DigitalDisplayBoard::readJSON()
 {
 
     return true;
+}
+
+void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
+{
+    for (auto val : vals) {
+        m_items[val.name]->setCurrentValue(val.value);
+    }
 }
