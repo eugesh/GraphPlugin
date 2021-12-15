@@ -1,5 +1,6 @@
 #include "addonplotdialog.h"
 #include "graphmainwindow.h"
+#include "graphpluginconfig.h"
 #include "ui_addonplotdialog.h"
 
 AddOnPlotDialog::AddOnPlotDialog(QWidget *parent) :
@@ -7,6 +8,20 @@ AddOnPlotDialog::AddOnPlotDialog(QWidget *parent) :
     ui(new Ui::AddOnPlotDialog)
 {
     ui->setupUi(this);
+
+    connect(ui->xPhysQuantCbBox, &QComboBox::currentTextChanged, [&](const QString &text) {
+        ui->xUnitComboBox->clear();
+        for (auto measUnit :  m_config->auxMeasUnits(text)) {
+            ui->xUnitComboBox->addItem(measUnit["name"].toString());
+        }
+    });
+
+    connect(ui->yPhysQuantCbBox, &QComboBox::currentTextChanged, [&](const QString &text) {
+        ui->yUnitComboBox->clear();
+        for (auto measUnit :  m_config->auxMeasUnits(text)) {
+            ui->yUnitComboBox->addItem(measUnit["name"].toString());
+        }
+    });
 }
 
 AddOnPlotDialog::~AddOnPlotDialog()
@@ -14,7 +29,21 @@ AddOnPlotDialog::~AddOnPlotDialog()
     delete ui;
 }
 
-void AddOnPlotDialog::setConfig(const GraphProperties &defaultProp)
+void AddOnPlotDialog::setConfig(GraphPluginConfig *config)
+{
+    m_config = config;
+
+    // Fill in Physical quantity Combo Boxes
+    for (auto physValName : config->physicalValuesNames()) {
+        ui->xPhysQuantCbBox->addItem(physValName);
+        ui->yPhysQuantCbBox->addItem(physValName);
+    }
+
+
+
+}
+
+void AddOnPlotDialog::setGraphProperties(const GraphProperties &defaultProp)
 {
 
 }

@@ -5,6 +5,7 @@
 #include <QTableView>
 
 class AddOnPlotDialog;
+class GraphPluginConfig;
 struct GraphProperties;
 
 class GraphTableView final: public QTableView
@@ -12,7 +13,8 @@ class GraphTableView final: public QTableView
     Q_OBJECT
 public:
     explicit GraphTableView(QWidget *parent = nullptr);
-    void setModel(QAbstractItemModel *model) final;
+    void setModel(QAbstractItemModel *model) final; // ToDo: place to constructor
+    void setConfig(GraphPluginConfig *config); // ToDo: place to constructor
 
 protected:
     void keyPressEvent(QKeyEvent *event) final;
@@ -27,6 +29,8 @@ protected slots:
 
 private:
     AddOnPlotDialog *m_addPointDialog;
+    // Config
+    GraphPluginConfig *m_config;
 };
 
 #endif // GRAPHTABLEVIEW_H

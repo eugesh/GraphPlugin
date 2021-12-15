@@ -22,8 +22,11 @@ class GraphPluginConfig
 {
 public:
     GraphPluginConfig(const QString &pathToUnits, const QString &pathToPrefixes);
-    QMap<QString, SIPrefix> prefixes();
-    QVariant getProperty(const QString &key);
+    QMap<QString, MeasUnit> measurementUnits() const;
+    QList<QMap<QString, QVariant>> auxMeasUnits(const QString &physValName) const;
+    QStringList physicalValuesNames() const;
+    QMap<QString, SIPrefix> prefixes() const;
+    QVariant getProperty(const QString &key) const;
 
 protected:
     bool readPrefixes(const QString &filepath);

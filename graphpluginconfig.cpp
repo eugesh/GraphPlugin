@@ -32,6 +32,26 @@ GraphPluginConfig::GraphPluginConfig(const QString &pathToUnits, const QString &
     readAuxUnits(pathToUnits);
 }
 
+QMap<QString, MeasUnit> GraphPluginConfig::measurementUnits() const
+{
+    return m_measUnits;
+}
+
+QList<QMap<QString, QVariant>> GraphPluginConfig::auxMeasUnits(const QString &physValName) const
+{
+    return m_measUnits.values(physValName);
+}
+
+QStringList GraphPluginConfig::physicalValuesNames() const
+{
+    return m_measUnits.uniqueKeys();
+}
+
+QMap<QString, SIPrefix> GraphPluginConfig::prefixes() const
+{
+    return m_prefixes;
+}
+
 bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
 {
     QFile loadFile(pathToJSON);

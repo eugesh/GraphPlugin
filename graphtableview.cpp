@@ -1,6 +1,7 @@
 #include "addonplotdialog.h"
 #include "common.h"
 #include "graphmainwindow.h"
+#include "graphpluginconfig.h"
 #include "graphtableview.h"
 
 #include <QAction>
@@ -54,6 +55,14 @@ GraphTableView::GraphTableView(QWidget *parent)
 
         contextMenu.exec(mapToGlobal(pos));
     });
+}
+
+void GraphTableView::setConfig(GraphPluginConfig *config)
+{
+    m_config = config;
+
+    m_addPointDialog = new AddOnPlotDialog;
+    m_addPointDialog->setConfig(config);
 }
 
 void GraphTableView::setModel(QAbstractItemModel *model)
@@ -110,8 +119,6 @@ void GraphTableView::copyRow()
 
 void GraphTableView::placeOnPlot()
 {
-    m_addPointDialog = new AddOnPlotDialog;
-
     if (m_addPointDialog->exec()) {
         GraphProperties prop;
 

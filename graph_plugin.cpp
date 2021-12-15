@@ -107,10 +107,12 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
     // m_tableView = new QTableView;
     m_tableView = new GraphTableView(m_mainWindow);
     m_tableView->setModel(m_tableModel);
+    m_tableView->setConfig(m_config);
     m_tableDock = new QDockWidget(m_mainWindow);
+    m_tableDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_tableDock->setWidget(m_tableView);
 
-    m_mainWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, m_tableDock);
+    m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, m_tableDock);
 
     for (auto graphMainWindow : m_graphsMainWins)
         connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphMainWindow, &GraphMainWindow::addData);
@@ -121,7 +123,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 {
     QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
-
+    dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
 
     dock_widget->setWidget(graphWindow);

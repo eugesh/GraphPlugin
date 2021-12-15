@@ -7,6 +7,8 @@ namespace Ui {
 class AddOnPlotDialog;
 }
 
+// Config
+class GraphPluginConfig;
 struct GraphProperties;
 
 class AddOnPlotDialog : public QDialog
@@ -17,11 +19,14 @@ public:
     explicit AddOnPlotDialog(QWidget *parent = nullptr);
     ~AddOnPlotDialog();
 
-    void setConfig(const GraphProperties &defaultProp);
+    void setConfig(GraphPluginConfig *config);
+    void setGraphProperties(const GraphProperties &defaultProp);
+
     GraphProperties getProp() const;
 
 private:
     Ui::AddOnPlotDialog *ui;
+    GraphPluginConfig *m_config;
 };
 
 #endif // ADDONPLOTDIALOG_H
