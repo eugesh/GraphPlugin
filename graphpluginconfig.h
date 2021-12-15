@@ -30,6 +30,9 @@ public:
     QMap<QString, SIPrefix> prefixes() const;
     QVariant getProperty(const QString &key) const;
 
+    // Map "unit name" -> multiplier
+    QMap<QString, double> getMultipliers(const QString &physQuantityName) const;
+
 protected:
     bool readPrefixes(const QString &filepath);
     bool readAuxUnits(const QString &filepath);

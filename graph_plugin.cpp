@@ -1,4 +1,5 @@
 #include "common.h"
+#include "digitaldisplayboard.h"
 #include "graph_plugin.h"
 #include "graphmainwindow.h"
 #include "graphpluginconfig.h"
@@ -49,10 +50,11 @@ bool GraphPlugin::loadJSONs()
         loadGraphJSON(path);
     }
 
-    // Read JSON for Score Board description
-
     // Read JSON for Table and it's model
     loadTableJSON(QString("%1/%2").arg(graphConfigsFolder).arg("plugin_config.json"));
+
+    // Read JSON for Score Board description
+    loadSensorsMonitorJSON("");
 
     return true;
 }
@@ -114,6 +116,20 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
         connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
 
     connect (m_tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
+
+    return true;
+}
+
+bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
+{
+    m_digitalBoard = new DigitalDisplayBoard();
+    m_digitalBoard->setConfig(m_config);
+    m_digitalBoard->setValuesDescriptions(m_measValDescMap);
+    m_digitalBoard->initFromJSON("");
+
+    m_boardDock = new QDockWidget(m_mainWindow);
+    m_boardDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    m_boardDock->setWidget(m_digitalBoard);
 
     return true;
 }

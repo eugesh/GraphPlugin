@@ -58,6 +58,7 @@
 #include <QObject>
 #include <QtPlugin>
 
+class DigitalDisplayBoard;
 class GraphMainWindow;
 class GraphPluginConfig;
 class GraphPluginTableModel;
@@ -101,6 +102,7 @@ private:
     // Read each JSON for graph plot window
     bool loadGraphJSON(const QString &pathToJSON);
     bool loadTableJSON(const QString &pathToJSON);
+    bool loadSensorsMonitorJSON(const QString &pathToJSON);
 
     bool saveGraphJSON(const QString &pathToJSON);
 
@@ -121,6 +123,9 @@ private:
     GraphPluginTableModel *m_tableModel;
     // QTableView *m_tableView;
     GraphTableView *m_tableView;
+
+    QDockWidget *m_boardDock;
+    DigitalDisplayBoard *m_digitalBoard;
     // QList<GraphMainWindow*> m_graphMainWins;
 
     // Config

@@ -1,13 +1,14 @@
 #ifndef GRAPHTABLEVIEW_H
 #define GRAPHTABLEVIEW_H
 
+#include "common.h"
+
 #include <QObject>
 #include <QTableView>
 
 class AddOnPlotDialog;
 class GraphPluginConfig;
 struct GraphProperties;
-struct MeasuredValueDescription;
 
 class GraphTableView final: public QTableView
 {

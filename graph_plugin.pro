@@ -21,6 +21,8 @@ EXAMPLE_FILES = graph_plugin.json
 SOURCES += \
     addonplotdialog.cpp \
     common.cpp \
+    digitalboarditem.cpp \
+    digitaldisplayboard.cpp \
     graph_plugin.cpp \
     graphmainwindow.cpp \
     graphpluginconfig.cpp \
@@ -31,6 +33,8 @@ SOURCES += \
 HEADERS += \
     addonplotdialog.h \
     common.h \
+    digitalboarditem.h \
+    digitaldisplayboard.h \
     graph_plugin.h \
     graphmainwindow.h \
     graphpluginconfig.h \
@@ -40,6 +44,8 @@ HEADERS += \
 
 FORMS += \
     addonplotdialog.ui \
+    digitalboarditem.ui \
+    digitaldisplayboard.ui \
     graphmainwindow.ui
 
 exists($$shell_path($${OUT_PWD}/../sv_tools/configs)) {

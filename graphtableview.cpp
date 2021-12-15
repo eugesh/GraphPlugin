@@ -1,5 +1,4 @@
 #include "addonplotdialog.h"
-#include "common.h"
 #include "graphmainwindow.h"
 #include "graphpluginconfig.h"
 #include "graphtableview.h"

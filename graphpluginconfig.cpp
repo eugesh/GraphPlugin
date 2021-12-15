@@ -135,7 +135,7 @@ bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
             auto unitObj = units[type].toObject();
             MeasUnit unit;
             unit.insert("name", type);
-            unit.insert("name_ru", type);
+            unit.insert("name_ru", unitObj["name_ru"].toString());
             if (unitObj.contains("symbol"))
                 unit.insert("symbol", unitObj["symbol"].toString());
             if (unitObj.contains("symbol_ru"))
@@ -147,4 +147,17 @@ bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
     }
 
     return true;
+}
+
+QMap<QString, double> GraphPluginConfig::getMultipliers(const QString &physQuantityName) const
+{
+    QMap<QString, double> map;
+
+    auto unitsMap = m_measUnits[physQuantityName];
+
+    for (auto unitName : unitsMap.keys()) {
+        map.insert(unitName, unitsMap["multiplier"].toDouble());
+    }
+
+    return map;
 }
