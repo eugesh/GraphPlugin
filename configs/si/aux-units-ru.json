@@ -14,6 +14,7 @@
             "foot":{
                 "name_ru": "фут",
                 "symbol": "ft",
+                "symbol_ru": "фут",
                 "type": "custom",
                 "multiplier": 0.3048
             },
@@ -21,6 +22,7 @@
                 "name_ru": "дюйм",
                 "plural_ru": "дюймов",
                 "symbol": "in",
+                "symbol_ru": "дюйм",
                 "type": "custom",
                 "multiplier": 0.0254
             },
@@ -30,6 +32,7 @@
                 "plural": "nautical miles",
                 "plural_ru": "морских миль",
                 "symbol": "M",
+                "symbol_ru": "миля",
                 "otherSymbols": ["NM", "nmi", "naut.mi"],
                 "type": "customary",
                 "systems": ["legacyMetric", "siCommon", "internationalNautical", "usNautical", "imperialNautical"],
@@ -41,6 +44,7 @@
                 "plural": "fathoms",
                 "plural_ru": "саженей",
                 "symbol": "ftm",
+                "symbol_ru": "сажень",
                 "otherSymbols": ["f", "fath", "fm", "fth", "fthm"],
                 "type": "customary",
                 "systems": ["imperial", "usCustomary", "englishUnits"],
@@ -51,6 +55,7 @@
                 "name_ru": "ярд",
                 "plural_ru": "ярдов",
                 "symbol": "yd",
+                "symbol_ru": "ярд",
                 "type": "custom",
                 "multiplier": 0.9144
             }
@@ -66,6 +71,7 @@
                 "plural": "pascals",
                 "plural_ru": "паскалей",
                 "symbol": "Pa",
+                "symbol_ru": "Па",
                 "type": "si",
                 "systems": ["si"],
                 "prefixes": ["kilo", "mega"]
@@ -73,6 +79,7 @@
             "bar":{
                 "name_ru": "бар",
                 "symbol": "bar",
+                "symbol_ru": "бар",
                 "type": "custom",
                 "multiplier": 1e5
             },
@@ -98,6 +105,7 @@
                 "name": "kelvin",
                 "otherNames": ["degree kelvin", "degrees kelvin"],
                 "symbol": "°K",
+                "symbol_ru": "°K",
                 "type": "si",
                 "systems": ["si"],
                 "notes": "As a postpositional adjective, the plural kelvin is used instead of kelvins"
@@ -107,6 +115,7 @@
                 "name": "celsius",
                 "otherNames": ["degree celsius", "degrees celsius"],
                 "symbol": "°C",
+                "symbol_ru": "°C",
                 "type": "si",
                 "systems": ["siCommon"],
                 "offset": -273.15
@@ -116,6 +125,7 @@
                 "name": "fahrenheit",
                 "otherNames": ["degree fahrenheit", "degrees fahrenheit"],
                 "symbol": "°F",
+                "symbol_ru": "°F",
                 "type": "customary",
                 "systems": ["englishUnits", "imperial", "usCustomary"],
                 "multiplier": 1.8,
@@ -274,6 +284,7 @@
                 "otherNames": ["Sarrau number"],
                 "symbol": "M",
                 "symbol": "\mathsf{M}",
+                "symbol_ru": "M",
                 "otherSymbols": ["Ma", "Mach"],
                 "otherSymbols_ru": ["число Маиевского"],
                 "symbolFirst": true,
