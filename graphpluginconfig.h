@@ -20,6 +20,13 @@ struct SIPrefix {
 
 typedef QMap<QString, QVariant> MeasUnit;
 
+struct physicalQuantity {
+    QString name_ru;
+    QString baseUnit;
+    bool isVector = false;
+    QList<MeasUnit> units;
+};
+
 class GraphPluginConfig
 {
 public:
@@ -32,6 +39,7 @@ public:
 
     // Map "unit name" -> multiplier
     QMap<QString, double> getMultipliers(const QString &physQuantityName) const;
+    QMap<QString, double> getOffsets(const QString &physQuantityName) const;
 
 protected:
     bool readPrefixes(const QString &filepath);

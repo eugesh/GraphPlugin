@@ -138,10 +138,22 @@ bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
             unit.insert("name_ru", unitObj["name_ru"].toString());
             if (unitObj.contains("symbol"))
                 unit.insert("symbol", unitObj["symbol"].toString());
+
             if (unitObj.contains("symbol_ru"))
                 unit.insert("symbol_ru", unitObj["symbol_ru"].toString());
+            else
+                unit.insert("symbol_ru", unitObj["symbol"].toString());
+
             if (unitObj.contains("multiplier"))
                 unit.insert("multiplier", unitObj["multiplier"].toDouble());
+            else
+                unit.insert("multiplier", 1.0);
+
+            if (unitObj.contains("offset"))
+                unit.insert("offset", unitObj["offset"].toDouble());
+            else
+                unit.insert("offset", 0.0);
+
             m_measUnits.insertMulti(physValName, unit);
         }
     }
@@ -153,10 +165,23 @@ QMap<QString, double> GraphPluginConfig::getMultipliers(const QString &physQuant
 {
     QMap<QString, double> map;
 
-    auto unitsMap = m_measUnits[physQuantityName];
+    auto unitsMap = m_measUnits.values(physQuantityName);
 
-    for (auto unitName : unitsMap.keys()) {
-        map.insert(unitName, unitsMap["multiplier"].toDouble());
+    for (auto unitMap : unitsMap) {
+        map.insert(unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble());
+    }
+
+    return map;
+}
+
+QMap<QString, double> GraphPluginConfig::getOffsets(const QString &physQuantityName) const
+{
+    QMap<QString, double> map;
+
+    auto unitsMap = m_measUnits.values(physQuantityName);
+
+    for (auto unitMap : unitsMap) {
+        map.insert(unitMap["symbol_ru"].toString(), unitMap["offset"].toDouble());
     }
 
     return map;
