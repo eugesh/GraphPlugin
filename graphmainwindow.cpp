@@ -196,23 +196,26 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
     QCPGraph *graph;
 
-    for (MeasuredValue val1 : packet)
+    for (MeasuredValue val1 : packet) {
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
-            if (val2_name.contains("time")) { // If X is time
+            // If X is time
+            if (val2_name.contains("time")) {
                 graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
                 if (graph) {
                     graph->addData(val1.timestamp, val1.value);
                     graph->rescaleAxes();
                 }
             } else {
-                for (MeasuredValue val2 : packet)
+                for (MeasuredValue val2 : packet) {
                     if (val2_name == val2.name) {
                         graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
-                        graph->addData(val1.value, val2.value);
+                        graph->addData(val2.value, val1.value);
                         graph->rescaleAxes();
                     }
+                }
             }
         }
+    }
 
     // Update graphs
     ui->customPlot->replot();
