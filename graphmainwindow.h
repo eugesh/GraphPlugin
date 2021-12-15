@@ -43,7 +43,7 @@ struct GraphProperties {
     GraphUpdateMode update_mode;
     GraphScaleType x_scale;
     GraphScaleType y_scale;
-    Qt::GlobalColor color;
+    QColor color;
 };
 
 class GraphMainWindow : public QMainWindow
@@ -63,6 +63,7 @@ public slots:
 
 private:
     bool readJSON(const QString &path);
+    void addGraph(const QString &name);
 
 private:
     Ui::GraphMainWindow *ui;

@@ -5,7 +5,7 @@ GraphPluginTableModel::GraphPluginTableModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
     // Must be read from JSON
-    m_coloumnNames << "Timestamp" << "Pressure" << "Temperature" << "Sound Velosicty";
+    m_coloumnNames << "Timestamp" << "Pressure" << "Temperature" << "Sound Velocity";
 
 }
 

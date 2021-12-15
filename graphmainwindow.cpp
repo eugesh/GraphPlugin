@@ -37,6 +37,52 @@ struct GraphProperties {
     Qt::GlobalColor color;
 };*/
 
+QColor nameToColorConverter(const QString &name) {
+    if (name.contains("black", Qt::CaseInsensitive))
+        return Qt::black;
+    else if (name.contains("white", Qt::CaseInsensitive))
+        return Qt::white;
+    else if (name.contains("lght", Qt::CaseInsensitive) &&
+             name.contains("gray", Qt::CaseInsensitive))
+        return Qt::lightGray;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("gray", Qt::CaseInsensitive))
+        return Qt::darkGray;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("red", Qt::CaseInsensitive))
+        return Qt::darkRed;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("blue", Qt::CaseInsensitive))
+        return Qt::darkBlue;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("green", Qt::CaseInsensitive))
+        return Qt::darkGreen;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("Cyan", Qt::CaseInsensitive))
+        return Qt::darkCyan;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("Magenta", Qt::CaseInsensitive))
+        return Qt::darkMagenta;
+    else if (name.contains("dark", Qt::CaseInsensitive) &&
+             name.contains("yellow", Qt::CaseInsensitive))
+        return Qt::darkYellow;
+
+    else if (name.contains("red", Qt::CaseInsensitive))
+        return Qt::red;
+    else if (name.contains("blue", Qt::CaseInsensitive))
+        return Qt::blue;
+    else if (name.contains("green", Qt::CaseInsensitive))
+        return Qt::green;
+    else if (name.contains("Cyan", Qt::CaseInsensitive))
+        return Qt::cyan;
+    else if (name.contains("Magenta", Qt::CaseInsensitive))
+        return Qt::magenta;
+    else if (name.contains("yellow", Qt::CaseInsensitive))
+        return Qt::yellow;
+
+    return QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
+}
+
 GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -68,6 +114,15 @@ bool GraphMainWindow::readJSON(const QString &path)
     if (loadDoc.object().contains("name")) {
         name = loadDoc.object()["name"].toObject()["name"].toString();
         setObjectName(name);
+        setWindowTitle(name);
+
+        ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
+                                      QCP::iSelectLegend | QCP::iSelectPlottables);
+        ui->customPlot->axisRect()->setupFullAxesBox();
+
+        ui->customPlot->plotLayout()->insertRow(0);
+        QCPTextElement *title = new QCPTextElement(ui->customPlot, name, QFont("sans", 14, QFont::Bold));
+        ui->customPlot->plotLayout()->addElement(0, 0, title);
     }
     //QString name = loadDoc.object()["name"].toObject()["name"].toString();
     //name = loadDoc["name"]["name"].toString();
@@ -92,11 +147,29 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.update_mode = static_cast<GraphUpdateMode>(plotObject["update_mode"].toInt());
         properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
         properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
-        properties.color = static_cast<Qt::GlobalColor>(plotObject["color"].toInt());
+        properties.color = nameToColorConverter(plotObject["color"].toString());
         m_properties[properties.name] = properties;
+        addGraph(properties.name);
     }
 
     return true;
+}
+
+void GraphMainWindow::addGraph(const QString &name)
+{
+    if (! m_properties.contains(name))
+        return;
+
+    ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    ui->customPlot->graph()->setName(name);
+    ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
+
+    QPen graphPen;
+    // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));
+    graphPen.setColor(m_properties[name].color);
+    graphPen.setWidthF(1);
+    ui->customPlot->graph()->setPen(graphPen);
+    ui->customPlot->replot();
 }
 
 bool GraphMainWindow::loadCSV()

@@ -6,9 +6,9 @@
 #include <QMainWindow>
 #include <QToolBar>
 
-static const char* graphConfigsFolder = "graphs";
-static const char* pluginConfigsFolder = "config";
-static const char* SIConfigsFolder = "si";
+static const char* graphConfigsFolder = "configs/graphs";
+static const char* pluginConfigsFolder = "configs/config";
+static const char* SIConfigsFolder = "configs/si";
 
 struct MeasuredValueDescrition {
     QString name;
