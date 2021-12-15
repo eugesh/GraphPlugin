@@ -7,7 +7,7 @@ GraphPluginTableModel::GraphPluginTableModel(QObject *parent) :
     // ToDo: Must be read from JSON
     // m_coloumnTitles << "Timestamp" << "Pressure" << "Temperature" << "Sound Velocity";
     m_coloumnTitles << tr("Время") << tr("Давление") << tr("Температура") << tr("Скорость звука");
-    m_coloumnNames << "ts" << "ps" << "tc" << "sv";
+    m_coloumnNames << "time" << "pressure" << "temperature" << "soundVelocity";
 }
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
@@ -69,6 +69,9 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
 
 QVariant GraphPluginTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    if (section < 0 || section >= m_coloumnTitles.size())
+        return {};
+
     if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal)) {
         return m_coloumnTitles[section];
     }

@@ -41,6 +41,8 @@ GraphTableView::GraphTableView(QWidget *parent)
 
     connect(horizontalHeader(), &QWidget::customContextMenuRequested,
         [this] (const QPoint &pos) {
+        m_currentColumn = horizontalHeader()->logicalIndexAt(pos);
+
         QMenu contextMenu(tr("Context menu"), this);
 
         QAction action1(tr("Копировать"), this);
@@ -63,6 +65,16 @@ void GraphTableView::setConfig(GraphPluginConfig *config)
 
     m_addPointDialog = new AddOnPlotDialog;
     m_addPointDialog->setConfig(config);
+}
+
+void GraphTableView::setMeasValues(const QMap<QString, MeasuredValueDescription> &mvd)
+{
+    m_measValuesDesc = mvd;
+    if (! m_addPointDialog) {
+        qCritical() << "Error: setConfig first!";
+        return;
+    }
+    m_addPointDialog->setMeasValDesc(mvd);
 }
 
 void GraphTableView::setModel(QAbstractItemModel *model)
@@ -119,11 +131,15 @@ void GraphTableView::copyRow()
 
 void GraphTableView::placeOnPlot()
 {
+    //model()->sel
+    // auto selected = horizontalHeader()->selectionModel()->currentIndex();
+    auto yName = model()->headerData(m_currentColumn, Qt::Horizontal).toString();
+
     if (m_addPointDialog->exec()) {
-        GraphProperties prop;
+        //GraphProperties prop;
 
+        //prop = m_addPointDialog->getProp();
 
-
-        emit createNewGraph(prop);
+        emit createNewGraph(m_addPointDialog->getCustomPlotName(), m_addPointDialog->getProp());
     }
 }

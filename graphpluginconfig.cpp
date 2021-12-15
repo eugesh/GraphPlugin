@@ -67,6 +67,7 @@ bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
 
     auto loadObj = loadDoc.object();
 
+    // Prefixes names
     auto keys = loadObj.keys();
 
     for (auto key : keys) {
@@ -80,6 +81,12 @@ bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
             //prefix.multiplier = obj["multiplier"].toString().toDouble();
             prefix.multiplier = obj["multiplier"].toDouble();
         }
+
+        if (obj.contains("name_ru"))
+            prefix.name_ru = obj["name_ru"].toString();
+
+        if (obj.contains("symbol_ru"))
+            prefix.name_ru = obj["symbol_ru"].toString();
 
         m_prefixes.insert(key, prefix);
     }
@@ -128,8 +135,11 @@ bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
             auto unitObj = units[type].toObject();
             MeasUnit unit;
             unit.insert("name", type);
+            unit.insert("name_ru", type);
             if (unitObj.contains("symbol"))
                 unit.insert("symbol", unitObj["symbol"].toString());
+            if (unitObj.contains("symbol_ru"))
+                unit.insert("symbol_ru", unitObj["symbol_ru"].toString());
             if (unitObj.contains("multiplier"))
                 unit.insert("multiplier", unitObj["multiplier"].toDouble());
             m_measUnits.insertMulti(physValName, unit);

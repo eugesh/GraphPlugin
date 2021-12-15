@@ -7,7 +7,9 @@
 
 struct SIPrefix {
     QString name;
+    QString name_ru;
     QString symbol;
+    QString symbol_ru;
     double multiplier;
 };
 
@@ -33,9 +35,9 @@ protected:
     bool readAuxUnits(const QString &filepath);
 
 private:
-    //!< Name, struct
+    //!< Prefix name, struct
     QMap<QString, SIPrefix> m_prefixes;
-    //!< Physical quantity name, MeasUnit struct, one multiple
+    //!< Physical quantity name, MeasUnit properties, one multiple
     QMap<QString, MeasUnit> m_measUnits;
 };
 

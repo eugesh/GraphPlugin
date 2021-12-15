@@ -2,6 +2,7 @@
 #define ADDONPLOTDIALOG_H
 
 #include <QDialog>
+#include <QMap>
 
 namespace Ui {
 class AddOnPlotDialog;
@@ -10,6 +11,7 @@ class AddOnPlotDialog;
 // Config
 class GraphPluginConfig;
 struct GraphProperties;
+struct MeasuredValueDescription;
 
 class AddOnPlotDialog : public QDialog
 {
@@ -21,12 +23,15 @@ public:
 
     void setConfig(GraphPluginConfig *config);
     void setGraphProperties(const GraphProperties &defaultProp);
+    void setMeasValDesc(const QMap<QString, MeasuredValueDescription> &mvd);
 
+    QString getCustomPlotName() const;
     GraphProperties getProp() const;
 
 private:
     Ui::AddOnPlotDialog *ui;
     GraphPluginConfig *m_config;
+    QMap<QString, MeasuredValueDescription> m_measValuesDesc;
 };
 
 #endif // ADDONPLOTDIALOG_H

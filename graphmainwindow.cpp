@@ -1,3 +1,4 @@
+#include "common.h"
 #include "graphmainwindow.h"
 #include "ui_graphmainwindow.h"
 
@@ -36,53 +37,6 @@ struct GraphProperties {
     GraphScaleType y_scale;
     Qt::GlobalColor color;
 };*/
-QColor nameToColorConverter(const QString &name);
-
-QColor nameToColorConverter(const QString &name) {
-    if (name.contains("black", Qt::CaseInsensitive))
-        return Qt::black;
-    else if (name.contains("white", Qt::CaseInsensitive))
-        return Qt::white;
-    else if (name.contains("lght", Qt::CaseInsensitive) &&
-             name.contains("gray", Qt::CaseInsensitive))
-        return Qt::lightGray;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("gray", Qt::CaseInsensitive))
-        return Qt::darkGray;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("red", Qt::CaseInsensitive))
-        return Qt::darkRed;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("blue", Qt::CaseInsensitive))
-        return Qt::darkBlue;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("green", Qt::CaseInsensitive))
-        return Qt::darkGreen;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("Cyan", Qt::CaseInsensitive))
-        return Qt::darkCyan;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("Magenta", Qt::CaseInsensitive))
-        return Qt::darkMagenta;
-    else if (name.contains("dark", Qt::CaseInsensitive) &&
-             name.contains("yellow", Qt::CaseInsensitive))
-        return Qt::darkYellow;
-
-    else if (name.contains("red", Qt::CaseInsensitive))
-        return Qt::red;
-    else if (name.contains("blue", Qt::CaseInsensitive))
-        return Qt::blue;
-    else if (name.contains("green", Qt::CaseInsensitive))
-        return Qt::green;
-    else if (name.contains("Cyan", Qt::CaseInsensitive))
-        return Qt::cyan;
-    else if (name.contains("Magenta", Qt::CaseInsensitive))
-        return Qt::magenta;
-    else if (name.contains("yellow", Qt::CaseInsensitive))
-        return Qt::yellow;
-
-    return QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
-}
 
 GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
@@ -93,9 +47,40 @@ GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     readJSON(path2JSON);
 }
 
+//GraphMainWindow::GraphMainWindow(const QString &name, const QList<GraphProperties> &properties, QWidget *parent) :
+GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::GraphMainWindow)
+{
+    ui->setupUi(this);
+
+    createCustomPlot(name);
+
+    addGraph(properties);
+}
+
 GraphMainWindow::~GraphMainWindow()
 {
     delete ui;
+}
+
+void GraphMainWindow::createCustomPlot(const QString &name)
+{
+    setObjectName(name);
+    setWindowTitle(name);
+
+    ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
+                                  QCP::iSelectLegend | QCP::iSelectPlottables);
+
+    //ui->customPlot->xAxis->setRange(2e-5, 6e-5);
+    //ui->customPlot->yAxis->setRange(-2, 2);
+    //ui->customPlot->yAxis2->setRange(-0.025, 0.025);
+    // ui->customPlot->yAxis->setScaleType(QCPAxis::stLogarithmic);
+    ui->customPlot->axisRect()->setupFullAxesBox();
+
+    ui->customPlot->plotLayout()->insertRow(0);
+    QCPTextElement *title = new QCPTextElement(ui->customPlot, name, QFont("sans", 14, QFont::Bold));
+    ui->customPlot->plotLayout()->addElement(0, 0, title);
 }
 
 bool GraphMainWindow::readJSON(const QString &path)
@@ -114,21 +99,7 @@ bool GraphMainWindow::readJSON(const QString &path)
     QString name;
     if (loadDoc.object().contains("name")) {
         name = loadDoc.object()["name"].toObject()["name"].toString();
-        setObjectName(name);
-        setWindowTitle(name);
-
-        ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
-                                      QCP::iSelectLegend | QCP::iSelectPlottables);
-
-        //ui->customPlot->xAxis->setRange(2e-5, 6e-5);
-        //ui->customPlot->yAxis->setRange(-2, 2);
-        //ui->customPlot->yAxis2->setRange(-0.025, 0.025);
-        // ui->customPlot->yAxis->setScaleType(QCPAxis::stLogarithmic);
-        ui->customPlot->axisRect()->setupFullAxesBox();
-
-        ui->customPlot->plotLayout()->insertRow(0);
-        QCPTextElement *title = new QCPTextElement(ui->customPlot, name, QFont("sans", 14, QFont::Bold));
-        ui->customPlot->plotLayout()->addElement(0, 0, title);
+        createCustomPlot(name);
     }
     //QString name = loadDoc.object()["name"].toObject()["name"].toString();
     //name = loadDoc["name"]["name"].toString();
@@ -161,6 +132,12 @@ bool GraphMainWindow::readJSON(const QString &path)
     return true;
 }
 
+bool GraphMainWindow::saveJSON(const QString &path)
+{
+
+    return true;
+}
+
 void GraphMainWindow::addGraph(const QString &name)
 {
     if (! m_properties.contains(name))
@@ -184,6 +161,13 @@ void GraphMainWindow::addGraph(const QString &name)
 
     QPair<QString, QString> yx = qMakePair<QString, QString> (m_properties[name].y_name, m_properties[name].x_name);
     m_valueGraphMap.insert(yx, graph);
+}
+
+void GraphMainWindow::addGraph(const GraphProperties &prop)
+{
+    m_properties.insert(prop.name, prop);
+
+    addGraph(prop.name);
 }
 
 bool GraphMainWindow::applyProperties()
@@ -214,8 +198,8 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 
     for (MeasuredValue val1 : packet)
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
-            if (val2_name.contains("ts")) { // If X is time
-                graph = m_valueGraphMap[qMakePair(val1.name, tr("ts"))];
+            if (val2_name.contains("time")) { // If X is time
+                graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
                 if (graph) {
                     graph->addData(val1.timestamp, val1.value);
                     graph->rescaleAxes();

@@ -52,6 +52,7 @@ class GraphMainWindow : public QMainWindow
 
 public:
     explicit GraphMainWindow(const QString &pathToJSON, QWidget *parent = nullptr);
+    explicit GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent = nullptr);
     ~GraphMainWindow();
 
     bool loadCSV();
@@ -60,9 +61,12 @@ public slots:
     void loadCSVdialog();
     void saveCSVdialog();
     void addData(const QList<MeasuredValue> &val);
+    void addGraph(const GraphProperties &prop);
 
 private:
+    void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
+    bool saveJSON(const QString &path);
     bool applyProperties();
     void addGraph(const QString &name);
 
@@ -71,7 +75,7 @@ private:
     QString m_pathToCSV;
     //!< Value name, pointer to Graph
     QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
-    QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
+    // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     QMap<QString, QString> m_valueNameXY;
     QMap<QString, QString> m_valueNameYX;

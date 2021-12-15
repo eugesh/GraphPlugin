@@ -62,7 +62,8 @@ class GraphMainWindow;
 class GraphPluginConfig;
 class GraphPluginTableModel;
 class GraphTableView;
-struct MeasuredValueDescrition;
+struct GraphProperties;
+struct MeasuredValueDescription;
 class QTableView;
 
 class GraphPlugin : public QObject, GraphInterface
@@ -89,6 +90,7 @@ public:
     bool loadJSONs();
 
 public slots:
+    void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
 
 private:
     // Values types, measurement units
@@ -100,13 +102,16 @@ private:
     bool loadGraphJSON(const QString &pathToJSON);
     bool loadTableJSON(const QString &pathToJSON);
 
+    bool saveGraphJSON(const QString &pathToJSON);
+
 private:
     // Pointer to superior MainWindow
     QMainWindow *m_mainWindow;
     // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
     // Graphs
     QList<QDockWidget*> m_graphsDocks;
-    QList<GraphMainWindow*> m_graphsMainWins;
+    // QList<GraphMainWindow*> m_graphsMainWins;
+    QMap<QString, GraphMainWindow*> m_graphsMainWins;
     // Score Board
     QDockWidget *m_scoreBoardDock;
     // ToolBar
@@ -125,7 +130,7 @@ private:
     //!< Timestamp -> value, one key - multple values
     // Data config
     int m_ringBufferSize;
-    QList<MeasuredValueDescrition> m_mvdesc_struct;
+    QMap<QString, MeasuredValueDescription> m_measValDescMap;
     //!< Unique Names of values
     QList<QString> m_valueNames;
     //!< Values descriptions

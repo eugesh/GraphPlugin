@@ -1,4 +1,5 @@
 #include "addonplotdialog.h"
+#include "common.h"
 #include "graphmainwindow.h"
 #include "graphpluginconfig.h"
 #include "ui_addonplotdialog.h"
@@ -43,74 +44,45 @@ void AddOnPlotDialog::setConfig(GraphPluginConfig *config)
 
 }
 
+void AddOnPlotDialog::setMeasValDesc(const QMap<QString, MeasuredValueDescription> &mvd)
+{
+    m_measValuesDesc = mvd;
+
+    for (auto val : mvd.values()) {
+        ui->xNameComboBox->addItem(val.name);
+        ui->yNameComboBox->addItem(val.name);
+    }
+}
+
 void AddOnPlotDialog::setGraphProperties(const GraphProperties &defaultProp)
 {
 
+}
+
+QString AddOnPlotDialog::getCustomPlotName() const
+{
+    return ui->customPltNameLineEdit->text();
 }
 
 GraphProperties AddOnPlotDialog::getProp() const
 {
     GraphProperties prop;
 
-    prop.name = ui->pltNameLineEdit->text();
+    prop.name = ui->graphNameLineEdit->text();
     prop.x_name = ui->xNameComboBox->currentText();
-    prop.y_name;
-    prop.x_unit;
-    prop.y_unit;
-    prop.x_phisical_quantity;
-    prop.y_phisical_quantity;
-    prop.x_dir;
-    prop.y_dir;
-    prop.total_N;
-    prop.last_N_limit;
-    prop.update_mode;
-    prop.x_scale;
-    prop.y_scale;
-    prop.color;
-
-    QComboBox *yNameComboBox;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *label_5;
-    QComboBox *xDirComboBox;
-    QHBoxLayout *horizontalLayout_5;
-    QLabel *label_6;
-    QComboBox *yDirComboBox;
-    QHBoxLayout *horizontalLayout_6;
-    QLabel *label_7;
-    QLineEdit *xTitleComboBox;
-    QHBoxLayout *horizontalLayout_7;
-    QLabel *label_8;
-    QLineEdit *yTitleComboBox;
-    QHBoxLayout *horizontalLayout_8;
-    QLabel *label_9;
-    QComboBox *xPhysQuantCbBox;
-    QHBoxLayout *horizontalLayout_9;
-    QLabel *label_10;
-    QComboBox *yPhysQuantCbBox;
-    QHBoxLayout *horizontalLayout_17;
-    QLabel *label_18;
-    QComboBox *xUnitComboBox;
-    QHBoxLayout *horizontalLayout_16;
-    QLabel *label_17;
-    QComboBox *yUnitComboBox;
-    QHBoxLayout *horizontalLayout_10;
-    QLabel *label_11;
-    QSpinBox *spinBox_MaxN;
-    QHBoxLayout *horizontalLayout_11;
-    QLabel *label_12;
-    QSpinBox *spinBox_MaxLastN;
-    QHBoxLayout *horizontalLayout_13;
-    QLabel *label_14;
-    QComboBox *xScaleTypeCbBox;
-    QHBoxLayout *horizontalLayout_12;
-    QLabel *label_13;
-    QComboBox *yScaleTypeCbBox;
-    QHBoxLayout *horizontalLayout_15;
-    QLabel *label_16;
-    QComboBox *updateModeCbBox;
-    QHBoxLayout *horizontalLayout_14;
-    QLabel *label_15;
-    QComboBox *colorComboBox;
+    prop.y_name = ui->yNameComboBox->currentText();
+    prop.x_unit = ui->xUnitComboBox->currentText();
+    prop.y_unit = ui->yUnitComboBox->currentText();
+    prop.x_phisical_quantity = ui->xPhysQuantCbBox->currentText();
+    prop.y_phisical_quantity = ui->yPhysQuantCbBox->currentText();
+    prop.x_dir = ui->xDirComboBox->currentText().contains(tr("Вправо")) ? GraphDir::RIGHT : GraphDir::LEFT;
+    prop.y_dir = ui->yDirComboBox->currentText().contains(tr("Вверх")) ? GraphDir::UP : GraphDir::DOWN;
+    prop.total_N = static_cast<unsigned int>(ui->spinBox_MaxLastN->value());
+    prop.last_N_limit = static_cast<unsigned int>(ui->spinBox_MaxN->value());
+    prop.update_mode = ui->updateModeCbBox->currentText().contains(tr("Отображать все")) ? GraphUpdateMode::SHOW_ALL : GraphUpdateMode::SHOW_LAST_N;
+    prop.x_scale = ui->xScaleTypeCbBox->currentText().contains(tr("Линейная")) ? GraphScaleType::LIN : GraphScaleType::LOG;
+    prop.y_scale = ui->yScaleTypeCbBox->currentText().contains(tr("Линейная")) ? GraphScaleType::LIN : GraphScaleType::LOG;
+    prop.color = nameToColorConverter(ui->colorComboBox->currentText());
 
     return prop;
 }

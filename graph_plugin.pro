@@ -20,6 +20,7 @@ EXAMPLE_FILES = graph_plugin.json
 
 SOURCES += \
     addonplotdialog.cpp \
+    common.cpp \
     graph_plugin.cpp \
     graphmainwindow.cpp \
     graphpluginconfig.cpp \
