@@ -5,8 +5,10 @@
     "plots": [
         {
             "name": "Sound Velocity",
-            "x_name": "Time",
-            "y_name": "Velocity",
+            "x_name": "ts",
+            "y_name": "sv",
+            "x_title": "Time",
+            "y_title": "Velocity",
             "x_unit": "s",
             "y_unit": "m/s",
             "x_phisical_quantity": "time",

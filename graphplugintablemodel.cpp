@@ -4,9 +4,10 @@
 GraphPluginTableModel::GraphPluginTableModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    // Must be read from JSON
-    m_coloumnNames << "Timestamp" << "Pressure" << "Temperature" << "Sound Velocity";
-
+    // ToDo: Must be read from JSON
+    // m_coloumnTitles << "Timestamp" << "Pressure" << "Temperature" << "Sound Velocity";
+    m_coloumnTitles << tr("Время") << tr("Давление") << tr("Температура") << tr("Скорость звука");
+    m_coloumnNames << "ts" << "ps" << "tc" << "sv";
 }
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
@@ -15,7 +16,7 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
     m_dataMap.insertMulti(val.timestamp, val);
 
     if (m_dataMap.values(val.timestamp).size() == m_packetSize) {
-        emit packetFormed(m_dataMap.values(val.timestamp));
+        emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         addRow(m_dataMap.values(val.timestamp));
         return;
     }
@@ -27,7 +28,9 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
 
 void GraphPluginTableModel::addRow(const QList<MeasuredValue> &packet)
 {
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
+    endInsertRows();
 }
 
 void GraphPluginTableModel::clear()
@@ -37,12 +40,13 @@ void GraphPluginTableModel::clear()
 
 int GraphPluginTableModel::columnCount(const QModelIndex &parent) const
 {
-    return m_packetSize;
+    return m_packetSize + 1; // + Timestamp
 }
 
 QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
 {
     int col = index.column();
+    int row = index.row();
 
     auto name = m_coloumnNames[col];
 
@@ -50,7 +54,10 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
     case Qt::TextAlignmentRole:
         return {};
     case Qt::DisplayRole: {
-        for(MeasuredValue val : m_dataMap.values(m_timeStamps[col]))
+        if (col == 0) { // Timestamp column
+            return QDateTime::fromMSecsSinceEpoch(m_timeStamps[row]);
+        }
+        for(MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
             if (val.name == name)
                 return val.value; // ToDo * by SI convertion coefficient;
     }
@@ -63,7 +70,7 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
 QVariant GraphPluginTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal)) {
-        return m_coloumnNames[section];
+        return m_coloumnTitles[section];
     }
 
     /*if ((role == Qt::SizeHintRole) && (orientation == Qt::Horizontal)) {

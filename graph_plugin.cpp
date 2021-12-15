@@ -4,6 +4,7 @@
 
 #include <QDockWidget>
 #include <QMainWindow>
+#include <QTableView>
 #include <QToolBar>
 
 static const char* graphConfigsFolder = "configs/graphs";
@@ -25,10 +26,8 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
     // Read JSON with ToolBar description (content, icons)
     m_toolbar = new QToolBar(mw);
 
-    m_tableModel = new GraphPluginTableModel(this);
+    // Table
 
-    for (auto graphMainWindow : m_graphsMainWins)
-        connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphMainWindow, &GraphMainWindow::addData);
 }
 
 GraphPlugin::~GraphPlugin()
@@ -50,6 +49,7 @@ bool GraphPlugin::loadJSONs()
     // Read JSON for Score Board description
 
     // Read JSON for Table and it's model
+    loadTableJSON(QString("%1/%2").arg(graphConfigsFolder).arg("plugin_config.json"));
 
     return true;
 }
@@ -93,6 +93,22 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
     return true;
 }
 
+bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
+{
+    m_tableModel = new GraphPluginTableModel(this);
+    m_tableView = new QTableView;
+    m_tableView->setModel(m_tableModel);
+    m_tableDock = new QDockWidget(m_mainWindow);
+    m_tableDock->setWidget(m_tableView);
+
+    m_mainWindow->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, m_tableDock);
+
+    for (auto graphMainWindow : m_graphsMainWins)
+        connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphMainWindow, &GraphMainWindow::addData);
+
+    return true;
+}
+
 bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 {
     QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
@@ -116,7 +132,9 @@ QString GraphPlugin::echo(const QString &message)
 
 void GraphPlugin::addData(const MeasuredValue &value)
 {
-    m_dataMap[value.timestamp] = value.name;
+    // m_dataMap[value.timestamp] = value.name;
+
+    m_tableModel->appendValue(value);
 }
 
 QToolBar* GraphPlugin::toolBar() const

@@ -46,6 +46,7 @@ private:
     QMap<uint64_t, MeasuredValue> m_dataMap;
     QList<uint64_t> m_timeStamps;
     QList<QString> m_coloumnNames;
+    QList<QString> m_coloumnTitles;
 };
 
 #endif // GRAPHPLUGINTABLEMODEL_H
