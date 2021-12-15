@@ -210,13 +210,26 @@ void GraphMainWindow::saveCSVdialog()
 
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
+    QCPGraph *graph;
+
     for (MeasuredValue val1 : packet)
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
-            if (val2_name.contains("ts"))
-                m_valueGraphMap[qMakePair(val1.name, tr("ts"))]->addData(val1.timestamp, val1.value);
-            else
+            if (val2_name.contains("ts")) { // If X is time
+                graph = m_valueGraphMap[qMakePair(val1.name, tr("ts"))];
+                if (graph) {
+                    graph->addData(val1.timestamp, val1.value);
+                    graph->rescaleAxes();
+                }
+            } else {
                 for (MeasuredValue val2 : packet)
-                    if (val2_name == val2.name)
-                        m_valueGraphMap[qMakePair(val1.name, val2.name)]->addData(val1.value, val2.value);
+                    if (val2_name == val2.name) {
+                        graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
+                        graph->addData(val1.value, val2.value);
+                        graph->rescaleAxes();
+                    }
+            }
         }
+
+    // Update graphs
+    ui->customPlot->replot();
 }
