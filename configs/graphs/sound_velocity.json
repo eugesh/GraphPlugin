@@ -1,14 +1,14 @@
 {
     "name": {
-        "name": "Sound Velocity"
+        "name": "Скорость звука"
     },
     "plots": [
         {
-            "name": "Sound Velocity",
+            "name": "Скорость звука",
             "x_name": "time",
             "y_name": "soundVelocity",
-            "x_title": "Time",
-            "y_title": "Velocity",
+            "x_title": "Время",
+            "y_title": "Скорость",
             "x_unit": "s",
             "y_unit": "m/s",
             "x_phisical_quantity": "time",

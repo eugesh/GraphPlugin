@@ -1,14 +1,14 @@
 {
     "name": {
-        "name": "Temperature"
+        "name": "Температура"
     },
     "plots": [
         {
-            "name": "Temperature",
+            "name": "Температура",
             "x_name": "time",
             "y_name": "temperature",
             "x_title": "Time",
-            "y_title": "Temperature",
+            "y_title": "Температура",
             "x_unit": "s",
             "y_unit": "C",
             "x_phisical_quantity": "time",

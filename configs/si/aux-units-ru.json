@@ -36,7 +36,7 @@
                 "multiplier": 1852
             },
             "fathom": {
-                "name_ru": "сажень",
+                "name_ru": "Морская сажень",
                 "name": "fathom",
                 "plural": "fathoms",
                 "plural_ru": "саженей",
@@ -133,7 +133,9 @@
         "units": {
             "second": {
                 "name": "second",
+                "name_ru": "секунда",
                 "plural": "seconds",
+                "plural_ru": "секунд",
                 "symbol": "s",
                 "symbol_ru": "с",
                 "otherSymbols": ["sec"],
@@ -221,7 +223,7 @@
             }
         }
     },
-    "speed": {
+    "velocity": {
         "name": "velocity",
         "name_ru": "скорость",
         "symbol": "v",
@@ -240,33 +242,6 @@
                 "type": "customary",
                 "systems": ["metric"],
                 "notes": "This is of type customary NOT si because you can't actually apply prefixes to it"
-            },
-            "footPerHour": {
-                "name": "foot per hour",
-                "plural": "feet per hour",
-                "symbol": "fph",
-                "otherSymbols": ["ft/h"],
-                "type": "customary",
-                "systems": ["imperial", "usCustomary"],
-                "multiplier": 8.466667e-5
-            },
-            "footPerMinute": {
-                "name": "foot per minute",
-                "plural": "feet per minute",
-                "symbol": "fpm",
-                "otherSymbols": ["ft/min"],
-                "type": "customary",
-                "systems": ["imperial", "usCustomary"],
-                "multiplier": 5.08e-3
-            },
-            "footPerSecond": {
-                "name": "foot per second",
-                "plural": "feet per second",
-                "symbol": "fps",
-                "otherSymbols": ["ft/s"],
-                "type": "customary",
-                "systems": ["imperial", "usCustomary"],
-                "multiplier": 3.048e-1
             },
             "kilometrePerHour": {
                 "name": "kilometre per hour",
@@ -293,19 +268,9 @@
                 "systems": ["metric", "internationalNautical", "imperial", "usCustomary"],
                 "multiplier": 0.514444
             },
-            "knotAdmiralty": {
-                "name": "knot",
-                "plural": "knots",
-                "symbol": "kn",
-                "otherSymbols": ["NM (Adm)/h"],
-                "type": "customary",
-                "systems": ["nonStandard"],
-                "multiplier": 0.514773333333,
-                "notes": "More research needed on systems and origins"
-            },
             "machNumber": {
                 "name": "mach number",
-                "name": "Число Маха",
+                "name_ru": "Число Маха",
                 "otherNames": ["Sarrau number"],
                 "symbol": "M",
                 "symbol": "\mathsf{M}",
@@ -328,49 +293,6 @@
                 "type": "customary",
                 "systems": ["imperial", "usCustomary"],
                 "multiplier": 0.44704
-            },
-            "milePerMinute": {
-                "name": "mile per minute",
-                "plural": "miles per minute",
-                "symbol": "mpm",
-                "otherSymbols": ["mi/min"],
-                "type": "customary",
-                "systems": ["imperial", "usCustomary"],
-                "multiplier": 26.8224
-            },
-            "milePerSecond": {
-                "name": "mile per second",
-                "plural": "miles per second",
-                "symbol": "mps",
-                "otherSymbols": ["mi/s"],
-                "type": "customary",
-                "systems": ["imperial", "usCustomary"],
-                "multiplier": 1609.344
-            },
-            "speedOfLight": {
-                "name": "speed of light",
-                "symbol": "c",
-                "type": "customary",
-                "systems": ["nonStandard"],
-                "multiplier": 299792458,
-                "notes": "Constant. In a vacuum"
-            },
-            "speedOfSound": {
-                "name": "speed of sound",
-                "symbol": "s",
-                "type": "customary",
-                "systems": ["nonStandard"],
-                "multiplier": 340.3,
-                "notes": "Constant. Based on standard sea level conditions and at 15 °C."
-            },
-            "naturalVelocity": {
-                "name": "unit of velocity",
-                "plural": "units of velocity",
-                "otherNames": ["unit of speed", "units of speed"],
-                "type": "customary",
-                "systems": ["natural"],
-                "multiplier": 299792458,
-                "notes": "Unit does not have a symbol"
             }
         }
     }
