@@ -63,6 +63,7 @@ public slots:
 
 private:
     bool readJSON(const QString &path);
+    bool applyProperties();
     void addGraph(const QString &name);
 
 private:
@@ -73,6 +74,7 @@ private:
     QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     QMap<QString, QString> m_valueNameXY;
+    QMap<QString, QString> m_valueNameYX;
     QMap<QString, GraphProperties> m_properties;
 };
 

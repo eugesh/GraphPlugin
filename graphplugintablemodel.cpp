@@ -11,7 +11,8 @@ GraphPluginTableModel::GraphPluginTableModel(QObject *parent) :
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
 {
-    m_dataMap[val.timestamp] = val;
+    //m_dataMap[val.timestamp] = val;
+    m_dataMap.insertMulti(val.timestamp, val);
 
     if (m_dataMap.values(val.timestamp).size() == m_packetSize) {
         emit packetFormed(m_dataMap.values(val.timestamp));
@@ -19,6 +20,7 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
         return;
     }
 
+    // Unique timestamps
     if (!m_timeStamps.contains(val.timestamp))
         m_timeStamps.append(val.timestamp);
 }

@@ -39,7 +39,7 @@ private:
     bool readJSON(const QString &path);
 
 private:
-    int m_packetSize; // 1 (t) + number of values
+    int m_packetSize = 3; // 1 (t) + number of values
     // Data Dispatcher
     //!< Timestamp -> value, one key - multple values
     int m_ringBufferSize;

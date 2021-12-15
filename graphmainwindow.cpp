@@ -118,6 +118,11 @@ bool GraphMainWindow::readJSON(const QString &path)
 
         ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
                                       QCP::iSelectLegend | QCP::iSelectPlottables);
+
+        //ui->customPlot->xAxis->setRange(2e-5, 6e-5);
+        //ui->customPlot->yAxis->setRange(-2, 2);
+        //ui->customPlot->yAxis2->setRange(-0.025, 0.025);
+        // ui->customPlot->yAxis->setScaleType(QCPAxis::stLogarithmic);
         ui->customPlot->axisRect()->setupFullAxesBox();
 
         ui->customPlot->plotLayout()->insertRow(0);
@@ -160,7 +165,7 @@ void GraphMainWindow::addGraph(const QString &name)
     if (! m_properties.contains(name))
         return;
 
-    ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
     ui->customPlot->graph()->setName(name);
     ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
 
@@ -170,6 +175,20 @@ void GraphMainWindow::addGraph(const QString &name)
     graphPen.setWidthF(1);
     ui->customPlot->graph()->setPen(graphPen);
     ui->customPlot->replot();
+    m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
+    m_valueNameYX.insertMulti(m_properties[name].y_name, m_properties[name].x_name);
+
+    // QPair<QString, QString> xy = qMakePair<QString, QString> (m_properties[name].x_name, m_properties[name].y_name);
+    // m_valueGraphMap.insert(xy, graph);
+
+    QPair<QString, QString> yx = qMakePair<QString, QString> (m_properties[name].y_name, m_properties[name].x_name);
+    m_valueGraphMap.insert(yx, graph);
+}
+
+bool GraphMainWindow::applyProperties()
+{
+
+    return true;
 }
 
 bool GraphMainWindow::loadCSV()
@@ -191,7 +210,7 @@ void GraphMainWindow::saveCSVdialog()
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
     for (MeasuredValue val1 : packet)
-        for (QString val2_name : m_valueNameXY[val1.name])
+        for (QString val2_name : m_valueNameYX.values(val1.name))
             for (MeasuredValue val2 : packet)
                 if (val2_name == val2.name)
                     m_valueGraphMap[qMakePair(val1.name, val2.name)]->addData(val1.value, val2.value);
