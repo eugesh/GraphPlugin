@@ -32,6 +32,8 @@ struct GraphProperties {
     QString name;
     QString x_name;
     QString y_name;
+    QString x_title;
+    QString y_title;
     QString x_unit;
     QString y_unit;
     QString x_phisical_quantity;
@@ -77,7 +79,7 @@ private:
     QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
-    QMap<QString, QString> m_valueNameXY;
+    //QMap<QString, QString> m_valueNameXY;
     QMap<QString, QString> m_valueNameYX;
     QMap<QString, GraphProperties> m_properties;
 };

@@ -113,6 +113,8 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.name = plotObject["name"].toString();
         properties.x_name = plotObject["x_name"].toString();
         properties.y_name = plotObject["y_name"].toString();
+        properties.x_title = plotObject["x_title"].toString();
+        properties.y_title = plotObject["y_title"].toString();
         properties.x_unit = plotObject["x_unit"].toString();
         properties.y_unit = plotObject["y_unit"].toString();
         properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
@@ -146,6 +148,10 @@ void GraphMainWindow::addGraph(const QString &name)
     QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
     ui->customPlot->graph()->setName(name);
     ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
+
+    ui->customPlot->xAxis->setLabel(m_properties[name].x_title);
+    ui->customPlot->yAxis->setLabel(m_properties[name].y_title);
+    ui->customPlot->legend->setVisible(true);
 
     QPen graphPen;
     // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>580</height>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="xTitleComboBox"/>
+        <widget class="QLineEdit" name="xTitleEdit"/>
        </item>
       </layout>
      </item>
@@ -88,7 +88,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="yTitleComboBox"/>
+        <widget class="QLineEdit" name="yTitleEdit"/>
        </item>
       </layout>
      </item>

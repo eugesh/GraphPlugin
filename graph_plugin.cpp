@@ -176,7 +176,7 @@ void GraphPlugin::setMainWindow(QMainWindow *mw)
 void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphProperties &prop)
 {
     if (m_graphsMainWins.contains(customPlotName)) {
-        m_graphsMainWins[prop.name]->addGraph(prop);
+        m_graphsMainWins[customPlotName]->addGraph(prop);
     } else {
         QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
         dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);

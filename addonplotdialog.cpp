@@ -71,6 +71,8 @@ GraphProperties AddOnPlotDialog::getProp() const
     prop.name = ui->graphNameLineEdit->text();
     prop.x_name = ui->xNameComboBox->currentText();
     prop.y_name = ui->yNameComboBox->currentText();
+    prop.x_title = ui->xTitleEdit->text();
+    prop.y_title = ui->yTitleEdit->text();
     prop.x_unit = ui->xUnitComboBox->currentText();
     prop.y_unit = ui->yUnitComboBox->currentText();
     prop.x_phisical_quantity = ui->xPhysQuantCbBox->currentText();

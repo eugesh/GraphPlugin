@@ -7,7 +7,7 @@
             "name": "Температура",
             "x_name": "time",
             "y_name": "temperature",
-            "x_title": "Time",
+            "x_title": "время",
             "y_title": "Температура",
             "x_unit": "s",
             "y_unit": "C",
