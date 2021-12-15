@@ -5,6 +5,7 @@
 #include <QTableView>
 
 class AddOnPlotDialog;
+struct GraphProperties;
 
 class GraphTableView final: public QTableView
 {
@@ -15,6 +16,9 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event) final;
+
+signals:
+    void createNewGraph(const GraphProperties &prop);
 
 protected slots:
     void copyColumn();

@@ -1,5 +1,6 @@
 #include "addonplotdialog.h"
 #include "common.h"
+#include "graphmainwindow.h"
 #include "graphtableview.h"
 
 #include <QAction>
@@ -111,5 +112,11 @@ void GraphTableView::placeOnPlot()
 {
     m_addPointDialog = new AddOnPlotDialog;
 
-    m_addPointDialog->exec();
+    if (m_addPointDialog->exec()) {
+        GraphProperties prop;
+
+
+
+        emit createNewGraph(prop);
+    }
 }

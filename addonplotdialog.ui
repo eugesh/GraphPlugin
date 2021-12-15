@@ -36,7 +36,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="pltNameLineEdit"/>
        </item>
       </layout>
      </item>
@@ -50,7 +50,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox"/>
+        <widget class="QComboBox" name="xNameComboBox"/>
        </item>
       </layout>
      </item>
@@ -64,7 +64,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_2"/>
+        <widget class="QComboBox" name="yNameComboBox"/>
        </item>
       </layout>
      </item>
@@ -78,7 +78,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_3">
+        <widget class="QComboBox" name="xDirComboBox">
          <item>
           <property name="text">
            <string>Вправо</string>
@@ -103,7 +103,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_4">
+        <widget class="QComboBox" name="yDirComboBox">
          <item>
           <property name="text">
            <string>Вверх</string>
@@ -128,7 +128,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="xTitleComboBox"/>
        </item>
       </layout>
      </item>
@@ -142,7 +142,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_3"/>
+        <widget class="QLineEdit" name="yTitleComboBox"/>
        </item>
       </layout>
      </item>
@@ -156,7 +156,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_5"/>
+        <widget class="QComboBox" name="xPhysQuantCbBox"/>
        </item>
       </layout>
      </item>
@@ -170,7 +170,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_6"/>
+        <widget class="QComboBox" name="yPhysQuantCbBox"/>
        </item>
       </layout>
      </item>
@@ -184,7 +184,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_12"/>
+        <widget class="QComboBox" name="xUnitComboBox"/>
        </item>
       </layout>
      </item>
@@ -198,7 +198,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_11"/>
+        <widget class="QComboBox" name="yUnitComboBox"/>
        </item>
       </layout>
      </item>
@@ -254,7 +254,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_8">
+        <widget class="QComboBox" name="xScaleTypeCbBox">
          <item>
           <property name="text">
            <string>Линейная</string>
@@ -279,7 +279,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_9">
+        <widget class="QComboBox" name="yScaleTypeCbBox">
          <item>
           <property name="text">
            <string>Линейная</string>
@@ -304,10 +304,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_10">
+        <widget class="QComboBox" name="updateModeCbBox">
          <item>
           <property name="text">
-           <string>Все сразу</string>
+           <string>Отображать все</string>
           </property>
          </item>
          <item>
@@ -329,7 +329,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_7"/>
+        <widget class="QComboBox" name="colorComboBox"/>
        </item>
       </layout>
      </item>
