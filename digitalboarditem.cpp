@@ -20,13 +20,14 @@ DigitalBoardItem::DigitalBoardItem(const QString &name, const QMap<QString, doub
     }
 
     connect(ui->comboBox, &QComboBox::currentTextChanged, [&](const QString &text) {
-        m_currVal *= m_measUnitsMult[text] + m_measUnitsOffsets[text];
-        updateValue();
+        setCurrentValue((m_currVal - m_measUnitsOffsets[m_prevText]) * m_measUnitsMult[m_prevText]);
+        m_prevText = text;
     });
 }
 
 void DigitalBoardItem::setCurrentValue(double val) {
-    m_currVal = val * m_measUnitsMult[ui->comboBox->currentText()] + m_measUnitsOffsets[ui->comboBox->currentText()];
+    m_prevText = ui->comboBox->currentText();
+    m_currVal = val / m_measUnitsMult[ui->comboBox->currentText()] + m_measUnitsOffsets[ui->comboBox->currentText()];
     updateValue();
 }
 

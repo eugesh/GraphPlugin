@@ -26,6 +26,8 @@ private:
     QMap<QString, double> m_measUnitsMult;
     QMap<QString, double> m_measUnitsOffsets;
     double m_currVal;
+    // Previous meausurement unit name
+    QString m_prevText;
 };
 
 #endif // DIGITALBOARDITEM_H

@@ -30,7 +30,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLCDNumber" name="lcdNumber"/>
+      <widget class="QLCDNumber" name="lcdNumber">
+       <property name="digitCount">
+        <number>6</number>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QComboBox" name="comboBox"/>
