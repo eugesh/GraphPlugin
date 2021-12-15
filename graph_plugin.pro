@@ -19,6 +19,7 @@ EXAMPLE_FILES = graph_plugin.json
 #CONFIG += c++14
 
 SOURCES += \
+    addonplotdialog.cpp \
     graph_plugin.cpp \
     graphmainwindow.cpp \
     graphplugintablemodel.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     graphtableview.cpp
 
 HEADERS += \
+    addonplotdialog.h \
     common.h \
     graph_plugin.h \
     graphmainwindow.h \
@@ -34,6 +36,7 @@ HEADERS += \
     graphtableview.h
 
 FORMS += \
+    addonplotdialog.ui \
     graphmainwindow.ui
 
 exists($$shell_path($${OUT_PWD}/../sv_tools/configs)) {

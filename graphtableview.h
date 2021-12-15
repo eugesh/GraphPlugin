@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTableView>
 
+class AddOnPlotDialog;
 
 class GraphTableView final: public QTableView
 {
@@ -19,6 +20,9 @@ protected slots:
     void copyColumn();
     void copyRow();
     void placeOnPlot();
+
+private:
+    AddOnPlotDialog *m_addPointDialog;
 };
 
 #endif // GRAPHTABLEVIEW_H

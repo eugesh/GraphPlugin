@@ -1,3 +1,4 @@
+#include "addonplotdialog.h"
 #include "common.h"
 #include "graphtableview.h"
 
@@ -44,7 +45,7 @@ GraphTableView::GraphTableView(QWidget *parent)
         QAction action2(tr("Вывести на график"), this);
 
         connect(&action1, &QAction::triggered, this, &GraphTableView::copyColumn);
-        connect(&action2, &QAction::triggered, this, &QAbstractItemView::selectAll);
+        connect(&action2, &QAction::triggered, this, &GraphTableView::placeOnPlot);
 
         if (selectedIndexes().count())
             contextMenu.addAction(&action1);
@@ -108,5 +109,7 @@ void GraphTableView::copyRow()
 
 void GraphTableView::placeOnPlot()
 {
+    m_addPointDialog = new AddOnPlotDialog;
 
+    m_addPointDialog->exec();
 }
