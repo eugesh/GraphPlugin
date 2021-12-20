@@ -45,3 +45,42 @@ QColor nameToColorConverter(const QString &name) {
 
     return QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
 }
+
+ QString ColorToNameConverter(const QColor &color) {
+    switch (color.rgb()) {
+    case Qt::black:
+        return QString("black");
+    case Qt::white:
+        return QString("white");
+    case Qt::lightGray:
+        return QString("lightGray");
+    case Qt::darkGray:
+        return QString("darkGray");
+    case Qt::darkRed:
+        return QString("darkRed");
+    case Qt::darkBlue:
+        return QString("darkBlue");
+    case Qt::darkGreen:
+        return QString("darkGreen");
+    case Qt::darkCyan:
+        return QString("darkCyan");
+    case Qt::darkMagenta:
+        return QString("darkMagenta");
+    case Qt::darkYellow:
+        return QString("darkYellow");
+    case Qt::red:
+        return QString("red");
+    case Qt::blue:
+        return QString("blue");
+    case Qt::green:
+        return QString("green");
+    case Qt::cyan:
+        return QString("cyan");
+    case Qt::magenta:
+        return QString("magenta");
+    case Qt::yellow:
+        return QString("yellow");
+    default:
+        return color.name();
+    }
+}

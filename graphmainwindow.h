@@ -28,6 +28,23 @@ enum GraphScaleType {
     LOG
 };
 
+// Unique ID of measured value
+struct valID {
+    // Number of channel
+    int chNumber;
+    // Name of physical quantity
+    QString name;
+};
+
+// Unique ID of graph figure
+struct graphID {
+    // Number of channel
+    int chNumber;
+    // Names of axes
+    QString xName;
+    QString yName;
+};
+
 struct GraphProperties {
     QString name;
     QString x_name;
@@ -45,6 +62,7 @@ struct GraphProperties {
     GraphUpdateMode update_mode;
     GraphScaleType x_scale;
     GraphScaleType y_scale;
+    QVector<int> channels; // e.g. 1, 2, 3, 4
     QColor color;
 };
 
@@ -62,10 +80,12 @@ public:
 public slots:
     void loadCSVdialog();
     void saveCSVdialog();
+    void saveJSONdialog();
     void addData(const QList<MeasuredValue> &val);
     void addGraph(const GraphProperties &prop);
 
 private:
+    void commonInit();
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
     bool saveJSON(const QString &path);
@@ -76,12 +96,14 @@ private:
     Ui::GraphMainWindow *ui;
     QString m_pathToCSV;
     //!< Value name, pointer to Graph
-    QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
+    // QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
+    QMap<graphID, QCPGraph*> m_valueGraphMap;
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     //QMap<QString, QString> m_valueNameXY;
     QMap<QString, QString> m_valueNameYX;
     QMap<QString, GraphProperties> m_properties;
+    QString m_JSONPath;
 };
 
 #endif // GRAPHMAINWINDOW_H

@@ -33,10 +33,22 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionSaveJSON"/>
+    <addaction name="actionSaveCSV"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSaveJSON">
+   <property name="text">
+    <string>Сохранить JSON</string>
+   </property>
+  </action>
+  <action name="actionSaveCSV">
+   <property name="text">
+    <string>Сохранить в CSV</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

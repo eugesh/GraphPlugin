@@ -18,7 +18,7 @@ class AddOnPlotDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddOnPlotDialog(QWidget *parent = nullptr);
+    explicit AddOnPlotDialog(int channelsNum = 1, QWidget *parent = nullptr);
     ~AddOnPlotDialog();
 
     void setConfig(GraphPluginConfig *config);
@@ -27,6 +27,9 @@ public:
 
     QString getCustomPlotName() const;
     GraphProperties getProp() const;
+    void setProp(const GraphProperties &prop);
+
+    QVector<int> channels() const;
 
 private:
     Ui::AddOnPlotDialog *ui;

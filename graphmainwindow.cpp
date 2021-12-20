@@ -42,21 +42,29 @@ GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
 {
-    ui->setupUi(this);
+    commonInit();
 
     readJSON(path2JSON);
 }
 
 //GraphMainWindow::GraphMainWindow(const QString &name, const QList<GraphProperties> &properties, QWidget *parent) :
+// Auxilliary constructor
 GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
 {
-    ui->setupUi(this);
+    commonInit();
 
     createCustomPlot(name);
 
     addGraph(properties);
+}
+
+void GraphMainWindow::commonInit()
+{
+    ui->setupUi(this);
+
+    connect(ui->actionSaveJSON, &QAction::triggered, this, &GraphMainWindow::saveJSONdialog);
 }
 
 GraphMainWindow::~GraphMainWindow()
@@ -134,8 +142,72 @@ bool GraphMainWindow::readJSON(const QString &path)
     return true;
 }
 
+void GraphMainWindow::saveJSONdialog()
+{
+    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить файл схемы как"), m_JSONPath, tr("(*.*)"));
+
+    saveJSON(m_JSONPath);
+}
+
+
+
+/*auto items = ui.schemeView->scene()->items();
+
+if (! saveFile.open(QIODevice::WriteOnly)) {
+    qCritical() << "Output file " << path << " wasn't opened on write";
+    return;
+}
+
+QJsonObject schemeObject;
+QJsonArray itemsArray;
+QJsonArray nodesArray;
+
+foreach (auto item, items) {
+    CircuitItem *citem = nullptr;
+    CircuitNodeItem *nitem = nullptr;
+    citem = dynamic_cast<CircuitItem*>(item);
+    if (citem) {
+        itemsArray.append(citem->toJSON());
+    } else if (nitem = dynamic_cast<CircuitNodeItem*>(item)) {
+        nodesArray.append(nitem->toJSON());
+    }
+}
+
+schemeObject["Elements"] = itemsArray;
+schemeObject["Nodes"] = nodesArray;
+
+QJsonDocument saveDoc(schemeObject);
+saveFile.write(saveDoc.toJson());*/
+
 bool GraphMainWindow::saveJSON(const QString &path)
 {
+    QFile saveFile(path);
+
+
+
+    /*for (int i = 0; i < m_valueGraphMap.values().size(); ++i) {
+        QJsonObject plotObject = plotsArray[i].toObject();
+        GraphProperties properties;
+        properties.name = plotObject["name"].toString();
+        properties.x_name = plotObject["x_name"].toString();
+        properties.y_name = plotObject["y_name"].toString();
+        properties.x_title = plotObject["x_title"].toString();
+        properties.y_title = plotObject["y_title"].toString();
+        properties.x_unit = plotObject["x_unit"].toString();
+        properties.y_unit = plotObject["y_unit"].toString();
+        properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
+        properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
+        properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
+        properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
+        properties.total_N = plotObject["total_N"].toInt();
+        properties.last_N_limit = plotObject["last_N_limit"].toInt();
+        properties.update_mode = static_cast<GraphUpdateMode>(plotObject["update_mode"].toInt());
+        properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
+        properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
+        properties.color = nameToColorConverter(plotObject["color"].toString());
+        m_properties[properties.name] = properties;
+        addGraph(properties.name);
+    }*/
 
     return true;
 }
@@ -145,28 +217,39 @@ void GraphMainWindow::addGraph(const QString &name)
     if (! m_properties.contains(name))
         return;
 
-    QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
-    ui->customPlot->graph()->setName(name);
-    ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
+    auto prop = m_properties[name];
 
-    ui->customPlot->xAxis->setLabel(m_properties[name].x_title);
-    ui->customPlot->yAxis->setLabel(m_properties[name].y_title);
-    ui->customPlot->legend->setVisible(true);
+    for (auto ch : prop.channels) {
 
-    QPen graphPen;
-    // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));
-    graphPen.setColor(m_properties[name].color);
-    graphPen.setWidthF(1);
-    ui->customPlot->graph()->setPen(graphPen);
-    ui->customPlot->replot();
-    // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
-    m_valueNameYX.insertMulti(m_properties[name].y_name, m_properties[name].x_name);
+        QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
+        ui->customPlot->graph()->setName(name);
+        ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
 
-    // QPair<QString, QString> xy = qMakePair<QString, QString> (m_properties[name].x_name, m_properties[name].y_name);
-    // m_valueGraphMap.insert(xy, graph);
+        ui->customPlot->xAxis->setLabel(prop.x_title);
+        ui->customPlot->yAxis->setLabel(prop.y_title);
+        ui->customPlot->legend->setVisible(true);
 
-    QPair<QString, QString> yx = qMakePair<QString, QString> (m_properties[name].y_name, m_properties[name].x_name);
-    m_valueGraphMap.insert(yx, graph);
+        QPen graphPen;
+        // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));
+        graphPen.setColor(prop.color);
+        graphPen.setWidthF(1);
+        ui->customPlot->graph()->setPen(graphPen);
+        ui->customPlot->replot();
+        // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
+        m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
+
+        // QPair<QString, QString> xy = qMakePair<QString, QString> (m_properties[name].x_name, m_properties[name].y_name);
+        // m_valueGraphMap.insert(xy, graph);
+
+        QPair<QString, QString> yx = qMakePair<QString, QString> (prop.y_name, prop.x_name);
+        graphID gid;
+        gid.chNumber = ch;
+        gid.xName = prop.x_name;
+        gid.yName = prop.y_name;
+        // QMap<graphID, QCPGraph*> m_valueGraphMap;
+        m_valueGraphMap.insert(gid, graph);
+        // m_valueGraphMap.insert(yx, graph);
+    }
 }
 
 void GraphMainWindow::addGraph(const GraphProperties &prop)
@@ -206,7 +289,11 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
-                graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
+                graphID gid;
+                gid.xName = tr("time");
+                gid.yName = val1.name;
+                gid.chNumber = val1.channel;
+                // graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
                 if (graph) {
                     graph->addData(val1.timestamp, val1.value);
                     graph->rescaleAxes();

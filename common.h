@@ -16,6 +16,7 @@ struct MeasuredValueDescription {
     QString unit_rus;
 };
 
+QString ColorToNameConverter(const QColor &color);
 QColor nameToColorConverter(const QString &name);
 
 

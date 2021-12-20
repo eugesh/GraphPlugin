@@ -88,7 +88,7 @@ public:
     //!<
     virtual void setMainWindow(QMainWindow *mw) override;
 
-    bool loadJSONs();
+    bool loadJSONs() override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);

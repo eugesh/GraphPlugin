@@ -4,7 +4,7 @@
 #include "graphpluginconfig.h"
 #include "ui_addonplotdialog.h"
 
-AddOnPlotDialog::AddOnPlotDialog(QWidget *parent) :
+AddOnPlotDialog::AddOnPlotDialog(int channelsNum, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddOnPlotDialog)
 {
@@ -23,6 +23,14 @@ AddOnPlotDialog::AddOnPlotDialog(QWidget *parent) :
             ui->yUnitComboBox->addItem(measUnit["name"].toString());
         }
     });
+
+    for (int i = 0; i < channelsNum; ++i) {
+        QCheckBox *chbx = new QCheckBox(this);
+        chbx->setText(QString("%1").arg(i));
+        labelChannels->layout()->addWidget(chbx);
+        ui->labelChannels->layout()->itemAt(i + 1)->setChecked(false);
+        ui->labelChannels->layout()->itemAt(i + 1)->setEnabled(true);
+    }
 }
 
 AddOnPlotDialog::~AddOnPlotDialog()
@@ -39,9 +47,6 @@ void AddOnPlotDialog::setConfig(GraphPluginConfig *config)
         ui->xPhysQuantCbBox->addItem(physValName);
         ui->yPhysQuantCbBox->addItem(physValName);
     }
-
-
-
 }
 
 void AddOnPlotDialog::setMeasValDesc(const QMap<QString, MeasuredValueDescription> &mvd)
@@ -62,6 +67,42 @@ void AddOnPlotDialog::setGraphProperties(const GraphProperties &defaultProp)
 QString AddOnPlotDialog::getCustomPlotName() const
 {
     return ui->customPltNameLineEdit->text();
+}
+
+void AddOnPlotDialog::setProp(const GraphProperties &prop)
+{
+    ui->graphNameLineEdit->clear();
+    ui->graphNameLineEdit->insert(prop.name);
+    ui->xNameComboBox->setCurrentText(prop.x_name);
+    ui->yNameComboBox->setCurrentText(prop.y_name);
+    ui->xTitleEdit->clear();
+    ui->xTitleEdit->insert(prop.x_title);
+    ui->yTitleEdit->clear();
+    ui->yTitleEdit->insert(prop.y_title);
+    ui->xUnitComboBox->setCurrentText(prop.x_unit);
+    ui->yUnitComboBox->setCurrentText(prop.y_unit);
+
+    ui->xPhysQuantCbBox->setCurrentText(prop.x_phisical_quantity);
+    ui->yPhysQuantCbBox->setCurrentText(prop.y_phisical_quantity);
+
+    ui->xDirComboBox->setCurrentText(prop.x_dir == GraphDir::RIGHT ? tr("Вправо") : tr("Влево"));
+    ui->yDirComboBox->setCurrentText(prop.y_dir == GraphDir::UP ? tr("Вверх") : tr("Вниз"));
+
+    ui->spinBox_MaxLastN->setValue(prop.total_N);
+    ui->spinBox_MaxN->setValue(prop.last_N_limit);
+
+    ui->updateModeCbBox->setCurrentText(prop.update_mode == GraphUpdateMode::SHOW_ALL ? tr("Отображать все") : tr("Последние N"));
+    ui->xScaleTypeCbBox->setCurrentText(prop.x_scale == GraphScaleType::LIN ? tr("Линейная") : tr("Логарифмическая"));
+    ui->yScaleTypeCbBox->setCurrentText(prop.y_scale == GraphScaleType::LIN ? tr("Линейная") : tr("Логарифмическая"));
+
+    for (auto ch : prop.channels) {
+        if (ch < ui->labelChannels->layout()->count()) {
+            ui->labelChannels->layout()->itemAt(ch)->setChecked(true);
+            ui->labelChannels->layout()->itemAt(ch)->setEnabled(true);
+        }
+    }
+
+    ui->colorComboBox->setCurrentText(ColorToNameConverter(prop.color));
 }
 
 GraphProperties AddOnPlotDialog::getProp() const
@@ -87,4 +128,16 @@ GraphProperties AddOnPlotDialog::getProp() const
     prop.color = nameToColorConverter(ui->colorComboBox->currentText());
 
     return prop;
+}
+
+QVector<int> AddOnPlotDialog::channels() const
+{
+    QVector<int> chls;
+
+    if (ui->checkBoxCh1.checked()) chls << 1;
+    if (ui->checkBoxCh2.checked()) chls << 2;
+    if (ui->checkBoxCh3.checked()) chls << 3;
+    if (ui->checkBoxCh4.checked()) chls << 4;
+
+    return chls;
 }
