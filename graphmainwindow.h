@@ -66,6 +66,16 @@ struct GraphProperties {
     QColor color;
 };
 
+inline bool operator<(const graphID &g1, const graphID &g2)
+{
+    if (g1.chNumber != g2.chNumber)
+        return g1.chNumber < g2.chNumber;
+    else if (g1.yName != g2.yName)
+        return g1.yName < g2.yName;
+    else
+        return g1.xName < g2.xName;
+}
+
 class GraphMainWindow : public QMainWindow
 {
     Q_OBJECT

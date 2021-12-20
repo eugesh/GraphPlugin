@@ -4,7 +4,7 @@
 #include "graphpluginconfig.h"
 #include "ui_addonplotdialog.h"
 
-AddOnPlotDialog::AddOnPlotDialog(int channelsNum, QWidget *parent) :
+AddOnPlotDialog::AddOnPlotDialog(QWidget *parent, int channelsNum) :
     QDialog(parent),
     ui(new Ui::AddOnPlotDialog)
 {
@@ -24,12 +24,15 @@ AddOnPlotDialog::AddOnPlotDialog(int channelsNum, QWidget *parent) :
         }
     });
 
-    for (int i = 0; i < channelsNum; ++i) {
+    for (int i = 1; i <= channelsNum; ++i) {
         QCheckBox *chbx = new QCheckBox(this);
         chbx->setText(QString("%1").arg(i));
-        labelChannels->layout()->addWidget(chbx);
-        ui->labelChannels->layout()->itemAt(i + 1)->setChecked(false);
-        ui->labelChannels->layout()->itemAt(i + 1)->setEnabled(true);
+        ui->horizontalLayoutCh->addWidget(chbx);
+        auto obj = qobject_cast<QCheckBox*> (ui->horizontalLayoutCh->itemAt(i)->widget());
+        if (obj) {
+            obj->setChecked(false);
+            obj->setEnabled(true);
+        }
     }
 }
 
@@ -96,9 +99,15 @@ void AddOnPlotDialog::setProp(const GraphProperties &prop)
     ui->yScaleTypeCbBox->setCurrentText(prop.y_scale == GraphScaleType::LIN ? tr("Линейная") : tr("Логарифмическая"));
 
     for (auto ch : prop.channels) {
-        if (ch < ui->labelChannels->layout()->count()) {
-            ui->labelChannels->layout()->itemAt(ch)->setChecked(true);
-            ui->labelChannels->layout()->itemAt(ch)->setEnabled(true);
+        if (ch < ui->horizontalLayoutCh->count()) {
+            auto obj = qobject_cast<QCheckBox*> (ui->horizontalLayoutCh->itemAt(ch)->widget());
+            if (obj) {
+                obj->setChecked(true);
+                obj->setEnabled(true);
+            }
+
+            // ui->labelChannels->layout()->itemAt(ch)->setChecked(true);
+            // ui->labelChannels->layout()->itemAt(ch)->setEnabled(true);
         }
     }
 
@@ -127,6 +136,13 @@ GraphProperties AddOnPlotDialog::getProp() const
     prop.y_scale = ui->yScaleTypeCbBox->currentText().contains(tr("Линейная")) ? GraphScaleType::LIN : GraphScaleType::LOG;
     prop.color = nameToColorConverter(ui->colorComboBox->currentText());
 
+    for (int i = 1; i < ui->horizontalLayoutCh->count(); ++i) {
+        auto obj = qobject_cast<QCheckBox*> (ui->horizontalLayoutCh->itemAt(i)->widget());
+        if (obj) {
+            prop.channels << i;
+        }
+    }
+
     return prop;
 }
 
@@ -134,10 +150,17 @@ QVector<int> AddOnPlotDialog::channels() const
 {
     QVector<int> chls;
 
-    if (ui->checkBoxCh1.checked()) chls << 1;
-    if (ui->checkBoxCh2.checked()) chls << 2;
-    if (ui->checkBoxCh3.checked()) chls << 3;
-    if (ui->checkBoxCh4.checked()) chls << 4;
+    for (int ch = 1; ch < ui->horizontalLayoutCh->count(); ch++) {
+        auto obj = qobject_cast<QCheckBox*> (ui->horizontalLayoutCh->itemAt(ch)->widget());
+        if (obj) {
+            chls << ch;
+        }
+    }
+
+    /*if (ui->checkBoxCh1->isChecked()) chls << 1;
+    if (ui->checkBoxCh2->isChecked()) chls << 2;
+    if (ui->checkBoxCh3->isChecked()) chls << 3;
+    if (ui->checkBoxCh4->isChecked()) chls << 4;*/
 
     return chls;
 }

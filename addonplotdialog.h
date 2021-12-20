@@ -18,7 +18,7 @@ class AddOnPlotDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddOnPlotDialog(int channelsNum = 1, QWidget *parent = nullptr);
+    explicit AddOnPlotDialog(QWidget *parent = nullptr, int channelsNum = 1);
     ~AddOnPlotDialog();
 
     void setConfig(GraphPluginConfig *config);

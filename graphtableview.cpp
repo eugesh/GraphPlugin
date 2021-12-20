@@ -62,7 +62,7 @@ void GraphTableView::setConfig(GraphPluginConfig *config)
 {
     m_config = config;
 
-    m_addPointDialog = new AddOnPlotDialog;
+    m_addPointDialog = new AddOnPlotDialog(this);
     m_addPointDialog->setConfig(config);
 }
 

@@ -135,6 +135,11 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
         properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
         properties.color = nameToColorConverter(plotObject["color"].toString());
+        // "channels": [1],
+        QJsonArray arr = plotObject["channels"].toArray();
+        for (auto ch : arr)
+            properties.channels << ch.toInt();
+
         m_properties[properties.name] = properties;
         addGraph(properties.name);
     }
@@ -294,6 +299,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 gid.yName = val1.name;
                 gid.chNumber = val1.channel;
                 // graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
+                graph = m_valueGraphMap[gid];
                 if (graph) {
                     graph->addData(val1.timestamp, val1.value);
                     graph->rescaleAxes();
@@ -301,7 +307,12 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
             } else {
                 for (MeasuredValue val2 : packet) {
                     if (val2_name == val2.name) {
-                        graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
+                        graphID gid;
+                        gid.xName = tr("time");
+                        gid.yName = val1.name;
+                        gid.chNumber = val1.channel;
+                        // graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
+                        graph = m_valueGraphMap[gid];
                         graph->addData(val2.value, val1.value);
                         graph->rescaleAxes();
                     }
