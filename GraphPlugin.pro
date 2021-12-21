@@ -51,7 +51,8 @@ FORMS += \
 #exists($$shell_path($${OUT_PWD}/../sv_tools/configs)) {
 # ToDo: test it on Win32
 #} else {
-    copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/)
+windows:    copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/configs)
+unix:       copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/)
     first.depends = $(first) copydata
     export(first.depends)
     export(copydata.commands)
