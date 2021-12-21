@@ -20,7 +20,7 @@
             "update_mode": "last_n",
             "x_scale": "lin",
             "y_scale": "lin",
-            "channels": [1],
+            "channels": [1,2,3,4],
             "color": "magenta"
         }
     ]

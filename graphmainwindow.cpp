@@ -224,11 +224,16 @@ void GraphMainWindow::addGraph(const QString &name)
 
     auto prop = m_properties[name];
 
+    int chNum = 1;
     for (auto ch : prop.channels) {
 
         QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
-        ui->customPlot->graph()->setName(name);
+        QString graphName = name;
+        if (prop.channels.count() > 1)
+            graphName += tr(", канал %1").arg(ch);
+        ui->customPlot->graph()->setName(graphName);
         ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
+        ui->customPlot->graph()->setScatterStyle(QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(chNum)));
 
         ui->customPlot->xAxis->setLabel(prop.x_title);
         ui->customPlot->yAxis->setLabel(prop.y_title);
@@ -254,6 +259,7 @@ void GraphMainWindow::addGraph(const QString &name)
         // QMap<graphID, QCPGraph*> m_valueGraphMap;
         m_valueGraphMap.insert(gid, graph);
         // m_valueGraphMap.insert(yx, graph);
+        chNum++;
     }
 }
 
