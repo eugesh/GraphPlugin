@@ -1,0 +1,40 @@
+{
+    "description" : "Названия физических величин, применямых в основном ПО.",
+    "values" : [
+        {
+            "name": "soundVelocity",
+            "description": "Sound velocity",
+            "physicalQuantity": "velocity",
+            "measure_unit": "m/s",
+            "measure_unit_rus": "м/с"
+        },
+        {
+            "name": "temperature",
+            "description": "Temperature",
+            "physicalQuantity": "temperature",
+            "measure_unit": "C",
+            "measure_unit_rus": "Ц"
+        },
+        {
+            "name": "time",
+            "description": "Time",
+            "physicalQuantity": "time",
+            "measure_unit": "s",
+            "measure_unit_rus": "с"
+        },
+        {
+            "name": "pressure",
+            "description": "Pressure",
+            "physicalQuantity": "pressure",
+            "measure_unit": "Pa",
+            "measure_unit_rus": "Па"
+        },
+        {
+            "name": "voltage",
+            "description": "Voltage",
+            "physicalQuantity": "voltage",
+            "measure_unit": "V",
+            "measure_unit_rus": "В"
+        }
+    ]
+}

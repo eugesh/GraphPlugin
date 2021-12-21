@@ -1,0 +1,27 @@
+{
+    "name": {
+        "name": "Температура"
+    },
+    "plots": [
+        {
+            "name": "Температура",
+            "x_name": "time",
+            "y_name": "temperature",
+            "x_title": "время",
+            "y_title": "Температура",
+            "x_unit": "s",
+            "y_unit": "C",
+            "x_phisical_quantity": "time",
+            "y_phisical_quantity": "temperature",
+            "x_dir": "right",
+            "y_dir": "up",
+            "total_N": "1000",
+            "last_N_limit": "100",
+            "update_mode": "last_n",
+            "x_scale": "lin",
+            "y_scale": "lin",
+            "channels": [1],
+            "color": "magenta"
+        }
+    ]
+}

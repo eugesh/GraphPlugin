@@ -1,0 +1,27 @@
+{
+    "name": {
+        "name": "Скорость звука"
+    },
+    "plots": [
+        {
+            "name": "Скорость звука",
+            "x_name": "time",
+            "y_name": "soundVelocity",
+            "x_title": "Время",
+            "y_title": "Скорость",
+            "x_unit": "s",
+            "y_unit": "m/s",
+            "x_phisical_quantity": "time",
+            "y_phisical_quantity": "velocity",
+            "x_dir": "right",
+            "y_dir": "up",
+            "total_N": "1000",
+            "last_N_limit": "100",
+            "update_mode": "last_n",
+            "x_scale": "lin",
+            "y_scale": "lin",
+            "channels": [1],
+            "color": "red"
+        }
+    ]
+}

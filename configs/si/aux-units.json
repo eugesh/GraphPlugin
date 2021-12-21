@@ -1,0 +1,363 @@
+{
+    "length":{
+        "baseUnit": "meter",
+        "vector": false,
+        "units": {
+            "meter":{
+                "symbol": "m",
+                "type": "si",
+                "prefixes": ["kilo", "deci", "centi", "milli"]
+            },
+            "foot":{
+                "symbol": "ft",
+                "type": "custom",
+                "multiplier": 0.3048
+            },
+            "inch":{
+                "symbol": "in",
+                "type": "custom",
+                "multiplier": 0.0254
+            },
+            "nauticalMile": {
+                "name": "nautical mile",
+                "plural": "nautical miles",
+                "symbol": "M",
+                "otherSymbols": ["NM", "nmi", "naut.mi"],
+                "type": "customary",
+                "systems": ["legacyMetric", "siCommon", "internationalNautical", "usNautical", "imperialNautical"],
+                "multiplier": 1852
+            },
+            "fathom": {
+                "name": "fathom",
+                "plural": "fathoms",
+                "symbol": "ftm",
+                "otherSymbols": ["f", "fath", "fm", "fth", "fthm"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary", "englishUnits"],
+                "multiplier": 1.8288,
+                "notes": "The nautical use and definition of fathom varied widely"
+            },
+            "yard":{
+                "symbol": "yd",
+                "type": "custom",
+                "multiplier": 0.9144
+            }
+        }
+    },
+    "pressure": {
+        "baseUnit": "pascal",
+        "vector": false,
+        "units": {
+            "pascal":{
+                "name": "pascal",
+                "plural": "pascals",
+                "symbol": "Pa",
+                "type": "si",
+                "systems": ["si"],
+                "prefixes": ["kilo", "mega"]
+            },
+            "bar":{
+                "symbol": "bar",
+                "type": "custom",
+                "multiplier": 1e5
+            },
+            "millimetreOfMercury": {
+                "name": "millimetre of mercury",
+                "plural": "millimetres of mercury",
+                "symbol": "mmHg",
+                "type": "customary",
+                "systems": ["legacyMetric"],
+                "multiplier": 133.3224
+            }
+        }
+    },
+    "temperature":{
+        "baseUnit": "kelvin",
+        "vector": false,
+        "units": {
+            "kelvin": {
+                "name": "kelvin",
+                "otherNames": ["degree kelvin", "degrees kelvin"],
+                "symbol": "°K",
+                "type": "si",
+                "systems": ["si"],
+                "notes": "As a postpositional adjective, the plural kelvin is used instead of kelvins"
+            },
+            "celsius": {
+                "name": "celsius",
+                "otherNames": ["degree celsius", "degrees celsius"],
+                "symbol": "°C",
+                "type": "si",
+                "systems": ["siCommon"],
+                "offset": -273.15
+            },
+            "fahrenheit": {
+                "name": "fahrenheit",
+                "otherNames": ["degree fahrenheit", "degrees fahrenheit"],
+                "symbol": "°F",
+                "type": "customary",
+                "systems": ["englishUnits", "imperial", "usCustomary"],
+                "multiplier": 1.8,
+                "offset": -459.67
+            }
+        }
+    },
+    "time": {
+        "name": "time",
+        "otherNames": [ "duration" ],
+        "symbol": "T",
+        "baseUnit": "second",
+        "vector": false,
+        "units": {
+            "second": {
+                "name": "second",
+                "plural": "seconds",
+                "symbol": "s",
+                "otherSymbols": ["sec"],
+                "type": "si",
+                "systems": ["metric", "imperial", "usCustomary", "englishUnits"],
+                "prefixes": ["milli", "micro", "nano"],
+                "notes": "1/60 of minute"
+            },
+            "minute": {
+                "name": "minute",
+                "plural": "minutes",
+                "symbol": "min",
+                "type": "customary",
+                "systems": ["siCommon", "imperial", "usCustomary", "englishUnits"],
+                "multiplier": 60,
+                "notes": "1/60 of hour"
+            },
+            "hour": {
+                "name": "hour",
+                "plural": "hours",
+                "otherNames": ["horae"],
+                "symbol": "h",
+                "otherSymbols": ["hr"],
+                "type": "customary",
+                "systems": ["siCommon", "imperial", "usCustomary", "englishUnits", "ancient"],
+                "multiplier": 3600,
+                "notes": "1/24 of day. The hour was developed by astrologers in Classical antiquity."
+            },
+            "day": {
+                "name": "day",
+                "plural": "days",
+                "symbol": "d",
+                "type": "customary",
+                "multiplier": 86400,
+                "systems": ["siCommon", "imperial", "usCustomary", "englishUnits", "ancient"],
+                "notes": "Possible Base"
+            },
+            "week": {
+                "name": "week",
+                "plural": "weeks",
+                "symbol": "wk",
+                "otherSymbols": ["w"],
+                "type": "customary",
+                "systems": ["siCommon", "imperial", "usCustomary", "englishUnits"],
+                "multiplier": 604800,
+                "notes": "7 days"
+            },
+            "month": {
+                "name": "month",
+                "plural": "months",
+                "type": "customary",
+                "estimation": true,
+                "multiplier": 2629800,
+                "systems": ["siCommon", "imperial", "usCustomary", "englishUnits"],
+                "notes": "1/12 of Julian year."
+            },
+            "year": {
+                "name": "year",
+                "plural": "years",
+                "otherNames": ["annus", "Julian year"],
+                "symbol": "yr",
+                "otherSymbols": ["y", "a", "aj"],
+                "type": "si",
+                "systems": ["siCommon", "imperial", "usCustomary", "englishUnits"],
+                "multiplier": 31557600,
+                "notes": "365.25 days of 86400 seconds"
+            }
+        }
+    },
+    "speed": {
+        "name": "speed",
+        "symbol": "v",
+        "baseUnit": "metrePerSecond",
+        "derived": "length/time",
+        "vector": false,
+        "units": {
+            "metrePerSecond": {
+                "name": "metre per second",
+                "plural": "metres per second",
+                "otherNames": ["meter per second", "meters per second"],
+                "symbol": "m/s",
+                "type": "customary",
+                "systems": ["metric"],
+                "notes": "This is of type customary NOT si because you can't actually apply prefixes to it"
+            },
+            "footPerHour": {
+                "name": "foot per hour",
+                "plural": "feet per hour",
+                "symbol": "fph",
+                "otherSymbols": ["ft/h"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 8.466667e-5
+            },
+            "footPerMinute": {
+                "name": "foot per minute",
+                "plural": "feet per minute",
+                "symbol": "fpm",
+                "otherSymbols": ["ft/min"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 5.08e-3
+            },
+            "footPerSecond": {
+                "name": "foot per second",
+                "plural": "feet per second",
+                "symbol": "fps",
+                "otherSymbols": ["ft/s"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 3.048e-1
+            },
+            "furlongPerFortnight": {
+                "name": "furlong per fortnight",
+                "symbol": "furlong/fortnight",
+                "type": "customary",
+                "systems": ["oldEuropean"],
+                "multiplier": 1.663095e-4
+            },
+            "inchPerHour": {
+                "name": "inch per hour",
+                "plural": "inches per hour",
+                "symbol": "iph",
+                "otherSymbols": ["in/hr"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 7.05556e-6
+            },
+            "inchPerMinute": {
+                "name": "inch per minute",
+                "plural": "inches per minute",
+                "symbol": "ipm",
+                "otherSymbols": ["in/min"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 4.23333e-4
+            },
+            "inchPerSecond": {
+                "name": "inch per second",
+                "plural": "inches per second",
+                "symbol": "ips",
+                "otherSymbols": ["in/s"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 2.54e-2
+            },
+            "kilometrePerHour": {
+                "name": "kilometre per hour",
+                "plural": "kilometres per hour",
+                "otherNames": ["kilometer per hour", "kilometers per hour"],
+                "symbol": "km/h",
+                "otherSymbols": ["kph"],
+                "type": "customary",
+                "systems": ["siCommon"],
+                "multiplier": 2.777778e-1
+            },
+            "knot": {
+                "name": "knot",
+                "plural": "knots",
+                "symbol": "kn",
+                "otherSymbols": ["nmi/h", "kt", "NMPH"],
+                "type": "customary",
+                "systems": ["metric", "internationalNautical", "imperial", "usCustomary"],
+                "multiplier": 0.514444
+            },
+            "knotAdmiralty": {
+                "name": "knot",
+                "plural": "knots",
+                "symbol": "kn",
+                "otherSymbols": ["NM (Adm)/h"],
+                "type": "customary",
+                "systems": ["nonStandard"],
+                "multiplier": 0.514773333333,
+                "notes": "More research needed on systems and origins"
+            },
+            "machNumber": {
+                "name": "mach number",
+                "otherNames": ["Sarrau number"],
+                "symbol": "M",
+                "otherSymbols": ["Ma", "Mach"],
+                "symbolFirst": true,
+                "type": "customary",
+                "systems": ["nonStandard"],
+                "multiplier": 340.3,
+                "notes": "Based on standard sea level conditions and at 15 °C. Additionally should be written Mach 2.3 (unit name first)"
+            },
+            "milePerHour": {
+                "name": "mile per hour",
+                "plural": "miles per hour",
+                "symbol": "mph",
+                "otherSymbols": ["mi/h"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 0.44704
+            },
+            "milePerMinute": {
+                "name": "mile per minute",
+                "plural": "miles per minute",
+                "symbol": "mpm",
+                "otherSymbols": ["mi/min"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 26.8224
+            },
+            "milePerSecond": {
+                "name": "mile per second",
+                "plural": "miles per second",
+                "symbol": "mps",
+                "otherSymbols": ["mi/s"],
+                "type": "customary",
+                "systems": ["imperial", "usCustomary"],
+                "multiplier": 1609.344
+            },
+            "speedOfLight": {
+                "name": "speed of light",
+                "symbol": "c",
+                "type": "customary",
+                "systems": ["nonStandard"],
+                "multiplier": 299792458,
+                "notes": "Constant. In a vacuum"
+            },
+            "speedOfSound": {
+                "name": "speed of sound",
+                "symbol": "s",
+                "type": "customary",
+                "systems": ["nonStandard"],
+                "multiplier": 340.3,
+                "notes": "Constant. Based on standard sea level conditions and at 15 °C."
+            },
+            "naturalVelocity": {
+                "name": "unit of velocity",
+                "plural": "units of velocity",
+                "otherNames": ["unit of speed", "units of speed"],
+                "type": "customary",
+                "systems": ["natural"],
+                "multiplier": 299792458,
+                "notes": "Unit does not have a symbol"
+            }
+        }
+    },
+    "velocity": {
+        "name": "velocity",
+        "symbol": "v",
+        "baseUnit": "metrePerSecond",
+        "derived": "length/time",
+        "vector": true,
+        "inheritedUnits": "speed",
+        "units": {}
+    }
+}
