@@ -129,11 +129,14 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
         properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
         properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
-        properties.total_N = plotObject["total_N"].toInt();
-        properties.last_N_limit = plotObject["last_N_limit"].toInt();
-        properties.update_mode = static_cast<GraphUpdateMode>(plotObject["update_mode"].toInt());
-        properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
-        properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
+        properties.total_N = static_cast<unsigned int >(plotObject["total_N"].toInt());
+        properties.last_N_limit = static_cast<unsigned int >(plotObject["last_N_limit"].toInt());
+        properties.update_mode = plotObject["update_mode"].toString().contains("ALL", Qt::CaseInsensitive) ||
+                plotObject["update_mode"].toString().contains("все", Qt::CaseInsensitive)? SHOW_ALL : SHOW_LAST_N;
+        properties.x_scale = plotObject["x_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
+                plotObject["x_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
+        properties.y_scale = plotObject["y_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
+                        plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.color = nameToColorConverter(plotObject["color"].toString());
         // "channels": [1],
         QJsonArray arr = plotObject["channels"].toArray();
@@ -149,70 +152,62 @@ bool GraphMainWindow::readJSON(const QString &path)
 
 void GraphMainWindow::saveJSONdialog()
 {
-    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить файл схемы как"), m_JSONPath, tr("(*.*)"));
+    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить график как"), m_JSONPath, tr("(*.JSON)"));
 
     saveJSON(m_JSONPath);
 }
-
-
-
-/*auto items = ui.schemeView->scene()->items();
-
-if (! saveFile.open(QIODevice::WriteOnly)) {
-    qCritical() << "Output file " << path << " wasn't opened on write";
-    return;
-}
-
-QJsonObject schemeObject;
-QJsonArray itemsArray;
-QJsonArray nodesArray;
-
-foreach (auto item, items) {
-    CircuitItem *citem = nullptr;
-    CircuitNodeItem *nitem = nullptr;
-    citem = dynamic_cast<CircuitItem*>(item);
-    if (citem) {
-        itemsArray.append(citem->toJSON());
-    } else if (nitem = dynamic_cast<CircuitNodeItem*>(item)) {
-        nodesArray.append(nitem->toJSON());
-    }
-}
-
-schemeObject["Elements"] = itemsArray;
-schemeObject["Nodes"] = nodesArray;
-
-QJsonDocument saveDoc(schemeObject);
-saveFile.write(saveDoc.toJson());*/
 
 bool GraphMainWindow::saveJSON(const QString &path)
 {
     QFile saveFile(path);
 
+    if (! saveFile.open(QIODevice::WriteOnly)) {
+        qCritical() << "Output file " << path << " wasn't opened on write";
+        return false;
+    }
 
+    QJsonObject docObject;
+    QJsonObject docPropObject;
+    QJsonArray customPlotArray;
+    QJsonObject graphObject;
 
-    /*for (int i = 0; i < m_valueGraphMap.values().size(); ++i) {
-        QJsonObject plotObject = plotsArray[i].toObject();
-        GraphProperties properties;
-        properties.name = plotObject["name"].toString();
-        properties.x_name = plotObject["x_name"].toString();
-        properties.y_name = plotObject["y_name"].toString();
-        properties.x_title = plotObject["x_title"].toString();
-        properties.y_title = plotObject["y_title"].toString();
-        properties.x_unit = plotObject["x_unit"].toString();
-        properties.y_unit = plotObject["y_unit"].toString();
-        properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
-        properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
-        properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
-        properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
-        properties.total_N = plotObject["total_N"].toInt();
-        properties.last_N_limit = plotObject["last_N_limit"].toInt();
-        properties.update_mode = static_cast<GraphUpdateMode>(plotObject["update_mode"].toInt());
-        properties.x_scale = static_cast<GraphScaleType>(plotObject["x_scale"].toInt());
-        properties.y_scale = static_cast<GraphScaleType>(plotObject["y_scale"].toInt());
-        properties.color = nameToColorConverter(plotObject["color"].toString());
-        m_properties[properties.name] = properties;
-        addGraph(properties.name);
-    }*/
+    docPropObject["name"] =  windowTitle();
+    docObject["name"] = docPropObject;
+
+    for (auto prop : m_properties) {
+        graphObject["name"] = prop.name;
+        graphObject["x_name"] = prop.x_name;
+        graphObject["y_name"] = prop.y_name;
+        graphObject["x_title"] = prop.x_title;
+        graphObject["y_title"] = prop.y_title;
+        graphObject["x_unit"] = prop.x_unit;
+        graphObject["y_unit"] = prop.y_unit;
+        graphObject["x_phisical_quantity"] = prop.x_phisical_quantity;
+        graphObject["y_phisical_quantity"] = prop.y_phisical_quantity;
+        graphObject["x_dir"] = prop.x_dir;
+        graphObject["y_dir"] = prop.y_dir;
+        graphObject["total_N"] = static_cast<int>(prop.total_N);
+        graphObject["last_N_limit"] = static_cast<int>(prop.last_N_limit);
+        graphObject["update_mode"] = prop.update_mode == SHOW_LAST_N ? "SHOW_LAST_N" : "SHOW_ALL";
+
+        graphObject["x_scale"] = prop.x_scale == GraphScaleType::LOG ? "LOG" : "LIN";
+        graphObject["y_scale"] = prop.y_scale == GraphScaleType::LOG ? "LOG" : "LIN";
+
+        graphObject["y_unit"] = ColorToNameConverter(prop.color);
+
+        QJsonArray channelsArray;
+        for (auto ch : prop.channels) {
+            channelsArray.append(ch);
+        }
+        graphObject["channels"] = channelsArray;
+
+        customPlotArray.append(graphObject);
+    }
+
+    docObject["plots"] = customPlotArray;
+
+    QJsonDocument saveDoc(docObject);
+    saveFile.write(saveDoc.toJson());
 
     return true;
 }
