@@ -37,7 +37,8 @@ struct valID {
 };
 
 // Unique ID of graph figure
-struct graphID {
+struct GraphID {
+    QString graphName;
     // Number of channel
     int chNumber;
     // Names of axes
@@ -66,7 +67,7 @@ struct GraphProperties {
     QColor color;
 };
 
-inline bool operator<(const graphID &g1, const graphID &g2)
+inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
     if (g1.chNumber != g2.chNumber)
         return g1.chNumber < g2.chNumber;
@@ -107,11 +108,12 @@ private:
     QString m_pathToCSV;
     //!< Value name, pointer to Graph
     // QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
-    QMap<graphID, QCPGraph*> m_valueGraphMap;
+    QMap<GraphID, QCPGraph*> m_valueGraphMap;
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     //QMap<QString, QString> m_valueNameXY;
     QMap<QString, QString> m_valueNameYX;
+    // Graph name -> properties
     QMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
 };

@@ -228,10 +228,10 @@ void GraphMainWindow::addGraph(const QString &name)
     for (auto ch : prop.channels) {
 
         QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
-        QString graphName = name;
+        QString graphSubTitle = name;
         if (prop.channels.count() > 1)
-            graphName += tr(", канал %1").arg(ch);
-        ui->customPlot->graph()->setName(graphName);
+            graphSubTitle += tr(", канал %1").arg(ch);
+        ui->customPlot->graph()->setName(graphSubTitle);
         ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
         ui->customPlot->graph()->setScatterStyle(QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(chNum)));
 
@@ -252,7 +252,8 @@ void GraphMainWindow::addGraph(const QString &name)
         // m_valueGraphMap.insert(xy, graph);
 
         QPair<QString, QString> yx = qMakePair<QString, QString> (prop.y_name, prop.x_name);
-        graphID gid;
+        GraphID gid;
+        gid.graphName = name;
         gid.chNumber = ch;
         gid.xName = prop.x_name;
         gid.yName = prop.y_name;
@@ -300,7 +301,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
-                graphID gid;
+                GraphID gid;
                 gid.xName = tr("time");
                 gid.yName = val1.name;
                 gid.chNumber = val1.channel;
@@ -313,7 +314,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
             } else {
                 for (MeasuredValue val2 : packet) {
                     if (val2_name == val2.name) {
-                        graphID gid;
+                        GraphID gid;
                         gid.xName = tr("time");
                         gid.yName = val1.name;
                         gid.chNumber = val1.channel;
