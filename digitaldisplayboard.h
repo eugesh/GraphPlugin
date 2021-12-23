@@ -19,7 +19,7 @@ class DigitalDisplayBoard : public QMainWindow
 
 public:
     explicit DigitalDisplayBoard(QWidget *parent = nullptr);
-    ~DigitalDisplayBoard();
+    ~DigitalDisplayBoard() override;
 
     // Call at first!
     bool setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd);
@@ -28,11 +28,16 @@ public:
     // Apply the last custom settings
     bool initFromJSON(const QString &pathToJSON);
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 public slots:
     void addData(const QList<MeasuredValue> &vals);
 
 private:
     bool readJSON();
+    bool restoreBoardGeometry();
+    bool saveBoardGeometry();
 
 private:
     Ui::DigitalDisplayBoard *ui;
@@ -40,6 +45,7 @@ private:
     GraphPluginConfig *m_config;
     QMap<QString, MeasuredValueDescription> m_measValDescMap;
     QMap<QString, DigitalBoardItem*> m_items;
+    QMap<QString, QDockWidget*> m_itemsDocks;
     QList<QString> m_activeSensorsNames;
 };
 

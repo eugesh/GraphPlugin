@@ -56,6 +56,44 @@ bool GraphPlugin::loadJSONs()
     // Read JSON for Score Board description
     loadSensorsMonitorJSON("");
 
+    restoreGraphPluginGeometry();
+
+    return true;
+}
+
+bool GraphPlugin::restoreGraphPluginGeometry()
+{
+    //  Restore Geometry
+    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
+    auto allKeys = settings.allKeys();
+    auto keys = settings.childKeys();
+    auto groups = settings.childGroups();
+
+    settings.beginGroup("MainWindow");
+
+    auto geomData = settings.value("geometry").toByteArray();
+    bool is_ok = m_mainWindow->restoreGeometry(geomData);
+    auto state = settings.value("windowState").toByteArray();
+    is_ok = is_ok && m_mainWindow->restoreState(state);
+
+    settings.endGroup();
+
+    return is_ok;
+}
+
+bool GraphPlugin::saveGraphPluginGeometry()
+{
+    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
+
+    settings.beginGroup("MainWindow");
+
+    auto geom = m_mainWindow->saveGeometry();
+    settings.setValue("geometry", geom);
+    auto state = m_mainWindow->saveState();
+    settings.setValue("windowState", state);
+
+    settings.endGroup();
+
     return true;
 }
 
@@ -109,6 +147,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
     m_tableDock = new QDockWidget(m_mainWindow);
     m_tableDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_tableDock->setWidget(m_tableView);
+    m_tableDock->setObjectName("GraphTableViewDock");
 
     m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, m_tableDock);
 
@@ -125,11 +164,12 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     m_digitalBoard = new DigitalDisplayBoard();
     m_digitalBoard->setConfig(m_config);
     m_digitalBoard->setValuesDescriptions(m_measValDescMap);
-    m_digitalBoard->initFromJSON("");
+    bool is_ok = m_digitalBoard->initFromJSON("");
 
     m_boardDock = new QDockWidget(m_mainWindow);
     m_boardDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_boardDock->setWidget(m_digitalBoard);
+    m_boardDock->setObjectName("DigitalDisplayBoardDock");
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
     connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
@@ -150,6 +190,7 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
 
     dock_widget->setWidget(graphWindow);
+    dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName()).arg("Dock"));
 
     m_graphsDocks.append(dock_widget);
     m_graphsMainWins.insert(graphWindow->objectName(), graphWindow);

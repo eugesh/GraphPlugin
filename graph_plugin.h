@@ -89,6 +89,7 @@ public:
     virtual void setMainWindow(QMainWindow *mw) override;
 
     bool loadJSONs() override;
+    bool saveGraphPluginGeometry() override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
@@ -105,6 +106,8 @@ private:
     bool loadSensorsMonitorJSON(const QString &pathToJSON);
 
     bool saveGraphJSON(const QString &pathToJSON);
+
+    bool restoreGraphPluginGeometry();
 
 private:
     // Pointer to superior MainWindow

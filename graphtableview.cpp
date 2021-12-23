@@ -14,6 +14,8 @@
 GraphTableView::GraphTableView(QWidget *parent)
  : QTableView(parent)
 {
+    setObjectName("GraphTableView");
+
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, &QWidget::customContextMenuRequested,

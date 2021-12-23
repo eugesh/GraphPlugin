@@ -53,6 +53,7 @@ GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &pro
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
 {
+    setObjectName(tr("%1%2").arg(name).arg("GraphWindow"));
     commonInit();
 
     createCustomPlot(name);
@@ -109,6 +110,8 @@ bool GraphMainWindow::readJSON(const QString &path)
         name = loadDoc.object()["name"].toObject()["name"].toString();
         createCustomPlot(name);
     }
+
+    setObjectName(tr("%1%2").arg(name).arg("GraphWindow"));
     //QString name = loadDoc.object()["name"].toObject()["name"].toString();
     //name = loadDoc["name"]["name"].toString();
 

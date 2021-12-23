@@ -10,6 +10,8 @@ DigitalBoardItem::DigitalBoardItem(const QString &name, const QMap<QString, doub
 {
     ui->setupUi(this);
 
+    setObjectName(tr("%1%2").arg(name).arg("BoardItem"));
+
     m_measUnitsMult = measUnitsMult;
     m_measUnitsOffsets = measUnitsOffsets;
 
