@@ -39,6 +39,7 @@ public:
 
     // Map "unit name" -> multiplier
     QMap<QString, double> getMultipliers(const QString &physQuantityName) const;
+    QMap<QString, double> getMultipliersWithPrefixes(const QString &physQuantityName) const;
     QMap<QString, double> getOffsets(const QString &physQuantityName) const;
 
 protected:

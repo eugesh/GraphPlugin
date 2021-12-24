@@ -3,6 +3,7 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <qlogging.h>
@@ -72,6 +73,7 @@ bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
 
     for (auto key : keys) {
         SIPrefix prefix;
+        prefix.name = key;
         auto obj = loadObj[key].toObject();
         if (obj.contains("symbol"))
             prefix.symbol = obj["symbol"].toString();
@@ -86,7 +88,7 @@ bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
             prefix.name_ru = obj["name_ru"].toString();
 
         if (obj.contains("symbol_ru"))
-            prefix.name_ru = obj["symbol_ru"].toString();
+            prefix.symbol_ru = obj["symbol_ru"].toString();
 
         m_prefixes.insert(key, prefix);
     }
@@ -154,6 +156,14 @@ bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
             else
                 unit.insert("offset", 0.0);
 
+            if (unitObj.contains("prefixes")) {
+                QJsonArray prefixesArray = unitObj["prefixes"].toArray();
+                for (int i = 0; i < prefixesArray.size(); ++i) {
+                    // QJsonObject prefixObject = prefixesArray[i].toObject();
+                    unit.insertMulti("prefixes", prefixesArray[i].toString());
+                }
+            }
+
             m_measUnits.insertMulti(physValName, unit);
         }
     }
@@ -169,6 +179,24 @@ QMap<QString, double> GraphPluginConfig::getMultipliers(const QString &physQuant
 
     for (auto unitMap : unitsMap) {
         map.insert(unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble());
+    }
+
+    return map;
+}
+
+QMap<QString, double> GraphPluginConfig::getMultipliersWithPrefixes(const QString &physQuantityName) const
+{
+    QMap<QString, double> map;
+
+    auto unitsMap = m_measUnits.values(physQuantityName);
+    for (auto unitMap : unitsMap) {
+        map.insert(unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble());
+        for (auto prefix : unitMap.values("prefixes")) {
+            QString prefNameRu = m_prefixes[prefix.toString()].symbol_ru;
+            double mult = m_prefixes[prefix.toString()].multiplier;
+
+            map.insert(prefNameRu + unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble() * mult);
+        }
     }
 
     return map;
