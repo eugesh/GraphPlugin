@@ -104,7 +104,7 @@ bool DigitalDisplayBoard::setValuesDescriptions(const QMap<QString, MeasuredValu
 {
     m_measValDescMap = mvd;
 
-    m_activeSensorsNames = mvd.keys(); // Stub
+    m_activeSensorsNames = mvd.keys();
 
     return true;
 }
@@ -112,11 +112,13 @@ bool DigitalDisplayBoard::setValuesDescriptions(const QMap<QString, MeasuredValu
 bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
 {
     for (auto name : m_activeSensorsNames) {
-        auto decs = m_measValDescMap[name];
+        auto desc = m_measValDescMap[name];
 
-        auto title = name; //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
+        auto title = desc.desc_ru;
+        //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
 
-        auto *item = new DigitalBoardItem(title, m_config->getMultipliers(name), m_config->getOffsets(name), this);
+        auto *item = new DigitalBoardItem(title,
+                     m_config->getMultipliers(desc.physQuant), m_config->getOffsets(name), this);
         item->setWindowTitle(title);
         auto *dock = new QDockWidget(this);
         m_items.insert(name, item);

@@ -11,6 +11,7 @@ enum : int {
 struct MeasuredValueDescription {
     QString name;
     QString desc;
+    QString desc_ru;
     QString physQuant;
     QString unit;
     QString unit_rus;

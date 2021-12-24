@@ -10,7 +10,7 @@
             "x_title": "время",
             "y_title": "Температура",
             "x_unit": "s",
-            "y_unit": "C",
+            "y_unit": "°C",
             "x_phisical_quantity": "time",
             "y_phisical_quantity": "temperature",
             "x_dir": "right",

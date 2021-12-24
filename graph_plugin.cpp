@@ -118,6 +118,7 @@ bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
         QJsonObject valueObject = valuesArray[i].toObject();
         mvdesc_struct.name = valueObject["name"].toString();
         mvdesc_struct.desc = valueObject["description"].toString();
+        mvdesc_struct.desc_ru = valueObject["description_ru"].toString();
         mvdesc_struct.physQuant = valueObject["physicalQuantity"].toString();
         mvdesc_struct.unit = valueObject["measure_unit"].toString();
         mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
