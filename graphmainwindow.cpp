@@ -187,8 +187,8 @@ bool GraphMainWindow::saveJSON(const QString &path)
         graphObject["y_unit"] = prop.y_unit;
         graphObject["x_phisical_quantity"] = prop.x_phisical_quantity;
         graphObject["y_phisical_quantity"] = prop.y_phisical_quantity;
-        graphObject["x_dir"] = prop.x_dir;
-        graphObject["y_dir"] = prop.y_dir;
+        graphObject["x_dir"] = prop.x_dir == LEFT ? "left" : "right";
+        graphObject["y_dir"] = prop.y_dir == DOWN ? "down" : "up";
         graphObject["total_N"] = static_cast<int>(prop.total_N);
         graphObject["last_N_limit"] = static_cast<int>(prop.last_N_limit);
         graphObject["update_mode"] = prop.update_mode == SHOW_LAST_N ? "SHOW_LAST_N" : "SHOW_ALL";
@@ -313,13 +313,15 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 for (MeasuredValue val2 : packet) {
                     if (val2_name == val2.name) {
                         GraphID gid;
-                        gid.xName = tr("time");
+                        gid.xName = val2.name;
                         gid.yName = val1.name;
                         gid.chNumber = val1.channel;
                         // graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
                         graph = m_valueGraphMap[gid];
-                        graph->addData(val2.value, val1.value);
-                        graph->rescaleAxes();
+                        if (graph) {
+                            graph->addData(val2.value, val1.value);
+                            graph->rescaleAxes();
+                        }
                     }
                 }
             }
