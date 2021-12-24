@@ -34,10 +34,10 @@
             "measure_unit_rus": "Па"
         },
         {
-            "name": "voltage",
+            "name": "electricPotential",
             "description": "Voltage",
             "description_ru": "Напряжение питания",
-            "physicalQuantity": "voltage",
+            "physicalQuantity": "electricPotential",
             "measure_unit": "V",
             "measure_unit_rus": "В"
         }

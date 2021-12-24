@@ -211,6 +211,7 @@
                 "name_ru": "месяц",
                 "plural": "months",
                 "plural_ru": "месяцев",
+                "symbol_ru": "мес",
                 "type": "customary",
                 "estimation": true,
                 "multiplier": 2629800,
@@ -233,6 +234,28 @@
             }
         }
     },
+    "electricPotential": {
+			"name": "electric potential",
+			"otherNames": [ "voltage", "electric field potential", "electrostatic potential", "electric potential tension"],
+			"symbol": "φ",
+			"otherSymbols": ["V", "U", "∆V", "∆U", "Δφ", "E"],
+			"baseUnit": "volt",
+			"derived": "mass*length*length/electricCurrent/time/time/time",
+			"vector": false,
+			"units": {
+				"volt": {
+					"name": "volt",
+                    "name_ru": "вольт",
+					"plural": "volts",
+					"otherNames": ["joules per coulomb"],
+					"symbol": "V",
+                    "symbol_ru": "В",
+                    "prefixes": ["kilo", "mega", "milli", "micro", "nano"],
+					"type": "si",
+					"systems": ["si", "mks"]
+				}
+			}
+	},
     "velocity": {
         "name": "velocity",
         "name_ru": "скорость",
