@@ -233,8 +233,11 @@ void GraphMainWindow::addGraph(const QString &name)
 
         QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
         QString graphSubTitle = name;
-        if (prop.channels.count() > 1)
-            graphSubTitle += tr(", канал %1").arg(ch);
+        if (prop.channels.count() > 1) {
+            if (! graphSubTitle.isEmpty())
+                graphSubTitle += tr(", ");
+            graphSubTitle += tr("канал %1").arg(ch);
+        }
         ui->customPlot->graph()->setName(graphSubTitle);
         ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
         ui->customPlot->graph()->setScatterStyle(QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(chNum)));
