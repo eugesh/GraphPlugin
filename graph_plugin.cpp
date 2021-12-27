@@ -152,8 +152,10 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
     m_tableDock->toggleViewAction()->setText(tr("Таблица"));
     m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, m_tableDock);
 
-    for (auto graphMainWindow : m_graphsMainWins.keys())
+    for (auto graphMainWindow : m_graphsMainWins.keys()) {
         connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
+        connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_tableView, &QAbstractItemView::scrollToBottom);
+    }
 
     connect (m_tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
 
