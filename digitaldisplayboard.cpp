@@ -117,7 +117,7 @@ bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
         auto title = desc.desc_ru;
         //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
 
-        auto *item = new DigitalBoardItem(title,
+        auto *item = new DigitalBoardItem(title, desc.unit_rus,
                      m_config->getMultipliersWithPrefixes(desc.physQuant), m_config->getOffsets(name), this);
         item->setWindowTitle(title);
         auto *dock = new QDockWidget(this);

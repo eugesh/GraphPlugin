@@ -128,7 +128,7 @@
                 "symbol_ru": "°F",
                 "type": "customary",
                 "systems": ["englishUnits", "imperial", "usCustomary"],
-                "multiplier": 1.8,
+                "multiplier": 0.55555,
                 "offset": -459.67
             }
         }
