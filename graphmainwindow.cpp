@@ -75,7 +75,6 @@ GraphMainWindow::~GraphMainWindow()
 
 void GraphMainWindow::createCustomPlot(const QString &name)
 {
-    setObjectName(name);
     setWindowTitle(name);
 
     ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
@@ -92,6 +91,14 @@ void GraphMainWindow::createCustomPlot(const QString &name)
     ui->customPlot->plotLayout()->addElement(0, 0, title);
 }
 
+QString GraphMainWindow::nameTr() const
+{
+    if (ui->customPlot)
+        return m_plotName;
+    else
+        return {};
+}
+
 bool GraphMainWindow::readJSON(const QString &path)
 {
     QFile loadFile(path);
@@ -105,13 +112,12 @@ bool GraphMainWindow::readJSON(const QString &path)
 
     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
 
-    QString name;
     if (loadDoc.object().contains("name")) {
-        name = loadDoc.object()["name"].toObject()["name"].toString();
-        createCustomPlot(name);
+        m_plotName = loadDoc.object()["name"].toObject()["name"].toString();
+        createCustomPlot(m_plotName);
     }
 
-    setObjectName(tr("%1%2").arg(name).arg("GraphWindow"));
+    setObjectName(tr("%1%2").arg(m_plotName).arg("GraphWindow"));
     //QString name = loadDoc.object()["name"].toObject()["name"].toString();
     //name = loadDoc["name"]["name"].toString();
 

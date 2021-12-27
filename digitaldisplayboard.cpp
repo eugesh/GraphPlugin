@@ -125,6 +125,7 @@ bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
         dock->setWidget(item);
         dock->setAllowedAreas(Qt::AllDockWidgetAreas);
         dock->setObjectName(tr("%1%2").arg(name).arg("Dock"));
+        dock->toggleViewAction()->setText(desc.desc_ru);
         m_itemsDocks.insert(name, dock);
         addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
     }

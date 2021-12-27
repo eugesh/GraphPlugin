@@ -149,7 +149,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
     m_tableDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_tableDock->setWidget(m_tableView);
     m_tableDock->setObjectName("GraphTableViewDock");
-
+    m_tableDock->toggleViewAction()->setText(tr("Таблица"));
     m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, m_tableDock);
 
     for (auto graphMainWindow : m_graphsMainWins.keys())
@@ -171,6 +171,7 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     m_boardDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_boardDock->setWidget(m_digitalBoard);
     m_boardDock->setObjectName("DigitalDisplayBoardDock");
+    m_boardDock->toggleViewAction()->setText(tr("Табло"));
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
     connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
@@ -195,6 +196,8 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 
     m_graphsDocks.append(dock_widget);
     m_graphsMainWins.insert(graphWindow->objectName(), graphWindow);
+
+    dock_widget->toggleViewAction()->setText(graphWindow->nameTr());
 
     m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 

@@ -87,6 +87,7 @@ public:
     ~GraphMainWindow();
 
     bool loadCSV();
+    QString nameTr() const;
 
 public slots:
     void loadCSVdialog();
@@ -116,6 +117,7 @@ private:
     // Graph name -> properties
     QMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
+    QString m_plotName;
 };
 
 #endif // GRAPHMAINWINDOW_H
