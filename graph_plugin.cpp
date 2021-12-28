@@ -122,6 +122,8 @@ bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
         mvdesc_struct.physQuant = valueObject["physicalQuantity"].toString();
         mvdesc_struct.unit = valueObject["measure_unit"].toString();
         mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
+        mvdesc_struct.symbol = valueObject["symbol"].toString();
+        mvdesc_struct.symbol_rus = valueObject["symbol_rus"].toString();
         m_measValDescMap.insert(mvdesc_struct.name, mvdesc_struct);
     }
 

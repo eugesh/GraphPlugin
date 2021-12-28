@@ -96,6 +96,21 @@ bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
     return true;
 }
 
+/**
+ * @brief GraphPluginConfig::getProperty
+ * @param physQuantName name of physical quantity (time, velocity, pressure, temperature, length, etc)
+ * @param key "name", "name_ru", "symbol", "symbol_ru", "multiplier", "offset", "prefixes"
+ * @return
+ */
+QVariant GraphPluginConfig::getProperty(const QString &physQuantName, const QString &unit, const QString &key) const
+{
+    for (auto val : m_measUnits.values(physQuantName)) {
+        if (val["name"].toString() == unit)
+           return  val[key];
+    }
+    return {};
+}
+
 bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
 {
     QFile loadFile(pathToJSON);

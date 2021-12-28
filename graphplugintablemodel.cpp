@@ -7,7 +7,7 @@ GraphPluginTableModel::GraphPluginTableModel(QObject *parent) :
     // ToDo: Must be read from JSON
     // m_coloumnTitles << "Timestamp" << "Pressure" << "Temperature" << "Sound Velocity";
     m_coloumnTitles << tr("Время") << tr("Давление") << tr("Температура") << tr("Скорость звука");
-    m_coloumnNames << "time" << "pressure" << "temperature" << "soundVelocity";
+    m_coloumnNames << "time" << "pressure" << "temperature" << "velocity";
 }
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
@@ -61,7 +61,8 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
             if (val.name == name)
                 return val.value; // ToDo * by SI convertion coefficient;
     }
-    //case ClipboardTextRole:
+    case ClipboardTextRole:
+        return {}; // ToDo
     default:
         return {};
     }
@@ -72,9 +73,14 @@ QVariant GraphPluginTableModel::headerData(int section, Qt::Orientation orientat
     if (section < 0 || section >= m_coloumnTitles.size())
         return {};
 
-    if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal)) {
+    if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal))
         return m_coloumnTitles[section];
-    }
+
+    if ((role == DataRole) && (orientation == Qt::Horizontal))
+        return m_coloumnNames[section];
+
+    if ((role == PhysQuantRole) && (orientation == Qt::Horizontal))
+        return m_coloumnNames[section];
 
     /*if ((role == Qt::SizeHintRole) && (orientation == Qt::Horizontal)) {
         switch (section) {

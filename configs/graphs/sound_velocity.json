@@ -6,7 +6,7 @@
         {
             "name": "Скорость звука",
             "x_name": "time",
-            "y_name": "soundVelocity",
+            "y_name": "velocity",
             "x_title": "Время",
             "y_title": "Скорость",
             "x_unit": "s",

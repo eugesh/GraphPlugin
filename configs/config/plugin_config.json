@@ -2,44 +2,54 @@
     "description" : "Названия физических величин, применямых в основном ПО.",
     "values" : [
         {
-            "name": "soundVelocity",
+            "name": "velocity",
             "description": "Sound velocity",
             "description_ru": "Скорость звука",
             "physicalQuantity": "velocity",
-            "measure_unit": "m/s",
-            "measure_unit_rus": "м/с"
+            "measure_unit": "metre per second",
+            "measure_unit_rus": "метр в секунду",
+            "symbol": "m/s",
+            "symbol_rus": "м/с"
         },
         {
             "name": "temperature",
             "description": "Temperature",
             "description_ru": "Температура",
             "physicalQuantity": "temperature",
-            "measure_unit": "°C",
-            "measure_unit_rus": "°C"
+            "measure_unit": "celsius",
+            "measure_unit_rus": "Целсий",
+            "symbol": "°C",
+            "symbol_rus": "°C"
         },
         {
             "name": "time",
             "description": "Time",
             "description_ru": "Время",
             "physicalQuantity": "time",
-            "measure_unit": "s",
-            "measure_unit_rus": "с"
+            "measure_unit": "second",
+            "measure_unit_rus": "секунда",
+            "symbol": "s",
+            "symbol_rus": "с"
         },
         {
             "name": "pressure",
             "description": "Pressure",
             "description_ru": "Давление",
             "physicalQuantity": "pressure",
-            "measure_unit": "Pa",
-            "measure_unit_rus": "Па"
+            "measure_unit": "Pascal",
+            "measure_unit_rus": "Паскаль",
+            "symbol": "Pa",
+            "symbol_rus": "Па"
         },
         {
             "name": "electricPotential",
             "description": "Voltage",
             "description_ru": "Напряжение питания",
             "physicalQuantity": "electricPotential",
-            "measure_unit": "V",
-            "measure_unit_rus": "В"
+            "measure_unit": "Volt",
+            "measure_unit_rus": "Вольт",
+            "symbol": "V",
+            "symbol_rus": "В"
         }
     ],
     "channel_modes" : [1,[1,2],[1,2,3,4]]

@@ -31,6 +31,9 @@ protected slots:
     void placeOnPlot();
 
 private:
+    GraphProperties graphPropertiesFromSelectedColoumn(const QString &name) const;
+
+private:
     AddOnPlotDialog *m_addPointDialog = nullptr;
     QMap<QString, MeasuredValueDescription> m_measValuesDesc;
     // Config

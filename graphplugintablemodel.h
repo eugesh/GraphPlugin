@@ -1,12 +1,12 @@
 #ifndef GRAPHPLUGINTABLEMODEL_H
 #define GRAPHPLUGINTABLEMODEL_H
 
-#include "graph_interface.h"
-#include <qcustomplot.h>
-
 #include <QAbstractItemModel>
 #include <QObject>
+#include <qcustomplot.h>
 
+#include "common.h"
+#include "graph_interface.h"
 
 class GraphPluginTableModel : public QAbstractTableModel
 {
@@ -25,7 +25,6 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
 
 public slots:
     void appendValue(const MeasuredValue &val);

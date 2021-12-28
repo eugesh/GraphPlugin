@@ -35,7 +35,7 @@ public:
     QList<QMap<QString, QVariant>> auxMeasUnits(const QString &physValName) const;
     QStringList physicalValuesNames() const;
     QMap<QString, SIPrefix> prefixes() const;
-    QVariant getProperty(const QString &key) const;
+    QVariant getProperty(const QString &physQuantName, const QString &unit, const QString &key) const;
 
     // Map "unit name" -> multiplier
     QMap<QString, double> getMultipliers(const QString &physQuantityName) const;

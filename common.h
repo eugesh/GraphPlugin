@@ -5,7 +5,9 @@
 #include <QColor>
 
 enum : int {
-  ClipboardTextRole = Qt::UserRole + 1
+    ClipboardTextRole = Qt::UserRole + 1,
+    DataRole = Qt::UserRole + 2,
+    PhysQuantRole = Qt::UserRole + 3
 };
 
 struct MeasuredValueDescription {
@@ -15,6 +17,8 @@ struct MeasuredValueDescription {
     QString physQuant;
     QString unit;
     QString unit_rus;
+    QString symbol;
+    QString symbol_rus;
 };
 
 QString ColorToNameConverter(const QColor &color);
