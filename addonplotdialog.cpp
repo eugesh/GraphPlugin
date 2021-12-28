@@ -74,6 +74,7 @@ QString AddOnPlotDialog::getCustomPlotName() const
 
 void AddOnPlotDialog::setProp(const GraphProperties &prop)
 {
+    ui->customPltNameLineEdit->setText(prop.name);
     ui->graphNameLineEdit->clear();
     ui->graphNameLineEdit->insert(prop.name);
     ui->xNameComboBox->setCurrentText(prop.x_name);
@@ -91,8 +92,8 @@ void AddOnPlotDialog::setProp(const GraphProperties &prop)
     ui->xDirComboBox->setCurrentText(prop.x_dir == GraphDir::RIGHT ? tr("Вправо") : tr("Влево"));
     ui->yDirComboBox->setCurrentText(prop.y_dir == GraphDir::UP ? tr("Вверх") : tr("Вниз"));
 
-    ui->spinBox_MaxLastN->setValue(prop.total_N);
-    ui->spinBox_MaxN->setValue(prop.last_N_limit);
+    ui->spinBox_MaxLastN->setValue(prop.last_N_limit);
+    ui->spinBox_MaxN->setValue(prop.total_N);
 
     ui->updateModeCbBox->setCurrentText(prop.update_mode == GraphUpdateMode::SHOW_ALL ? tr("Отображать все") : tr("Последние N"));
     ui->xScaleTypeCbBox->setCurrentText(prop.x_scale == GraphScaleType::LIN ? tr("Линейная") : tr("Логарифмическая"));
