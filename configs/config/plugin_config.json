@@ -28,6 +28,7 @@
             "physicalQuantity": "time",
             "measure_unit": "second",
             "measure_unit_rus": "секунда",
+            "prefix": "milli",
             "symbol": "s",
             "symbol_rus": "с"
         },

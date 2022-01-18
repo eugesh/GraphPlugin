@@ -106,6 +106,7 @@ private:
 
 private:
     Ui::GraphMainWindow *ui;
+    QSharedPointer<QCPAxisTickerDateTime> m_ticker;
     QString m_pathToCSV;
     //!< Value name, pointer to Graph
     // QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;

@@ -243,6 +243,17 @@ void GraphMainWindow::addGraph(const QString &name)
         ui->customPlot->graph()->setScatterStyle(QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(chNum)));
 
         ui->customPlot->xAxis->setLabel(prop.x_title);
+
+        if (prop.x_phisical_quantity.contains("time", Qt::CaseInsensitive)) {
+            m_ticker = QSharedPointer<QCPAxisTickerDateTime>::create();
+            // m_ticker->setDateTimeFormat("hh:mm:ss\nzzz");
+            m_ticker->setDateTimeFormat(QLatin1String("hh:mm:ss"));
+            //mDateTimeFormat(QLatin1String("hh:mm:ss\ndd.MM.yy")),
+            ui->customPlot->xAxis->setTicker(m_ticker);
+            ui->customPlot->xAxis->setTickLabels(true);
+            m_ticker->setTickStepStrategy(QCPAxisTicker::tssMeetTickCount);
+        }
+
         ui->customPlot->yAxis->setLabel(prop.y_title);
         ui->customPlot->legend->setVisible(true);
 
@@ -314,7 +325,9 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 gid.chNumber = val1.channel;
                 // graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
                 graph = m_valueGraphMap[gid];
+                ui->customPlot->xAxis->setTickLabels(true);
                 if (graph) {
+                    //auto date = QDateTime::fromMSecsSinceEpoch(val1.timestamp);
                     graph->addData(val1.timestamp, val1.value);
                     graph->rescaleAxes();
                 }
