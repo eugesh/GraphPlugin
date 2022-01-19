@@ -76,7 +76,6 @@ public:
 
     virtual ~GraphInterface() = default;
     //virtual QObject* getObject() = 0;
-    virtual QString echo(const QString &message) = 0;
     virtual void addData(const MeasuredValue &value) = 0;
     virtual QToolBar* toolBar() const = 0;
     virtual QList<QDockWidget*> dockWindows() const = 0;

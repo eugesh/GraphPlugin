@@ -208,11 +208,6 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     return true;
 }
 
-QString GraphPlugin::echo(const QString &message)
-{
-    return message;
-}
-
 void GraphPlugin::addData(const MeasuredValue &value)
 {
     // m_dataMap[value.timestamp] = value.name;

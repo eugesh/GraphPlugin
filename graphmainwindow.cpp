@@ -2,42 +2,6 @@
 #include "graphmainwindow.h"
 #include "ui_graphmainwindow.h"
 
-/*enum GraphDir {
-    LEFT,
-    UP,
-    RIGHT,
-    DOWN
-};
-
-enum GraphUpdateMode {
-    SHOW_ALL,
-    SHOW_LAST_N,
-    DONT_UPDATE
-};
-
-enum GraphScaleType {
-    LIN,
-    LOG
-};
-
-struct GraphProperties {
-    QString name;
-    QString x_name;
-    QString y_name;
-    QString x_unit;
-    QString y_unit;
-    QString x_phisical_quantity;
-    QString y_phisical_quantity;
-    GraphDir x_dir;
-    GraphDir y_dir;
-    unsigned int total_N;
-    unsigned int last_N_limit;
-    GraphUpdateMode update_mode;
-    GraphScaleType x_scale;
-    GraphScaleType y_scale;
-    Qt::GlobalColor color;
-};*/
-
 GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -47,7 +11,6 @@ GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     readJSON(path2JSON);
 }
 
-//GraphMainWindow::GraphMainWindow(const QString &name, const QList<GraphProperties> &properties, QWidget *parent) :
 // Auxilliary constructor
 GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent) :
     QMainWindow(parent),
