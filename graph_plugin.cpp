@@ -6,6 +6,7 @@
 #include "graphplugintablemodel.h"
 #include "graphtableview.h"
 
+#include <QApplication>
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QTableView>
@@ -73,6 +74,10 @@ bool GraphPlugin::restoreGraphPluginGeometry()
 
     auto geomData = settings.value("geometry").toByteArray();
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
+
+    if (m_mainWindow->isMaximized())
+           m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
+
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
 
