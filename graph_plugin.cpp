@@ -33,6 +33,11 @@ GraphPlugin::~GraphPlugin()
 
 }
 
+QString GraphPlugin::aboutInfo()
+{
+    return QString("%1.%2.%3").arg(GRAPH_PLUGIN_VERSION_MAJOR).arg(GRAPH_PLUGIN_VERSION_MINOR).arg(GRAPH_PLUGIN_VERSION_PATCH);
+}
+
 bool GraphPlugin::loadJSONs()
 {
     // Load SI units and prefixes

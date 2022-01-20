@@ -83,6 +83,7 @@ public:
     // Call it after setMainWindow
     virtual bool loadJSONs() = 0;
     virtual bool saveGraphPluginGeometry() = 0;
+    virtual QString aboutInfo() = 0;
 
 //signals:
     //void newDockWindow(QDockWidget*);

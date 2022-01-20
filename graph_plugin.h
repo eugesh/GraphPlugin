@@ -89,6 +89,7 @@ public:
 
     bool loadJSONs() override;
     bool saveGraphPluginGeometry() override;
+    QString aboutInfo() override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
