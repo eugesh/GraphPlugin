@@ -36,7 +36,6 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
     auto configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 
     //  Restore Geometry
-    // QSettings settings("eugesh", "GruphPlugin");
     QSettings settings(QApplication::organizationName(), QApplication::applicationName());
     auto allKeys = settings.allKeys();
     auto keys = settings.childKeys();
@@ -52,11 +51,6 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
     /*for (auto item : m_itemsDocks.values()) {
         settings.beginGroup(tr("%1").arg(item->objectName()));
 
-        if (! settings.value("isChecked").toBool()) {
-            auto act = item->toggleViewAction();
-            act->setChecked(false);
-            //item->hide();
-        }
 
         settings.endGroup();
     }*/
@@ -69,7 +63,6 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
 
 bool DigitalDisplayBoard::saveBoardGeometry()
 {
-    // QSettings settings("eugesh", "DigitalDisplayBoard");
     QSettings settings(QApplication::organizationName(), QApplication::applicationName());
 
     settings.beginGroup("DigitalDisplayBoard");
@@ -81,11 +74,6 @@ bool DigitalDisplayBoard::saveBoardGeometry()
 
     /*for (auto item : m_itemsDocks.values()) {
         settings.beginGroup(tr("%1").arg(item->objectName()));
-
-        auto act = item->toggleViewAction();
-        settings.setValue("isChecked", act->isChecked());
-        //settings.setValue("isHidden", item->isHidden());
-
         settings.endGroup();
     }*/
 
