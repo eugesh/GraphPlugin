@@ -20,6 +20,7 @@ GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &pro
     commonInit();
 
     createCustomPlot(name);
+    m_plotName = name;
 
     addGraph(properties);
 }
@@ -28,11 +29,26 @@ void GraphMainWindow::commonInit()
 {
     ui->setupUi(this);
 
+    m_JSONPath = "./configs/graphs";
+
     connect(ui->actionSaveJSON, &QAction::triggered, this, &GraphMainWindow::saveJSONdialog);
 }
 
 GraphMainWindow::~GraphMainWindow()
 {
+    if (! m_isLoadFromJson || m_hasUpdate) {
+        int button = QMessageBox::question(this,
+                                      tr("Внимание!"),
+                                      tr("\n Есть несохраненные графики:"
+                                         "\n    %1,"
+                                         "\n желаете сохранить?").arg(m_plotName),
+                                      QMessageBox::StandardButton::Yes,
+                                      QMessageBox::StandardButton::No);
+        if (QMessageBox::StandardButton::Yes == button) {
+            saveJSONdialog();
+        }
+    }
+
     delete ui;
 }
 
@@ -41,7 +57,7 @@ void GraphMainWindow::createCustomPlot(const QString &name)
     setWindowTitle(name);
 
     ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
-                                  QCP::iSelectLegend | QCP::iSelectPlottables);
+                                    QCP::iSelectLegend | QCP::iSelectPlottables);
 
     //ui->customPlot->xAxis->setRange(2e-5, 6e-5);
     //ui->customPlot->yAxis->setRange(-2, 2);
@@ -118,6 +134,8 @@ bool GraphMainWindow::readJSON(const QString &path)
         m_properties[properties.name] = properties;
         addGraph(properties.name);
     }
+
+    m_isLoadFromJson = true;
 
     return true;
 }
@@ -247,16 +265,18 @@ void GraphMainWindow::addGraph(const QString &name)
 
 void GraphMainWindow::addGraph(const GraphProperties &prop)
 {
-    m_properties.insert(prop.name, prop);
+    m_properties.insertMulti(prop.name, prop);
+
+    m_hasUpdate = true;
 
     addGraph(prop.name);
 }
 
-bool GraphMainWindow::applyProperties()
+/*bool GraphMainWindow::applyProperties()
 {
 
     return true;
-}
+}*/
 
 bool GraphMainWindow::loadCSV()
 {

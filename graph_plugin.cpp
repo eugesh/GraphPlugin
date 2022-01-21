@@ -209,7 +209,7 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName()).arg("Dock"));
 
     m_graphsDocks.append(dock_widget);
-    m_graphsMainWins.insert(graphWindow->objectName(), graphWindow);
+    m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);
 
     dock_widget->toggleViewAction()->setText(graphWindow->nameTr());
 
@@ -259,7 +259,7 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
         dock_widget->setWidget(graphWindow);
 
         m_graphsDocks.append(dock_widget);
-        m_graphsMainWins.insert(graphWindow->objectName(), graphWindow);
+        m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);
 
         m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 

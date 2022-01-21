@@ -101,7 +101,7 @@ private:
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
     bool saveJSON(const QString &path);
-    bool applyProperties();
+    // bool applyProperties();
     void addGraph(const QString &name);
 
 private:
@@ -119,6 +119,8 @@ private:
     QMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
     QString m_plotName;
+    bool m_isLoadFromJson = false;
+    bool m_hasUpdate = false;
 };
 
 #endif // GRAPHMAINWINDOW_H
