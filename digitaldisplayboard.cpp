@@ -6,6 +6,7 @@
 
 #include "ui_digitaldisplayboard.h"
 
+#include <QDebug>
 #include <QDockWidget>
 #include <QStandardPaths>
 #include <QSettings>
@@ -130,6 +131,14 @@ bool DigitalDisplayBoard::readJSON()
 void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto val : vals) {
-        m_items[val.name]->setCurrentValue(val.value);
+        /*if (val.name.isEmpty()) {
+            qWarning() << "Warning: empty MeasuredValue name!";
+            continue;
+        } else {
+            m_items[val.name]->setCurrentValue(val.value);
+        }*/
+
+        if (m_items.contains(val.name))
+            m_items[val.name]->setCurrentValue(val.value);
     }
 }

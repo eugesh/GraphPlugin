@@ -72,7 +72,7 @@ class GraphInterface
 {
 public:
     // GraphInterface(QObject *parent = nullptr) {}
-    //GraphInterface(QMainWindow *parent = nullptr) {}
+    // GraphInterface(QMainWindow *parent = nullptr) {}
 
     virtual ~GraphInterface() = default;
     //virtual QObject* getObject() = 0;
