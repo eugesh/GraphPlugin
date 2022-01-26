@@ -32,6 +32,8 @@ void GraphMainWindow::commonInit()
     m_JSONPath = "./configs/graphs";
 
     connect(ui->actionSaveJSON, &QAction::triggered, this, &GraphMainWindow::saveJSONdialog);
+    connect(ui->actionSaveCSV, &QAction::triggered, this, &GraphMainWindow::saveCSVdialog);
+    connect(ui->actionSaveImage, &QAction::triggered, this, &GraphMainWindow::saveImageDialog);
 }
 
 GraphMainWindow::~GraphMainWindow()
@@ -147,7 +149,7 @@ void GraphMainWindow::saveJSONdialog()
     saveJSON(m_JSONPath);
 }
 
-bool GraphMainWindow::saveJSON(const QString &path)
+bool GraphMainWindow::saveJSON(const QString &path) const
 {
     QFile saveFile(path);
 
@@ -200,6 +202,60 @@ bool GraphMainWindow::saveJSON(const QString &path)
     saveFile.write(saveDoc.toJson());
 
     return true;
+}
+
+void GraphMainWindow::saveCSVdialog()
+{
+    m_CSVPath = QFileDialog::getSaveFileName(this,
+                                             tr("Сохранить график в CSV"),
+                                             m_CSVPath,
+                                             tr("(*.CSV)"));
+
+    saveCSV(m_CSVPath);
+}
+
+void GraphMainWindow::saveCSV(const QString &name) const
+{
+    if (name.isEmpty())
+        return;
+
+    QFile file(name);
+
+    if (! file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical() << tr("Ошибка: Файл") << name << tr(" не был открыт на запись!");
+        // qCritical() << tr("File") << name << " wasn't opened on read";
+        return;
+    }
+
+    QTextStream *stream = new QTextStream(&file);
+
+    for (int i = 0; i < ui->customPlot->graphCount(); ++i) {
+        for (int k = 0; ui->customPlot->graph(i)->data().data()->size(); ++k) {
+            auto val = ui->customPlot->graph(i)->data().data()->at(k);
+            *stream << val << ",";
+        }
+        *stream << '\n';
+    }
+
+    delete stream;
+}
+
+void GraphMainWindow::saveImageDialog()
+{
+    m_ImagePath = QFileDialog::getSaveFileName(this,
+                                               tr("Сохранить график как изображение"),
+                                               m_ImagePath,
+                                               tr("Изображения (*.png *.bmp *.tif *.xpm *.jpg *.jpeg *.JPG)"));
+
+    saveImage(m_ImagePath);
+}
+
+void GraphMainWindow::saveImage(const QString &name) const
+{
+    if (name.isEmpty())
+        return;
+
+    ui->customPlot->saveJpg(name);
 }
 
 void GraphMainWindow::addGraph(const QString &name)
@@ -285,11 +341,6 @@ bool GraphMainWindow::loadCSV()
 }
 
 void GraphMainWindow::loadCSVdialog()
-{
-
-}
-
-void GraphMainWindow::saveCSVdialog()
 {
 
 }

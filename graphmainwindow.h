@@ -93,6 +93,7 @@ public slots:
     void loadCSVdialog();
     void saveCSVdialog();
     void saveJSONdialog();
+    void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
     void addGraph(const GraphProperties &prop);
 
@@ -100,9 +101,11 @@ private:
     void commonInit();
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
-    bool saveJSON(const QString &path);
+    bool saveJSON(const QString &path) const;
     // bool applyProperties();
     void addGraph(const QString &name);
+    void saveCSV(const QString &name) const;
+    void saveImage(const QString &name) const;
 
 private:
     Ui::GraphMainWindow *ui;
@@ -118,6 +121,8 @@ private:
     // Graph name -> properties
     QMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
+    QString m_CSVPath;
+    QString m_ImagePath;
     QString m_plotName;
     bool m_isLoadFromJson = false;
     bool m_hasUpdate = false;
