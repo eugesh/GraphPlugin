@@ -2,6 +2,7 @@
 #define SIMULATORMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -10,6 +11,10 @@ class MainWindow;
 class QFormLayout;
 class GraphInterface;
 struct MeasuredValue;
+
+enum State {
+    STOP, RUN, PAUSE
+};
 
 class SimulatorMainWindow : public QMainWindow
 {
@@ -29,13 +34,17 @@ private slots:
 
 private:
     bool loadGraphPlugin();
+    MeasuredValue currentValue(const QString &name) const;
+    QVector<MeasuredValue> allCurrentValue() const;
 
 private:
     Ui::MainWindow *ui;
-    GraphInterface *graphInterface;
+    GraphInterface *graphInterface = nullptr;
     // Number of channels
     int m_channelNum = 0;
     QFormLayout *m_formLayout;
+    State m_state;
+    QTimer m_greqTimer;
 };
 
 #endif // SIMULATORMAINWINDOW_H

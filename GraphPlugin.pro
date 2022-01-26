@@ -8,9 +8,8 @@ QT             += core gui widgets printsupport
 
 TARGET          = $$qtLibraryTarget(graph_plugin)
 TEMPLATE        = lib
-DESTDIR         = ../sv_tools/plugins
+DESTDIR         = ../plugins
 CONFIG         += plugin
-INCLUDEPATH    += ../sv_tools
 INCLUDEPATH    += ../QCustomPlot
 DEPENDPATH     +=.
 
@@ -60,13 +59,18 @@ FORMS += \
     digitaldisplayboard.ui \
     graphmainwindow.ui
 
+
+# install
+target.path = ../plugins
+INSTALLS += target
+
 #exists($$shell_path($${OUT_PWD}/../sv_tools/configs)) {
 # ToDo: test it on Win32
 #} else {
-windows:    copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/configs)
-unix:       copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/)
-    first.depends = $(first) copydata
-    export(first.depends)
-    export(copydata.commands)
-    QMAKE_EXTRA_TARGETS += first copydata
+#windows:    copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/configs)
+#unix:       copydata.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../sv_tools/configs) & $(COPY_DIR) $$shell_path($${PWD}/configs) $$shell_path($${OUT_PWD}/../sv_tools/)
+#    first.depends = $(first) copydata
+#    export(first.depends)
+#    export(copydata.commands)
+#    QMAKE_EXTRA_TARGETS += first copydata
 #}

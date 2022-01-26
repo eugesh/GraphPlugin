@@ -25,7 +25,7 @@
         <item>
          <widget class="QPushButton" name="pushButtonAddChannel">
           <property name="text">
-           <string>Add channel</string>
+           <string>Add data Source</string>
           </property>
          </widget>
         </item>
