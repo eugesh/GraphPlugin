@@ -5,3 +5,5 @@ Makefile.*
 Makefile
 ui_*.h
 *.user
+*.o
+moc_*

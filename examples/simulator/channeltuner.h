@@ -1,7 +1,7 @@
 #ifndef CHANNELTUNER_H
 #define CHANNELTUNER_H
 
-#include "../common.h"
+#include "common.h"
 
 #include <QWidget>
 
