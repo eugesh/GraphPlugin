@@ -81,7 +81,7 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
 
     if (m_mainWindow->isMaximized())
-           m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
+        m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
 
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
@@ -150,9 +150,25 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
     return true;
 }
 
+QStringList GraphPlugin::getValuesNames() const
+{
+    return m_measValDescMap.uniqueKeys();
+}
+
+QStringList GraphPlugin::getDescriptionsTr() const
+{
+    QStringList descs;
+
+    for (auto valDesc : m_measValDescMap.values())
+        descs << valDesc.desc_ru;
+
+    return descs;
+}
+
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 {
-    m_tableModel = new GraphPluginTableModel(this);
+    m_tableModel = new GraphPluginTableModel(getDescriptionsTr(), getValuesNames(), m_synchMode, this);
+    m_tableModel->setPacketSize(m_measValDescMap.size() - 1);
     m_tableView = new GraphTableView(m_mainWindow);
     m_tableView->setModel(m_tableModel);
     m_tableView->setConfig(m_config);
@@ -193,11 +209,11 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     return true;
 }
 
-bool GraphPlugin::saveGraphJSON(const QString &pathToJSON)
+/*bool GraphPlugin::saveGraphJSON(const QString &pathToJSON)
 {
 
     return true;
-}
+}*/
 
 bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 {
@@ -216,6 +232,11 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 
     return true;
+}
+
+void GraphPlugin::setMode(GraphPluginMode mode)
+{
+    m_synchMode = mode;
 }
 
 void GraphPlugin::addData(const MeasuredValue &value)

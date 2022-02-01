@@ -31,8 +31,10 @@ private slots:
     void removeChannel();
     void onRun();
     void onStop();
+    void onConfigure();
 
 private:
+    void enableConfigure(bool isEnabled = false);
     bool loadGraphPlugin();
     MeasuredValue currentValue(const QString &name) const;
     QVector<MeasuredValue> allCurrentValue() const;
@@ -45,6 +47,7 @@ private:
     QFormLayout *m_formLayout;
     State m_state;
     QTimer m_greqTimer;
+    bool m_enableConfigure = false;
 };
 
 #endif // SIMULATORMAINWINDOW_H

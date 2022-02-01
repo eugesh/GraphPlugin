@@ -4,6 +4,11 @@
 #include <qnamespace.h>
 #include <QColor>
 
+enum GraphPluginMode {
+    GRAPH_DATA_SYNCH,         //!< Data represents one packet, every value arrives synchronously (Telemetry packet mode)
+    GRAPH_DATA_ASYNC          //!< Values arrives asynchronously ()
+};
+
 enum : int {
     ClipboardTextRole = Qt::UserRole + 1,
     DataRole = Qt::UserRole + 2,

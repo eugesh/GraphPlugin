@@ -31,6 +31,7 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     connect(ui->pushButtonRemoveChannel, &QPushButton::pressed, this, &SimulatorMainWindow::removeChannel);
     connect(ui->pushButtonRun, &QPushButton::pressed, this, &SimulatorMainWindow::onRun);
     connect(ui->pushButtonStop, &QPushButton::pressed, this, &SimulatorMainWindow::onStop);
+    connect(ui->pushButtonConfigure, &QPushButton::pressed, this, &SimulatorMainWindow::onConfigure);
 
     m_formLayout = new QFormLayout(this);
     ui->widget->setLayout(m_formLayout);
@@ -91,8 +92,19 @@ bool SimulatorMainWindow::loadGraphPlugin()
     return false;
 }
 
+void SimulatorMainWindow::enableConfigure(bool isEnabled)
+{
+    m_enableConfigure = isEnabled;
+
+    ui->pushButtonConfigure->setEnabled(isEnabled);
+    ui->pushButtonRun->setEnabled(!isEnabled);
+    ui->pushButtonStop->setEnabled(!isEnabled);
+}
+
 void SimulatorMainWindow::addChannel()
 {
+    enableConfigure(true);
+
     m_channelNum++;
 
     ChannelTuner *ct = new ChannelTuner(m_channelNum);
@@ -102,6 +114,8 @@ void SimulatorMainWindow::addChannel()
 
 void SimulatorMainWindow::removeChannel()
 {
+    enableConfigure(true);
+
     int lastRow = m_formLayout->count() - 1;
 
     if (!lastRow)
@@ -116,11 +130,15 @@ QVector<MeasuredValue> SimulatorMainWindow::allCurrentValue() const
 {
     QVector<MeasuredValue> vec;
 
+    uint64_t timestamp = QDateTime::currentMSecsSinceEpoch();
+
     for (int i = 0; i < m_formLayout->count(); ++i) {
         MeasuredValue val;
         auto widg = static_cast<ChannelTuner*> (m_formLayout->itemAt(i)->widget());
         if (widg) {
             val.value = widg->randomValue();
+            val.timestamp = timestamp;
+            val.channel = 1;
             vec << val;
         }
     }
@@ -139,6 +157,11 @@ MeasuredValue SimulatorMainWindow::currentValue(const QString &name) const
 
 void SimulatorMainWindow::onRun()
 {
+    if (m_enableConfigure) {
+        // ToDo: QMessage here
+        return;
+    }
+
     QEventLoop _loop;
 
     m_state = RUN;
@@ -147,7 +170,7 @@ void SimulatorMainWindow::onRun()
         AutoDisconnect(conn) = connect(&m_greqTimer, &QTimer::timeout, [&_loop]() {
             _loop.exit();
         });
-        m_greqTimer.start(ui->spinBox->value() * 1000);
+        m_greqTimer.start(1000.0 / ui->spinBox->value());
         _loop.exec();
         for (auto val : allCurrentValue())
             emit newData(val);
@@ -157,4 +180,16 @@ void SimulatorMainWindow::onRun()
 void SimulatorMainWindow::onStop()
 {
     m_state = STOP;
+}
+
+void SimulatorMainWindow::onConfigure()
+{
+    // Unload plugin
+
+    // Write  JSONs
+
+    // Read JSONS and load plugin again
+
+    // Prepare GUI
+    enableConfigure(false);
 }
