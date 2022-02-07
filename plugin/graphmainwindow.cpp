@@ -34,6 +34,7 @@ void GraphMainWindow::commonInit()
     connect(ui->actionSaveJSON, &QAction::triggered, this, &GraphMainWindow::saveJSONdialog);
     connect(ui->actionSaveCSV, &QAction::triggered, this, &GraphMainWindow::saveCSVdialog);
     connect(ui->actionSaveImage, &QAction::triggered, this, &GraphMainWindow::saveImageDialog);
+    connect(ui->actionRemoveJSON, &QAction::triggered, this, &GraphMainWindow::onRemoveJSON);
 }
 
 GraphMainWindow::~GraphMainWindow()
@@ -82,6 +83,8 @@ QString GraphMainWindow::nameTr() const
 
 bool GraphMainWindow::readJSON(const QString &path)
 {
+    m_JSONPath = path;
+
     QFile loadFile(path);
 
     if (! loadFile.open(QIODevice::ReadOnly)) {
@@ -202,6 +205,22 @@ bool GraphMainWindow::saveJSON(const QString &path) const
     saveFile.write(saveDoc.toJson());
 
     return true;
+}
+
+void GraphMainWindow::onRemoveJSON()
+{
+    auto isOk = removeJSON();
+
+    emit deleteMe();
+}
+
+bool GraphMainWindow::removeJSON() const
+{
+    auto info = QFileInfo(m_JSONPath);
+
+    QDir dir = info.absoluteDir();
+
+    return dir.remove(info.absoluteFilePath());
 }
 
 void GraphMainWindow::saveCSVdialog()

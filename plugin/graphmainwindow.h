@@ -96,12 +96,17 @@ public slots:
     void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
     void addGraph(const GraphProperties &prop);
+    void onRemoveJSON();
+
+signals:
+    void deleteMe();
 
 private:
     void commonInit();
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
     bool saveJSON(const QString &path) const;
+    bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);
     void saveCSV(const QString &name) const;

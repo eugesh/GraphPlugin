@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -36,6 +36,7 @@
     <addaction name="actionSaveJSON"/>
     <addaction name="actionSaveCSV"/>
     <addaction name="actionSaveImage"/>
+    <addaction name="actionRemoveJSON"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -53,6 +54,11 @@
   <action name="actionSaveImage">
    <property name="text">
     <string>Сохранить изображение</string>
+   </property>
+  </action>
+  <action name="actionRemoveJSON">
+   <property name="text">
+    <string>Удалить JSON</string>
    </property>
   </action>
  </widget>

@@ -118,7 +118,7 @@ private:
     QMainWindow *m_mainWindow;
     // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
     // Graphs
-    QList<QDockWidget*> m_graphsDocks;
+    QMap<QString, QDockWidget*> m_graphsDocks;
     // QList<GraphMainWindow*> m_graphsMainWins;
     QMap<QString, GraphMainWindow*> m_graphsMainWins;
     // Score Board

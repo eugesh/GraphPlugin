@@ -221,10 +221,17 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
 
+    connect(graphWindow, &GraphMainWindow::deleteMe, [=,this]() {
+        m_graphsMainWins.remove(graphWindow->nameTr());
+        m_mainWindow->removeDockWidget(dock_widget);
+        m_graphsDocks.remove(graphWindow->nameTr());
+        dock_widget->deleteLater();
+    });
+
     dock_widget->setWidget(graphWindow);
     dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName()).arg("Dock"));
 
-    m_graphsDocks.append(dock_widget);
+    m_graphsDocks.insert(graphWindow->nameTr(), dock_widget);
     m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);
 
     dock_widget->toggleViewAction()->setText(graphWindow->nameTr());
@@ -255,7 +262,7 @@ QList<QDockWidget*> GraphPlugin::dockWindows() const
 {
     QList<QDockWidget*> list;
 
-    list.append(m_graphsDocks);
+    list.append(m_graphsDocks.values());
     list.append(m_tableDock);
     list.append(m_scoreBoardDock);
 
@@ -279,7 +286,7 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
 
         dock_widget->setWidget(graphWindow);
 
-        m_graphsDocks.append(dock_widget);
+        m_graphsDocks.insert(graphWindow->nameTr(), dock_widget);
         m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);
 
         m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
