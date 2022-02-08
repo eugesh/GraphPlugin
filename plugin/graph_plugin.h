@@ -121,8 +121,6 @@ private:
     QMap<QString, QDockWidget*> m_graphsDocks;
     // QList<GraphMainWindow*> m_graphsMainWins;
     QMap<QString, GraphMainWindow*> m_graphsMainWins;
-    // Score Board
-    QDockWidget *m_scoreBoardDock;
     // ToolBar
     QToolBar *m_toolbar;
     // Table

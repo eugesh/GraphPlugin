@@ -264,7 +264,7 @@ QList<QDockWidget*> GraphPlugin::dockWindows() const
 
     list.append(m_graphsDocks.values());
     list.append(m_tableDock);
-    list.append(m_scoreBoardDock);
+    list.append(m_boardDock);
 
     return list;
 }
