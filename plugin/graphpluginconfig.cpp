@@ -38,6 +38,11 @@ QMap<QString, MeasUnit> GraphPluginConfig::measurementUnits() const
     return m_measUnits;
 }
 
+QList<MeasUnit> GraphPluginConfig::measurementUnits(const QString &name) const
+{
+    return m_measUnits.values(name);
+}
+
 QList<QMap<QString, QVariant>> GraphPluginConfig::auxMeasUnits(const QString &physValName) const
 {
     return m_measUnits.values(physValName);

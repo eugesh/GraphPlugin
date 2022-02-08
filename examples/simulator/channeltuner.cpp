@@ -1,17 +1,19 @@
 #include "channelconfigurationdialog.h"
 #include "channeltuner.h"
+#include "graphpluginconfig.h"
 #include "ui_channeltuner.h"
 
 #include <cmath>
 
 
-ChannelTuner::ChannelTuner(int channelNumber, QWidget *parent) :
+ChannelTuner::ChannelTuner(int channelNumber, GraphPluginConfig *config, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ChannelTuner)
+    ui(new Ui::ChannelTuner),
+    m_config(config)
 {
     ui->setupUi(this);
 
-    ui->label->setText("Channel " + QString::number(channelNumber));
+    ui->label->setText("Source " + QString::number(channelNumber));
 
     connect(ui->toolButton, &QAbstractButton::pressed,
             this,           &ChannelTuner::slotToolButton);
@@ -19,14 +21,16 @@ ChannelTuner::ChannelTuner(int channelNumber, QWidget *parent) :
 
 ChannelTuner::~ChannelTuner()
 {
+    delete m_dialog;
     delete ui;
 }
 
 void ChannelTuner::slotToolButton()
 {
-    auto dialog = new ChannelConfigurationDialog(this);
+    if (!m_dialog)
+        m_dialog = new ChannelConfigurationDialog(m_config, this);
 
-    dialog->exec();
+    m_dialog->exec();
 }
 
 double ChannelTuner::amplitude() const

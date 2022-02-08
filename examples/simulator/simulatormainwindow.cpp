@@ -1,6 +1,7 @@
 #include "channelconfigurationdialog.h"
 #include "channeltuner.h"
 #include "graph_interface.h"
+#include "graphpluginconfig.h"
 #include "simulatormainwindow.h"
 #include "ui_simulatormainwindow.h"
 
@@ -37,6 +38,8 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     ui->widget->setLayout(m_formLayout);
 
     loadGraphPlugin();
+
+    m_config = new GraphPluginConfig(siPath, prefPath);
 
     srand(time(0));
 }
@@ -107,7 +110,7 @@ void SimulatorMainWindow::addChannel()
 
     m_channelNum++;
 
-    ChannelTuner *ct = new ChannelTuner(m_channelNum);
+    ChannelTuner *ct = new ChannelTuner(m_channelNum, m_config);
 
     m_formLayout->addRow(ct);
 }
@@ -126,7 +129,7 @@ void SimulatorMainWindow::removeChannel()
     m_formLayout->removeRow(lastRow);
 }
 
-QVector<MeasuredValue> SimulatorMainWindow::allCurrentValue() const
+QVector<MeasuredValue> SimulatorMainWindow::allCurrentValues() const
 {
     QVector<MeasuredValue> vec;
 
@@ -172,7 +175,7 @@ void SimulatorMainWindow::onRun()
         });
         m_greqTimer.start(1000.0 / ui->spinBox->value());
         _loop.exec();
-        for (auto val : allCurrentValue())
+        for (auto val : allCurrentValues())
             emit newData(val);
     }
 }

@@ -9,6 +9,8 @@ namespace Ui {
 class ChannelTuner;
 }
 
+class ChannelConfigurationDialog;
+class GraphPluginConfig;
 // struct MeasuredValueDescription;
 
 class ChannelTuner : public QWidget
@@ -16,7 +18,7 @@ class ChannelTuner : public QWidget
     Q_OBJECT
 
 public:
-    explicit ChannelTuner(int channelNumber, QWidget *parent = nullptr);
+    explicit ChannelTuner(int channelNumber, GraphPluginConfig *config, QWidget *parent = nullptr);
     ~ChannelTuner();
 
     double amplitude() const;
@@ -35,6 +37,8 @@ private slots:
 private:
     Ui::ChannelTuner *ui;
     MeasuredValueDescription m_prop;
+    GraphPluginConfig *m_config;
+    ChannelConfigurationDialog *m_dialog = nullptr;
 };
 
 #endif // CHANNELTUNER_H

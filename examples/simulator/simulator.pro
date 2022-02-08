@@ -1,30 +1,24 @@
 QT             += core gui widgets printsupport
 
 TEMPLATE        = app
-#DESTDIR         = ../sv_tools/plugins
-#CONFIG         += plugin
 INCLUDEPATH    += ../../plugin
 INCLUDEPATH    += ../../QCustomPlot
-#DEPENDPATH     +=.
-
-#CONFIG += c++14
 
 INCLUDEPATH += ../..
 
 HEADERS += \
-    ../../graph_interface.h \
+    ../../plugin/graph_interface.h \
+    ../../plugin/graphpluginconfig.h \
     channelconfigurationdialog.h \
     channeltuner.h \
     simulatormainwindow.h
 
 SOURCES += \
+    ../../plugin/graphpluginconfig.cpp \
     channelconfigurationdialog.cpp \
     channeltuner.cpp \
     main.cpp \
     simulatormainwindow.cpp
-
-#FORMS += \
-#    addonplotdialog.ui
 
 FORMS += \
     channelconfigurationdialog.ui \

@@ -9,6 +9,7 @@ class MainWindow;
 }
 
 class QFormLayout;
+class GraphPluginConfig;
 class GraphInterface;
 struct MeasuredValue;
 
@@ -37,7 +38,7 @@ private:
     void enableConfigure(bool isEnabled = false);
     bool loadGraphPlugin();
     MeasuredValue currentValue(const QString &name) const;
-    QVector<MeasuredValue> allCurrentValue() const;
+    QVector<MeasuredValue> allCurrentValues() const;
 
 private:
     Ui::MainWindow *ui;
@@ -48,6 +49,7 @@ private:
     State m_state;
     QTimer m_greqTimer;
     bool m_enableConfigure = false;
+    GraphPluginConfig *m_config;
 };
 
 #endif // SIMULATORMAINWINDOW_H
