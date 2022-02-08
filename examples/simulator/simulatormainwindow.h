@@ -11,6 +11,7 @@ class MainWindow;
 class QFormLayout;
 class GraphPluginConfig;
 class GraphInterface;
+class QPluginLoader;
 struct MeasuredValue;
 
 enum State {
@@ -37,12 +38,14 @@ private slots:
 private:
     void enableConfigure(bool isEnabled = false);
     bool loadGraphPlugin();
+    bool unloadGraphPlugin();
     MeasuredValue currentValue(const QString &name) const;
     QVector<MeasuredValue> allCurrentValues() const;
 
 private:
     Ui::MainWindow *ui;
-    GraphInterface *graphInterface = nullptr;
+    QPluginLoader *m_graphPluginLoader = nullptr;
+    GraphInterface *m_graphInterface = nullptr;
     // Number of channels
     int m_channelNum = 0;
     QFormLayout *m_formLayout;

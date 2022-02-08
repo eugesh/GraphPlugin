@@ -46,8 +46,8 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
 
 SimulatorMainWindow::~SimulatorMainWindow()
 {
-    if (graphInterface) {
-        graphInterface->saveGraphPluginGeometry();
+    if (m_graphInterface) {
+        m_graphInterface->saveGraphPluginGeometry();
 
     }
 
@@ -70,31 +70,50 @@ bool SimulatorMainWindow::loadGraphPlugin()
     pluginsDir.cd("plugins");
     const QStringList entries = pluginsDir.entryList(QDir::Files);
     for (const QString &fileName : entries) {
-        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-        QObject *plugin = pluginLoader.instance();
+        m_graphPluginLoader = new QPluginLoader(pluginsDir.absoluteFilePath(fileName));
+        QObject *plugin = m_graphPluginLoader->instance();
         if (plugin) {
-            graphInterface = qobject_cast<GraphInterface *>(plugin);
+            m_graphInterface = qobject_cast<GraphInterface *>(plugin);
 
-            graphInterface->setMainWindow(this);
+            m_graphInterface->setMainWindow(this);
 
-            graphInterface->loadJSONs();
+            m_graphInterface->loadJSONs();
 
             connect(this, &SimulatorMainWindow::newData, [&](const MeasuredValue &val) {
-                graphInterface->addData(val);
+                m_graphInterface->addData(val);
             });
 
-            if (graphInterface) {
+            if (m_graphInterface) {
                 return true;
             }
 
             qWarning() << "Graph Plugin wasn't loaded!";
-            pluginLoader.unload();
+            m_graphPluginLoader->unload();
         }
     }
 
     return false;
 }
 
+bool SimulatorMainWindow::unloadGraphPlugin()
+{
+    if (m_graphPluginLoader && m_graphPluginLoader->isLoaded()) {
+        auto docks = m_graphInterface->dockWindows();
+        for (QDockWidget *widget :  m_graphInterface->dockWindows())
+            removeDockWidget(widget);
+
+        if (!m_graphPluginLoader->unload()) {
+            qWarning() << "Can't uload plugin: " << m_graphPluginLoader->errorString();
+            return false;
+        } else {
+            delete m_graphPluginLoader;
+            m_graphPluginLoader = nullptr;
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
 void SimulatorMainWindow::enableConfigure(bool isEnabled)
 {
     m_enableConfigure = isEnabled;
@@ -160,7 +179,7 @@ MeasuredValue SimulatorMainWindow::currentValue(const QString &name) const
 
 void SimulatorMainWindow::onRun()
 {
-    if (m_enableConfigure) {
+    if (m_enableConfigure || !m_graphPluginLoader) {
         // ToDo: QMessage here
         return;
     }
@@ -188,7 +207,7 @@ void SimulatorMainWindow::onStop()
 void SimulatorMainWindow::onConfigure()
 {
     // Unload plugin
-
+    auto isOk = unloadGraphPlugin();
     // Write  JSONs
 
     // Read JSONS and load plugin again
