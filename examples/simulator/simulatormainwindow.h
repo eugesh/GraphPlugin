@@ -41,6 +41,7 @@ private:
     // Write JSONs after configuration process is finished
     bool writeConfigJSON(const QString &path) const;
     bool writeGraphJSON(const QString &path) const;
+    bool writeGraphJSONs() const;
 
     void enableConfigure(bool isEnabled = false);
     bool loadGraphPlugin();

@@ -7,6 +7,7 @@
 
 #include <QDateTime>
 #include <QDebug>
+#include <QDockWidget>
 #include <QDir>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -106,12 +107,19 @@ bool SimulatorMainWindow::loadGraphPlugin()
 bool SimulatorMainWindow::unloadGraphPlugin()
 {
     if (m_graphPluginLoader && m_graphPluginLoader->isLoaded()) {
-        auto docks = m_graphInterface->dockWindows();
-        for (QDockWidget *widget :  m_graphInterface->dockWindows())
+        // auto docks = m_graphInterface->dockWindows();
+        for (QDockWidget *widget :  m_graphInterface->dockWindows()) {
+            /*QEventLoop _loop;
+            AutoDisconnect(conn) = connect(widget, &QDockWidget::destroyed, [&_loop]() {
+                _loop.exit();
+            });*/
             removeDockWidget(widget);
+            // delete widget;
+            // _loop.exec();
+        }
 
         if (!m_graphPluginLoader->unload()) {
-            qWarning() << "Can't uload plugin: " << m_graphPluginLoader->errorString();
+            qWarning() << "Can't unload plugin: " << m_graphPluginLoader->errorString();
             return false;
         } else {
             delete m_graphPluginLoader;
@@ -173,6 +181,13 @@ bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
     writeFile.write(saveDoc.toJson());
 
     return true;
+}
+
+bool SimulatorMainWindow::writeGraphJSONs() const
+{
+    for (int i = 0; i < m_formLayout->rowCount(); ++i) {
+
+    }
 }
 
 bool SimulatorMainWindow::writeGraphJSON(const QString &path) const
@@ -274,12 +289,21 @@ void SimulatorMainWindow::onStop()
 void SimulatorMainWindow::onConfigure()
 {
     // Unload plugin
-    auto isOk = unloadGraphPlugin();
+    // auto isOk = unloadGraphPlugin();
+    /*QEventLoop eventLoop;
+    eventLoop.exec();
+    while (!eventLoop.processEvents())
+        eventLoop.quit();*/
     // Write  JSONs
+    // Config:
     auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
-    isOk = writeConfigJSON(path);
+    bool isOk = writeConfigJSON(path);
+
+    // Graph Plots:
+    writeGraphJSONs();
 
     // Read JSONS and load plugin again
+    // loadGraphPlugin();
 
     // Prepare GUI
     enableConfigure(false);
