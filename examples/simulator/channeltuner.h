@@ -24,10 +24,12 @@ public:
     double amplitude() const;
     double deviation() const;
     QString name() const;
-    MeasuredValueDescription description() const;
+    QString description() const;
+    // MeasuredValueDescription description() const;
     //!< Amplitude + deviation * random();
     double randomValue() const;
-
+    QString physicalValueName() const;
+    QString measurementUnitName() const;
 
 signals:
 

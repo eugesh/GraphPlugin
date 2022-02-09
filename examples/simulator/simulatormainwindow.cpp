@@ -8,6 +8,8 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QEventLoop>
 #include <QFormLayout>
 #include <QPluginLoader>
@@ -21,6 +23,9 @@
         }\
     ); *l //-- Use AutoDisconnect(conn1) = connect(....);
 
+static const char* graphConfigsFolder = "configs/graphs";
+static const char* pluginConfigsFolder = "configs/config";
+static const char* SIConfigsFolder = "configs/si";
 
 SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,6 +44,9 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
 
     loadGraphPlugin();
 
+    // Load SI units and prefixes
+    auto prefPath = QString("%1/%2").arg(SIConfigsFolder).arg("prefixes.json");
+    auto siPath = QString("%1/%2").arg(SIConfigsFolder).arg("aux-units-ru.json");
     m_config = new GraphPluginConfig(siPath, prefPath);
 
     srand(time(0));
@@ -114,6 +122,65 @@ bool SimulatorMainWindow::unloadGraphPlugin()
         return false;
     }
 }
+
+// Read JSON to propose user comboboxes with lists of SI units
+bool SimulatorMainWindow::readSiJSON(const QString &path)
+{
+
+    return true;
+}
+
+// Write JSONs after configuration process is finished
+bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
+{
+    QFile writeFile(pathToJSON);
+
+    if (! writeFile.open(QIODevice::WriteOnly)) {
+        qCritical() << "Output file " << pathToJSON << " wasn't opened on write";
+        return false;
+    }
+
+    QJsonObject docObject;
+    QJsonArray valuesArray;
+
+    for (int i = 0; i < m_formLayout->rowCount(); ++i) {
+        auto widg = static_cast<ChannelTuner*> (m_formLayout->itemAt(i)->widget());
+        if (widg) {
+            QJsonObject valueObject;
+            auto physValName = widg->physicalValueName();
+            auto measUnitName = widg->measurementUnitName();
+            QList<MeasUnit> units = m_config->measurementUnits(physValName);
+            // Find out selected unit in units list
+            MeasUnit selectedUnit;
+            for (auto unit : units) {
+                if (unit["name"] == measUnitName)
+                    selectedUnit = unit;
+            }
+            valueObject["name"] = widg->name();
+            valueObject["description"] = "";
+            valueObject["description_ru"] = widg->description();
+            valueObject["physicalQuantity"] = physValName;
+            valueObject["measure_unit"] = measUnitName;
+            valueObject["symbol"] = selectedUnit["symbol"].toString();
+            valueObject["symbol_rus"] = selectedUnit["symbol_ru"].toString();
+
+            valuesArray.append(valueObject);
+        }
+    }
+
+    docObject["values"] = valuesArray;
+    QJsonDocument saveDoc(docObject);
+    writeFile.write(saveDoc.toJson());
+
+    return true;
+}
+
+bool SimulatorMainWindow::writeGraphJSON(const QString &path) const
+{
+
+    return true;
+}
+
 void SimulatorMainWindow::enableConfigure(bool isEnabled)
 {
     m_enableConfigure = isEnabled;
@@ -209,6 +276,8 @@ void SimulatorMainWindow::onConfigure()
     // Unload plugin
     auto isOk = unloadGraphPlugin();
     // Write  JSONs
+    auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
+    isOk = writeConfigJSON(path);
 
     // Read JSONS and load plugin again
 

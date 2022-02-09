@@ -26,11 +26,41 @@ void ChannelConfigurationDialog::onComboBoxPhyscsChanged(const QString &physValN
     ui->comboBox_units->clear();
 
     for (auto unitName : m_config->measurementUnits(physValName))
-        ui->comboBox_units->addItem(unitName["name_ru"].toString());
+        ui->comboBox_units->addItem(unitName["name_ru"].toString(), unitName["name"].toString());
+}
+
+QString ChannelConfigurationDialog::measurementValueName() const
+{
+    return ui->lineEdit->text();
+}
+
+QString ChannelConfigurationDialog::description() const
+{
+    return ui->lineEdit_description->text();
+}
+
+QString ChannelConfigurationDialog::physicalValueName() const
+{
+    return ui->comboBox_physcs->currentText();
+}
+
+QString ChannelConfigurationDialog::measurementUnitName() const
+{
+    return ui->comboBox_units->currentData().toString();
+}
+
+QString ChannelConfigurationDialog::measurementUnitNameTr() const
+{
+    return ui->comboBox_units->currentText();
 }
 
 void ChannelConfigurationDialog::fillForm()
 {
     for (auto name : m_config->physicalValuesNames())
         ui->comboBox_physcs->addItem(name);
+}
+
+bool ChannelConfigurationDialog::addTimePlotChecked() const
+{
+    return ui->checkBox_addPlot->isChecked();
 }

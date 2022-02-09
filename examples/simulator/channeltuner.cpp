@@ -33,6 +33,16 @@ void ChannelTuner::slotToolButton()
     m_dialog->exec();
 }
 
+QString ChannelTuner::physicalValueName() const
+{
+    return m_dialog->physicalValueName();
+}
+
+QString ChannelTuner::measurementUnitName() const
+{
+    return m_dialog->measurementUnitName();
+}
+
 double ChannelTuner::amplitude() const
 {
     return ui->doubleSpinBoxAmplitude->value();
@@ -45,13 +55,18 @@ double ChannelTuner::deviation() const
 
 QString ChannelTuner::name() const
 {
-    // return ui->;
+    return m_dialog->measurementValueName();
 }
 
-MeasuredValueDescription ChannelTuner::description() const
+QString ChannelTuner::description() const
+{
+    return m_dialog->description();
+}
+
+/*MeasuredValueDescription ChannelTuner::description() const
 {
 
-}
+}*/
 
 //!< Amplitude + deviation * random();
 double ChannelTuner::randomValue() const

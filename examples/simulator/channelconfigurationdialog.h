@@ -17,10 +17,19 @@ public:
     explicit ChannelConfigurationDialog(GraphPluginConfig *config, QWidget *parent = nullptr);
     ~ChannelConfigurationDialog();
 
-    void fillForm();
+    //!< Whether add standard time plot - f(t)
+    bool addTimePlotChecked() const;
+    QString measurementValueName() const;
+    QString description() const;
+    QString physicalValueName() const;
+    QString measurementUnitName() const;
+    QString measurementUnitNameTr() const;
 
 public slots:
     void onComboBoxPhyscsChanged(const QString &name);
+
+private:
+    void fillForm();
 
 private:
     Ui::ChannelConfigurationDialog *ui;

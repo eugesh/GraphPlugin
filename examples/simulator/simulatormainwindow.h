@@ -36,6 +36,12 @@ private slots:
     void onConfigure();
 
 private:
+    // Read JSON to propose user comboboxes with lists of SI units
+    bool readSiJSON(const QString &path);
+    // Write JSONs after configuration process is finished
+    bool writeConfigJSON(const QString &path) const;
+    bool writeGraphJSON(const QString &path) const;
+
     void enableConfigure(bool isEnabled = false);
     bool loadGraphPlugin();
     bool unloadGraphPlugin();
