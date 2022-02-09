@@ -30,6 +30,17 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
 
 GraphPlugin::~GraphPlugin()
 {
+    for (auto dock : m_graphsMainWins)
+        delete dock;
+
+    for (auto dock : m_graphsDocks)
+        delete dock;
+
+    delete m_config;
+    delete m_tableModel;
+    delete m_tableView;
+    delete m_tableDock;
+    delete m_boardDock;
 
 }
 
