@@ -9,7 +9,8 @@
             "measure_unit": "metre per second",
             "measure_unit_rus": "метр в секунду",
             "symbol": "m/s",
-            "symbol_rus": "м/с"
+            "symbol_rus": "м/с",
+            "channel_modes" : [1,[1,2],[1,2,3,4]]
         },
         {
             "name": "temperature",
@@ -19,7 +20,8 @@
             "measure_unit": "celsius",
             "measure_unit_rus": "Целсий",
             "symbol": "°C",
-            "symbol_rus": "°C"
+            "symbol_rus": "°C",
+            "channel_modes" : [1]
         },
         {
             "name": "time",
@@ -40,7 +42,8 @@
             "measure_unit": "Pascal",
             "measure_unit_rus": "Паскаль",
             "symbol": "Pa",
-            "symbol_rus": "Па"
+            "symbol_rus": "Па",
+            "channel_modes" : [1,[1,2],[1,2,3,4]]
         },
         {
             "name": "electricPotential",
@@ -50,8 +53,9 @@
             "measure_unit": "Volt",
             "measure_unit_rus": "Вольт",
             "symbol": "V",
-            "symbol_rus": "В"
+            "symbol_rus": "В",
+            "channel_modes" : [1]
         }
     ],
-    "channel_modes" : [1,[1,2],[1,2,3,4]]
+    "synch_mode" : "synchronous"
 }
