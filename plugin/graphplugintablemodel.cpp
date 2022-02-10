@@ -3,8 +3,8 @@
 
 GraphPluginTableModel::GraphPluginTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode, QObject *parent) :
     QAbstractTableModel(parent),
-    m_coloumnNames(names),
-    m_coloumnTitles(titles),
+    m_coloumnNames(QStringList() << "time" << names),
+    m_coloumnTitles(QStringList() << tr("Время") << titles),
     m_syncMode(syncMode)
 {
     // ToDo: Must be read from JSON

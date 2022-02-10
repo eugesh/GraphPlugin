@@ -122,8 +122,6 @@ bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
 {
     QFile loadFile(pathToJSON);
 
-    MeasuredValueDescription mvdesc_struct;
-
     if (! loadFile.open(QIODevice::ReadOnly)) {
         qCritical() << "Input file " << pathToJSON << " wasn't opened on read";
         return false;
@@ -137,6 +135,10 @@ bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
 
     for (int i = 0; i < valuesArray.size(); ++i) {
         QJsonObject valueObject = valuesArray[i].toObject();
+        if (valueObject["name"].toString().contains("time", Qt::CaseInsensitive))
+            continue;
+
+        MeasuredValueDescription mvdesc_struct;
         mvdesc_struct.name = valueObject["name"].toString();
         mvdesc_struct.desc = valueObject["description"].toString();
         mvdesc_struct.desc_ru = valueObject["description_ru"].toString();
@@ -179,7 +181,7 @@ QStringList GraphPlugin::getDescriptionsTr() const
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 {
     m_tableModel = new GraphPluginTableModel(getDescriptionsTr(), getValuesNames(), m_synchMode, this);
-    m_tableModel->setPacketSize(m_measValDescMap.size() - 1);
+    m_tableModel->setPacketSize(m_measValDescMap.size());
     m_tableView = new GraphTableView(m_mainWindow);
     m_tableView->setModel(m_tableModel);
     m_tableView->setConfig(m_config);
