@@ -9,12 +9,14 @@ INCLUDEPATH += ../..
 HEADERS += \
     ../../plugin/graph_interface.h \
     ../../plugin/graphpluginconfig.h \
+    ../../plugin/common.h \
     channelconfigurationdialog.h \
     channeltuner.h \
     simulatormainwindow.h
 
 SOURCES += \
     ../../plugin/graphpluginconfig.cpp \
+    ../../plugin/common.cpp \
     channelconfigurationdialog.cpp \
     channeltuner.cpp \
     main.cpp \

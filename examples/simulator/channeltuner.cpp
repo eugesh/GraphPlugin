@@ -17,6 +17,9 @@ ChannelTuner::ChannelTuner(int channelNumber, GraphPluginConfig *config, QWidget
 
     connect(ui->toolButton, &QAbstractButton::pressed,
             this,           &ChannelTuner::slotToolButton);
+
+    if (!m_dialog)
+        m_dialog = new ChannelConfigurationDialog(m_config, this);
 }
 
 ChannelTuner::~ChannelTuner()
@@ -43,6 +46,11 @@ QString ChannelTuner::measurementUnitName() const
     return m_dialog->measurementUnitName();
 }
 
+QString ChannelTuner::measurementUnitNameTr() const
+{
+    return m_dialog->measurementUnitNameTr();
+}
+
 double ChannelTuner::amplitude() const
 {
     return ui->doubleSpinBoxAmplitude->value();
@@ -61,6 +69,36 @@ QString ChannelTuner::name() const
 QString ChannelTuner::description() const
 {
     return m_dialog->description();
+}
+
+void ChannelTuner::setCurrentPhysicalValue(const QString &name)
+{
+    m_dialog->setCurrentPhysicalValue(name);
+}
+
+void ChannelTuner::setCurrentMeasurementUnit(const QString &name)
+{
+    m_dialog->setCurrentMeasurementUnit(name);
+}
+
+void ChannelTuner::setName(const QString &name)
+{
+    m_dialog->setName(name);
+}
+
+void ChannelTuner::setDescription(const QString &name)
+{
+    m_dialog->setDescription(name);
+}
+
+void ChannelTuner::setPhysicalValues(const QStringList &names)
+{
+    m_dialog->setPhysicalValues(names);
+}
+
+void ChannelTuner::setMeasurementUnits(const QStringList &names)
+{
+
 }
 
 /*MeasuredValueDescription ChannelTuner::description() const

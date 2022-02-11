@@ -64,3 +64,28 @@ bool ChannelConfigurationDialog::addTimePlotChecked() const
 {
     return ui->checkBox_addPlot->isChecked();
 }
+
+void ChannelConfigurationDialog::setCurrentPhysicalValue(const QString &name)
+{
+    ui->comboBox_physcs->setCurrentText(name);
+}
+
+void ChannelConfigurationDialog::setCurrentMeasurementUnit(const QString &name)
+{
+    ui->comboBox_units->setCurrentText(name);
+}
+
+void ChannelConfigurationDialog::setName(const QString &name)
+{
+    ui->lineEdit->setText(name);
+}
+
+void ChannelConfigurationDialog::setDescription(const QString &name)
+{
+    ui->lineEdit_description->setText(name);
+}
+
+void ChannelConfigurationDialog::setPhysicalValues(const QStringList &names)
+{
+    ui->comboBox_physcs->insertItems(0, names);
+}

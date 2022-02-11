@@ -28,6 +28,6 @@ struct MeasuredValueDescription {
 
 QString ColorToNameConverter(const QColor &color);
 QColor nameToColorConverter(const QString &name);
-
+QMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON);
 
 #endif // COMMON_H

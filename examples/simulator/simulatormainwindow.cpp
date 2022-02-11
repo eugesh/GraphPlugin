@@ -48,7 +48,13 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     // Load SI units and prefixes
     auto prefPath = QString("%1/%2").arg(SIConfigsFolder).arg("prefixes.json");
     auto siPath = QString("%1/%2").arg(SIConfigsFolder).arg("aux-units-ru.json");
-    m_config = new GraphPluginConfig(siPath, prefPath);
+    auto valuesPath = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
+
+    m_globalConfig = new GraphPluginConfig(siPath, prefPath);
+
+    m_currentConfig = loadConfigJSON(valuesPath);
+
+    fillGUI();
 
     srand(time(0));
 }
@@ -57,7 +63,6 @@ SimulatorMainWindow::~SimulatorMainWindow()
 {
     if (m_graphInterface) {
         m_graphInterface->saveGraphPluginGeometry();
-
     }
 
     delete ui;
@@ -104,6 +109,17 @@ bool SimulatorMainWindow::loadGraphPlugin()
     return false;
 }
 
+void SimulatorMainWindow::fillGUI()
+{
+    for (auto val : m_currentConfig.values()) {
+        addChannel();
+        channelTunerAt(m_channelNum - 1)->setCurrentPhysicalValue(val.physQuant);
+        channelTunerAt(m_channelNum - 1)->setCurrentMeasurementUnit(val.unit_rus);
+        channelTunerAt(m_channelNum - 1)->setName(val.name);
+        channelTunerAt(m_channelNum - 1)->setDescription(val.desc_ru);
+    }
+}
+
 bool SimulatorMainWindow::unloadGraphPlugin()
 {
     if (m_graphPluginLoader && m_graphPluginLoader->isLoaded()) {
@@ -132,7 +148,7 @@ bool SimulatorMainWindow::unloadGraphPlugin()
 }
 
 // Read JSON to propose user comboboxes with lists of SI units
-bool SimulatorMainWindow::readSiJSON(const QString &path)
+bool SimulatorMainWindow::readConfigJSON(const QString &path)
 {
 
     return true;
@@ -157,7 +173,9 @@ bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
             QJsonObject valueObject;
             auto physValName = widg->physicalValueName();
             auto measUnitName = widg->measurementUnitName();
-            QList<MeasUnit> units = m_config->measurementUnits(physValName);
+            auto measUnitNameTr = widg->measurementUnitNameTr();
+
+            QList<MeasUnit> units = m_globalConfig->measurementUnits(physValName);
             // Find out selected unit in units list
             MeasUnit selectedUnit;
             for (auto unit : units) {
@@ -169,6 +187,7 @@ bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
             valueObject["description_ru"] = widg->description();
             valueObject["physicalQuantity"] = physValName;
             valueObject["measure_unit"] = measUnitName;
+            valueObject["measure_unit_rus"] = measUnitNameTr;
             valueObject["symbol"] = selectedUnit["symbol"].toString();
             valueObject["symbol_rus"] = selectedUnit["symbol_ru"].toString();
 
@@ -211,9 +230,16 @@ void SimulatorMainWindow::addChannel()
 
     m_channelNum++;
 
-    ChannelTuner *ct = new ChannelTuner(m_channelNum, m_config);
+    ChannelTuner *ct = new ChannelTuner(m_channelNum, m_globalConfig);
 
     m_formLayout->addRow(ct);
+}
+
+ChannelTuner *SimulatorMainWindow::channelTunerAt(int index) const
+{
+    auto widg = static_cast<ChannelTuner*> (m_formLayout->itemAt(index)->widget());
+
+    return widg;
 }
 
 void SimulatorMainWindow::removeChannel()
@@ -243,6 +269,7 @@ QVector<MeasuredValue> SimulatorMainWindow::allCurrentValues() const
             val.value = widg->randomValue();
             val.timestamp = timestamp;
             val.channel = 1;
+            val.name = widg->name();
             vec << val;
         }
     }

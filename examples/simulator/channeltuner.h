@@ -30,6 +30,13 @@ public:
     double randomValue() const;
     QString physicalValueName() const;
     QString measurementUnitName() const;
+    QString measurementUnitNameTr() const;
+    void setPhysicalValues(const QStringList &names);
+    void setCurrentPhysicalValue(const QString &name);
+    void setCurrentMeasurementUnit(const QString &name);
+    void setName(const QString &name);
+    void setDescription(const QString &name);
+    void setMeasurementUnits(const QStringList &names);
 
 signals:
 

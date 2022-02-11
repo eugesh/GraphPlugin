@@ -120,37 +120,9 @@ bool GraphPlugin::saveGraphPluginGeometry()
 
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
 {
-    QFile loadFile(pathToJSON);
+    m_measValDescMap = loadConfigJSON(pathToJSON);
 
-    if (! loadFile.open(QIODevice::ReadOnly)) {
-        qCritical() << "Input file " << pathToJSON << " wasn't opened on read";
-        return false;
-    }
-
-    QByteArray loadData = loadFile.readAll();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
-
-    QJsonArray valuesArray = loadDoc.object()["values"].toArray();
-
-    for (int i = 0; i < valuesArray.size(); ++i) {
-        QJsonObject valueObject = valuesArray[i].toObject();
-        if (valueObject["name"].toString().contains("time", Qt::CaseInsensitive))
-            continue;
-
-        MeasuredValueDescription mvdesc_struct;
-        mvdesc_struct.name = valueObject["name"].toString();
-        mvdesc_struct.desc = valueObject["description"].toString();
-        mvdesc_struct.desc_ru = valueObject["description_ru"].toString();
-        mvdesc_struct.physQuant = valueObject["physicalQuantity"].toString();
-        mvdesc_struct.unit = valueObject["measure_unit"].toString();
-        mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
-        mvdesc_struct.symbol = valueObject["symbol"].toString();
-        mvdesc_struct.symbol_rus = valueObject["symbol_rus"].toString();
-        m_measValDescMap.insert(mvdesc_struct.name, mvdesc_struct);
-    }
-
-    return true;
+    return static_cast<bool>(m_measValDescMap.count());
 }
 
 bool GraphPlugin::loadConfig(const QString &pathToJSON)

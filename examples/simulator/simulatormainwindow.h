@@ -1,13 +1,17 @@
 #ifndef SIMULATORMAINWINDOW_H
 #define SIMULATORMAINWINDOW_H
 
+#include "common.h"
+
 #include <QMainWindow>
+#include <QMap>
 #include <QTimer>
 
 namespace Ui {
 class MainWindow;
 }
 
+class ChannelTuner;
 class QFormLayout;
 class GraphPluginConfig;
 class GraphInterface;
@@ -36,8 +40,9 @@ private slots:
     void onConfigure();
 
 private:
-    // Read JSON to propose user comboboxes with lists of SI units
-    bool readSiJSON(const QString &path);
+    void fillGUI();
+    // Read config JSON
+    bool readConfigJSON(const QString &path);
     // Write JSONs after configuration process is finished
     bool writeConfigJSON(const QString &path) const;
     bool writeGraphJSON(const QString &path) const;
@@ -48,6 +53,7 @@ private:
     bool unloadGraphPlugin();
     MeasuredValue currentValue(const QString &name) const;
     QVector<MeasuredValue> allCurrentValues() const;
+    ChannelTuner *channelTunerAt(int index) const;
 
 private:
     Ui::MainWindow *ui;
@@ -59,7 +65,8 @@ private:
     State m_state;
     QTimer m_greqTimer;
     bool m_enableConfigure = false;
-    GraphPluginConfig *m_config;
+    GraphPluginConfig *m_globalConfig;
+    QMap<QString, MeasuredValueDescription> m_currentConfig;
 };
 
 #endif // SIMULATORMAINWINDOW_H
