@@ -65,6 +65,8 @@ SimulatorMainWindow::~SimulatorMainWindow()
         m_graphInterface->saveGraphPluginGeometry();
     }
 
+    unloadGraphPlugin();
+
     delete ui;
 }
 
