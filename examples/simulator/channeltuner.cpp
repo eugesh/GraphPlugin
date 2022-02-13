@@ -51,6 +51,11 @@ QString ChannelTuner::measurementUnitNameTr() const
     return m_dialog->measurementUnitNameTr();
 }
 
+bool ChannelTuner::isUseStandardPlot() const
+{
+    return m_dialog->isUseStandardPlot();
+}
+
 double ChannelTuner::amplitude() const
 {
     return ui->doubleSpinBoxAmplitude->value();

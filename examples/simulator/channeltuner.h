@@ -31,6 +31,7 @@ public:
     QString physicalValueName() const;
     QString measurementUnitName() const;
     QString measurementUnitNameTr() const;
+    bool isUseStandardPlot() const;
     void setPhysicalValues(const QStringList &names);
     void setCurrentPhysicalValue(const QString &name);
     void setCurrentMeasurementUnit(const QString &name);

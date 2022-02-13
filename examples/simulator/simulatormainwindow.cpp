@@ -207,7 +207,9 @@ bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
 bool SimulatorMainWindow::writeGraphJSONs() const
 {
     for (int i = 0; i < m_formLayout->rowCount(); ++i) {
+        if (channelTunerAt(i)->isUseStandardPlot()) {
 
+        }
     }
 }
 

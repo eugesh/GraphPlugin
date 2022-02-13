@@ -89,3 +89,14 @@ void ChannelConfigurationDialog::setPhysicalValues(const QStringList &names)
 {
     ui->comboBox_physcs->insertItems(0, names);
 }
+
+bool ChannelConfigurationDialog::isUseStandardPlot() const
+{
+    return ui->checkBox_addPlot->isChecked();
+}
+
+/*void ChannelConfigurationDialog::setMeasurementUnits(const QStringList &names)
+{
+    for (auto name : names)
+        ui->comboBox_units->insertItem(name.name);
+}*/
