@@ -111,7 +111,7 @@
                 "notes": "As a postpositional adjective, the plural kelvin is used instead of kelvins"
             },
             "celsius": {
-                "name_ru": "цельсий",
+                "name_ru": "градус Цельсия",
                 "name": "celsius",
                 "otherNames": ["degree celsius", "degrees celsius"],
                 "symbol": "°C",
@@ -121,7 +121,7 @@
                 "offset": -273.15
             },
             "fahrenheit": {
-                "name_ru": "фаренгейт",
+                "name_ru": "градус Фаренгейта",
                 "name": "fahrenheit",
                 "otherNames": ["degree fahrenheit", "degrees fahrenheit"],
                 "symbol": "°F",

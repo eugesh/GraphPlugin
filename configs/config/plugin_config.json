@@ -18,7 +18,7 @@
             "description_ru": "Температура",
             "physicalQuantity": "temperature",
             "measure_unit": "celsius",
-            "measure_unit_rus": "Целсий",
+            "measure_unit_rus": "градус Цельсия",
             "symbol": "°C",
             "symbol_rus": "°C",
             "channel_modes" : [1]
