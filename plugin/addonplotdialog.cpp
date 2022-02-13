@@ -60,6 +60,16 @@ void AddOnPlotDialog::setMeasValDesc(const QMap<QString, MeasuredValueDescriptio
         ui->xNameComboBox->addItem(val.name);
         ui->yNameComboBox->addItem(val.name);
     }
+
+    // Add "time"
+    MeasuredValueDescription timeVal;
+    timeVal.desc = "time";
+    timeVal.desc_ru = tr("время");
+    timeVal.name = "time";
+    timeVal.physQuant = "time";
+    timeVal.unit = "second";
+    m_measValuesDesc.insert("time", timeVal);
+    ui->xNameComboBox->addItem("time");
 }
 
 void AddOnPlotDialog::setGraphProperties(const GraphProperties &defaultProp)
