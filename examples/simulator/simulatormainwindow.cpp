@@ -302,10 +302,10 @@ void SimulatorMainWindow::onRun()
     m_state = RUN;
 
     while (m_state == RUN) {
-        AutoDisconnect(conn) = connect(&m_greqTimer, &QTimer::timeout, [&_loop]() {
+        AutoDisconnect(conn) = connect(&m_freqTimer, &QTimer::timeout, [&_loop]() {
             _loop.exit();
         });
-        m_greqTimer.start(1000.0 / ui->spinBox->value());
+        m_freqTimer.start(1000.0 / ui->spinBox->value());
         _loop.exec();
         for (auto val : allCurrentValues())
             emit newData(val);

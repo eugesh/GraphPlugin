@@ -7,3 +7,6 @@ ui_*.h
 *.user
 *.o
 moc_*
+examples/simulator/configs
+examples/simulator/plugins
+*.stash
