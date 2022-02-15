@@ -18,6 +18,10 @@ DigitalDisplayBoard::DigitalDisplayBoard(QWidget *parent) :
     setObjectName("DigitalDisplayBoard");
 
     ui->setupUi(this);
+
+    ui->DigitalScreenToolBar->toggleViewAction()->setEnabled(false);
+    ui->DigitalScreenToolBar->toggleViewAction()->setVisible(false);
+    removeAction(ui->DigitalScreenToolBar->toggleViewAction());
 }
 
 DigitalDisplayBoard::~DigitalDisplayBoard()

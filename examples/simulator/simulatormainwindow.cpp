@@ -57,6 +57,8 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     fillGUI();
 
     srand(time(0));
+
+    ui->toolBar->toggleViewAction()->setVisible(false);
 }
 
 SimulatorMainWindow::~SimulatorMainWindow()
