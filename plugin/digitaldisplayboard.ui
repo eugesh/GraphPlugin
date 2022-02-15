@@ -22,6 +22,9 @@
    <property name="accessibleName">
     <string>Инструменты</string>
    </property>
+   <property name="floatable">
+    <bool>true</bool>
+   </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
    </attribute>

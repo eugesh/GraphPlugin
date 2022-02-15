@@ -1,6 +1,7 @@
 #ifndef GRAPHMAINWINDOW_H
 #define GRAPHMAINWINDOW_H
 
+#include "graph_common.h"
 #include "graph_interface.h"
 #include "qcustomplot.h"
 #include <QMainWindow>
@@ -9,63 +10,6 @@
 namespace Ui {
 class GraphMainWindow;
 }
-
-enum GraphDir {
-    LEFT,
-    UP,
-    RIGHT,
-    DOWN
-};
-
-enum GraphUpdateMode {
-    SHOW_ALL,
-    SHOW_LAST_N,
-    DONT_UPDATE
-};
-
-enum GraphScaleType {
-    LIN,
-    LOG
-};
-
-// Unique ID of measured value
-struct valID {
-    // Number of channel
-    int chNumber;
-    // Name of physical quantity
-    QString name;
-};
-
-// Unique ID of graph figure
-struct GraphID {
-    QString graphName;
-    // Number of channel
-    int chNumber;
-    // Names of axes
-    QString xName;
-    QString yName;
-};
-
-struct GraphProperties {
-    QString name;
-    QString x_name;
-    QString y_name;
-    QString x_title;
-    QString y_title;
-    QString x_unit;
-    QString y_unit;
-    QString x_phisical_quantity;
-    QString y_phisical_quantity;
-    GraphDir x_dir;
-    GraphDir y_dir;
-    unsigned int total_N;
-    unsigned int last_N_limit;
-    GraphUpdateMode update_mode;
-    GraphScaleType x_scale;
-    GraphScaleType y_scale;
-    QVector<int> channels; // e.g. 1, 2, 3, 4
-    QColor color;
-};
 
 inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
@@ -105,7 +49,7 @@ private:
     void commonInit();
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
-    bool saveJSON(const QString &path) const;
+    // bool saveJSON(const QString &path) const;
     bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);

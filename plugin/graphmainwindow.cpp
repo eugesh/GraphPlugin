@@ -149,10 +149,11 @@ void GraphMainWindow::saveJSONdialog()
 {
     m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить график как"), m_JSONPath, tr("(*.JSON)"));
 
-    saveJSON(m_JSONPath);
+    // saveJSON(m_JSONPath);
+    saveJSON(m_JSONPath, m_properties.values(), windowTitle());
 }
 
-bool GraphMainWindow::saveJSON(const QString &path) const
+/*bool GraphMainWindow::saveJSON(const QString &path) const
 {
     QFile saveFile(path);
 
@@ -205,7 +206,7 @@ bool GraphMainWindow::saveJSON(const QString &path) const
     saveFile.write(saveDoc.toJson());
 
     return true;
-}
+}*/
 
 void GraphMainWindow::onRemoveJSON()
 {

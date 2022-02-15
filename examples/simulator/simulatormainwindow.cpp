@@ -1,5 +1,6 @@
 #include "channelconfigurationdialog.h"
 #include "channeltuner.h"
+#include "graph_common.h"
 #include "graph_interface.h"
 #include "graphpluginconfig.h"
 #include "simulatormainwindow.h"
@@ -28,11 +29,15 @@ static const char* graphConfigsFolder = "configs/graphs";
 static const char* pluginConfigsFolder = "configs/config";
 static const char* SIConfigsFolder = "configs/si";
 
+Q_DECLARE_METATYPE(MeasuredValue)
+
 SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    qRegisterMetaType<MeasuredValue>();
 
     connect(ui->pushButtonAddChannel, &QPushButton::pressed, this, &SimulatorMainWindow::addChannel);
     connect(ui->pushButtonRemoveChannel, &QPushButton::pressed, this, &SimulatorMainWindow::removeChannel);
@@ -97,9 +102,19 @@ bool SimulatorMainWindow::loadGraphPlugin()
 
             m_graphInterface->loadJSONs();
 
-            connect(this, &SimulatorMainWindow::newData, [&](const MeasuredValue &val) {
+            connect(this, &SimulatorMainWindow::newData,
+                    this, [this](const MeasuredValue &val) {
+
+                QTimer timer;
+                QEventLoop _loop;
+                AutoDisconnect(conn) = connect(&timer, &QTimer::timeout, [&_loop]() {
+                    _loop.exit();
+                });
+                timer.start(1);
+                _loop.exec();
+
                 m_graphInterface->addData(val);
-            });
+            }, Qt::QueuedConnection);
 
             if (m_graphInterface) {
                 return true;
@@ -210,9 +225,17 @@ bool SimulatorMainWindow::writeGraphJSONs() const
 {
     for (int i = 0; i < m_formLayout->rowCount(); ++i) {
         if (channelTunerAt(i)->isUseStandardPlot()) {
+            GraphProperties prop;
+            prop.name = channelTunerAt(i)->name();
+            prop.y_name = channelTunerAt(i)->name();
+            prop.y_phisical_quantity = channelTunerAt(i)->physicalValueName();
+            prop.y_unit = channelTunerAt(i)->measurementUnitName();
 
+            //m_graphInterface->
         }
     }
+
+    return true;
 }
 
 bool SimulatorMainWindow::writeGraphJSON(const QString &path) const

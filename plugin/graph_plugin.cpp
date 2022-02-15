@@ -259,6 +259,15 @@ void GraphPlugin::setMainWindow(QMainWindow *mw)
     m_mainWindow = mw;
 }
 
+/*void GraphPlugin::saveGraphJSON(const QString &valueName, const QString &pathToJSON)
+{
+    for (auto name : m_graphsMainWins.keys()) {
+        if (name.contains(valueName, Qt::CaseInsensitive)) {
+            m_graphsMainWins[name]->saveJSON(pathToJSON);
+        }
+    }
+}*/
+
 void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphProperties &prop)
 {
     if (m_graphsMainWins.contains(customPlotName)) {

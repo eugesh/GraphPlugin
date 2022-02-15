@@ -93,7 +93,10 @@ public:
     QString aboutInfo() override;
     void setMode(GraphPluginMode mode = GRAPH_DATA_SYNCH);
 
-public slots:
+// public slots: // Auxilliary methods
+    // void saveGraphJSON(const QString &valueName, const QString &pathToJSON);
+
+private slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
 
 private:

@@ -26,6 +26,7 @@ SOURCES += \
     common.cpp \
     digitalboarditem.cpp \
     digitaldisplayboard.cpp \
+    graph_common.cpp \
     graph_plugin.cpp \
     graphmainwindow.cpp \
     graphpluginconfig.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     common.h \
     digitalboarditem.h \
     digitaldisplayboard.h \
+    graph_common.h \
     graph_plugin.h \
     graphmainwindow.h \
     graphpluginconfig.h \
