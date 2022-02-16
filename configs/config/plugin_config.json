@@ -24,17 +24,6 @@
             "channel_modes" : [1]
         },
         {
-            "name": "time",
-            "description": "Time",
-            "description_ru": "Время",
-            "physicalQuantity": "time",
-            "measure_unit": "second",
-            "measure_unit_rus": "секунда",
-            "prefix": "milli",
-            "symbol": "s",
-            "symbol_rus": "с"
-        },
-        {
             "name": "pressure",
             "description": "Pressure",
             "description_ru": "Давление",
@@ -44,17 +33,6 @@
             "symbol": "Pa",
             "symbol_rus": "Па",
             "channel_modes" : [1,[1,2],[1,2,3,4]]
-        },
-        {
-            "name": "electricPotential",
-            "description": "Voltage",
-            "description_ru": "Напряжение питания",
-            "physicalQuantity": "electricPotential",
-            "measure_unit": "Volt",
-            "measure_unit_rus": "Вольт",
-            "symbol": "V",
-            "symbol_rus": "В",
-            "channel_modes" : [1]
         }
     ],
     "synch_mode" : "synchronous"
