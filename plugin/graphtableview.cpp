@@ -19,6 +19,7 @@ GraphTableView::GraphTableView(QWidget *parent)
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, &QWidget::customContextMenuRequested,
+            this,
         [this] (const QPoint &pos) {
         QMenu contextMenu(tr("Context menu"), this);
 
@@ -33,14 +34,18 @@ GraphTableView::GraphTableView(QWidget *parent)
             contextMenu.addAction(&action1);
         contextMenu.addAction(&action2);
 
-        contextMenu.exec(mapToGlobal(pos));
-    });
+        // contextMenu.exec(mapToGlobal(pos));
+        auto size = contextMenu.sizeHint();
+        contextMenu.setWindowModality(Qt::WindowModality::NonModal);
+        contextMenu.popup(mapToGlobal(pos));
+    }, Qt::QueuedConnection);
 
     // QHeaderView *header = new QHeaderView(Qt::Orientation::Horizontal, this);
     // header->setContextMenuPolicy(Qt::CustomContextMenu);
     horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(horizontalHeader(), &QWidget::customContextMenuRequested,
+            this,
         [this] (const QPoint &pos) {
         m_currentColumn = horizontalHeader()->logicalIndexAt(pos);
         auto IndexList = selectedIndexes();
@@ -57,8 +62,11 @@ GraphTableView::GraphTableView(QWidget *parent)
             contextMenu.addAction(&action1);
         contextMenu.addAction(&action2);
 
-        contextMenu.exec(mapToGlobal(pos));
-    });
+        auto size = contextMenu.sizeHint();
+        // contextMenu.exec(mapToGlobal(pos));
+        contextMenu.setWindowModality(Qt::WindowModality::NonModal);
+        contextMenu.popup(mapToGlobal(pos));
+    }, Qt::QueuedConnection);
 }
 
 void GraphTableView::setConfig(GraphPluginConfig *config)
@@ -98,6 +106,25 @@ void GraphTableView::keyPressEvent(QKeyEvent *event)
     } else {
         QTableView::keyPressEvent(event);
     }
+}
+
+void GraphTableView::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu contextMenu(tr("Context menu"), this);
+
+    QAction action1(tr("Копировать"), this);
+    // QAction action2("Select all", this);
+    QAction action2(tr("Выделить все"), this);
+
+    connect(&action1, &QAction::triggered, this, &GraphTableView::copyRow);
+    connect(&action2, &QAction::triggered, this, &QAbstractItemView::selectAll);
+
+    if (selectedIndexes().count())
+        contextMenu.addAction(&action1);
+    contextMenu.addAction(&action2);
+
+    // contextMenu.exec(mapToGlobal(pos));
+    contextMenu.popup(mapToGlobal(event->globalPos()));
 }
 
 void GraphTableView::copyColumn()

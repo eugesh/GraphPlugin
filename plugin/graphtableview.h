@@ -21,6 +21,7 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event) final;
+    void contextMenuEvent(QContextMenuEvent *) override;
 
 signals:
     void createNewGraph(const QString &customPlotName, const GraphProperties &prop);
