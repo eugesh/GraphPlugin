@@ -2,6 +2,11 @@
 #include "graphmainwindow.h"
 #include "ui_graphmainwindow.h"
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <utility>
+#endif
+
+
 GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -321,12 +326,16 @@ void GraphMainWindow::addGraph(const QString &name)
         ui->customPlot->graph()->setPen(graphPen);
         ui->customPlot->replot();
         // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
-        m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
+        m_valueNameYX.insert(prop.y_name, prop.x_name);
 
         // QPair<QString, QString> xy = qMakePair<QString, QString> (m_properties[name].x_name, m_properties[name].y_name);
         // m_valueGraphMap.insert(xy, graph);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QPair<QString, QString> yx = std::make_pair(prop.y_name, prop.x_name);
+#else
         QPair<QString, QString> yx = qMakePair<QString, QString> (prop.y_name, prop.x_name);
+#endif
         GraphID gid;
         gid.graphName = name;
         gid.chNumber = ch;
@@ -341,7 +350,8 @@ void GraphMainWindow::addGraph(const QString &name)
 
 void GraphMainWindow::addGraph(const GraphProperties &prop)
 {
-    m_properties.insertMulti(prop.name, prop);
+    // m_properties.insertMulti(prop.name, prop);
+    m_properties.insert(prop.name, prop);
 
     m_hasUpdate = true;
 

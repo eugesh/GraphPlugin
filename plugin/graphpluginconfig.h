@@ -18,7 +18,7 @@ struct SIPrefix {
 
 };*/
 
-typedef QMap<QString, QVariant> MeasUnit;
+typedef QMultiMap<QString, QVariant> MeasUnit;
 
 struct physicalQuantity {
     QString name_ru;
@@ -32,10 +32,10 @@ class GraphPluginConfig
 public:
     GraphPluginConfig(const QString &pathToUnits, const QString &pathToPrefixes);
 
-    QMap<QString, MeasUnit> measurementUnits() const;
+    QMultiMap<QString, MeasUnit> measurementUnits() const;
     QList<MeasUnit> measurementUnits(const QString &name) const;
 
-    QList<QMap<QString, QVariant>> auxMeasUnits(const QString &physValName) const;
+    QList<QMultiMap<QString, QVariant>> auxMeasUnits(const QString &physValName) const;
     QStringList physicalValuesNames() const;
     QMap<QString, SIPrefix> prefixes() const;
     QVariant getProperty(const QString &physQuantName, const QString &unit, const QString &key) const;
@@ -53,7 +53,7 @@ private:
     //!< Prefix name, struct
     QMap<QString, SIPrefix> m_prefixes;
     //!< Physical quantity name, MeasUnit properties, one multiple
-    QMap<QString, MeasUnit> m_measUnits;
+    QMultiMap<QString, MeasUnit> m_measUnits;
 };
 
 #endif // GRAPHPLUGINCONFIG_H

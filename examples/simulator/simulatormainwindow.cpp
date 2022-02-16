@@ -198,7 +198,7 @@ bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
             // Find out selected unit in units list
             MeasUnit selectedUnit;
             for (auto unit : units) {
-                if (unit["name"] == measUnitName)
+                if (unit.values("name").first() == measUnitName)
                     selectedUnit = unit;
             }
             valueObject["name"] = widg->name();
@@ -207,8 +207,8 @@ bool SimulatorMainWindow::writeConfigJSON(const QString &pathToJSON) const
             valueObject["physicalQuantity"] = physValName;
             valueObject["measure_unit"] = measUnitName;
             valueObject["measure_unit_rus"] = measUnitNameTr;
-            valueObject["symbol"] = selectedUnit["symbol"].toString();
-            valueObject["symbol_rus"] = selectedUnit["symbol_ru"].toString();
+            valueObject["symbol"] = selectedUnit.values("symbol").first().toString();
+            valueObject["symbol_rus"] = selectedUnit.values("symbol_ru").first().toString();
 
             valuesArray.append(valueObject);
         }

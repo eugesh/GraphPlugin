@@ -2,6 +2,7 @@
 #define SIMULATORMAINWINDOW_H
 
 #include "common.h"
+#include "graph_interface.h"
 
 #include <QMainWindow>
 #include <QMap>
@@ -16,7 +17,7 @@ class QFormLayout;
 class GraphPluginConfig;
 class GraphInterface;
 class QPluginLoader;
-struct MeasuredValue;
+// struct MeasuredValue;
 
 enum State {
     STOP, RUN, PAUSE

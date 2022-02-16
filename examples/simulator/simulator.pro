@@ -52,7 +52,7 @@ windows:    copydata2.commands = $(COPY_DIR) $$shell_path($${OUT_PWD}/../../plug
 unix:       copydata2.commands = $(COPY_DIR) $$shell_path($${OUT_PWD}/../../plugins) $$shell_path($${OUT_PWD}/)
 #}
 
-message(pluginsPWD: $${OUT_PWD}/configs)
+message(configsOUT_PWD: $${OUT_PWD}/configs)
 message(pluginsOUTPWD: $${OUT_PWD}/plugins)
 
 first.depends = $(first) mkdir copydata mkdir2 copydata2

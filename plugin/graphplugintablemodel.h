@@ -44,7 +44,7 @@ private:
     // Data Dispatcher
     //!< Timestamp -> value, one key - multple values
     int m_ringBufferSize;
-    QMap<uint64_t, MeasuredValue> m_dataMap;
+    QMultiMap<uint64_t, MeasuredValue> m_dataMap;
     QList<uint64_t> m_timeStamps;
     QStringList m_coloumnNames;
     QStringList m_coloumnTitles;

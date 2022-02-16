@@ -92,7 +92,11 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
 
     if (m_mainWindow->isMaximized())
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        m_mainWindow->setGeometry(m_mainWindow->screen()->availableGeometry());
+#else
         m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
+#endif
 
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
@@ -137,7 +141,7 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
 
 QStringList GraphPlugin::getValuesNames() const
 {
-    return m_measValDescMap.uniqueKeys();
+    return m_measValDescMap.keys();
 }
 
 QStringList GraphPlugin::getDescriptionsTr() const

@@ -1,6 +1,9 @@
 #ifndef DIGITALDISPLAYBOARD_H
 #define DIGITALDISPLAYBOARD_H
 
+#include "common.h"
+#include "graph_interface.h"
+
 #include <QMainWindow>
 #include <QMap>
 
@@ -10,8 +13,8 @@ class DigitalDisplayBoard;
 
 class DigitalBoardItem;
 class GraphPluginConfig;
-struct MeasuredValue;
-struct MeasuredValueDescription;
+// struct MeasuredValue;
+// struct MeasuredValueDescription;
 
 class DigitalDisplayBoard : public QMainWindow
 {
