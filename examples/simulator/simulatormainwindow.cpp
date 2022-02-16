@@ -122,6 +122,8 @@ void SimulatorMainWindow::fillGUI()
         channelTunerAt(m_channelNum - 1)->setName(val.name);
         channelTunerAt(m_channelNum - 1)->setDescription(val.desc_ru);
     }
+
+    enableConfigure(false);
 }
 
 bool SimulatorMainWindow::unloadGraphPlugin()
