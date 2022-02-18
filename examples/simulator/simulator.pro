@@ -55,7 +55,11 @@ unix:       copydata2.commands = $(COPY_DIR) $$shell_path($${OUT_PWD}/../../plug
 message(pluginsPWD: $${OUT_PWD}/configs)
 message(pluginsOUTPWD: $${OUT_PWD}/plugins)
 
-first.depends = $(first) mkdir copydata mkdir2 copydata2
+exists($$shell_path($${OUT_PWD}/plugins)) {
+            first.depends = $(first) mkdir copydata copydata2
+} else {
+            first.depends = $(first) mkdir copydata mkdir2 copydata2
+}
 export(first.depends)
 export(mkdir.commands)
 export(copydata.commands)
