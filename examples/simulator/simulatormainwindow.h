@@ -63,7 +63,7 @@ private:
     int m_channelNum = 0;
     QFormLayout *m_formLayout;
     State m_state;
-    QTimer m_greqTimer;
+    QTimer m_freqTimer;
     bool m_enableConfigure = false;
     GraphPluginConfig *m_globalConfig;
     QMap<QString, MeasuredValueDescription> m_currentConfig;

@@ -166,7 +166,7 @@ bool GraphMainWindow::saveJSON(const QString &path) const
     QJsonArray customPlotArray;
     QJsonObject graphObject;
 
-    docPropObject["name"] =  windowTitle();
+    docPropObject["name"] = windowTitle();
     docObject["name"] = docPropObject;
 
     for (auto prop : m_properties) {

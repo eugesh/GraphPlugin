@@ -57,6 +57,8 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
     fillGUI();
 
     srand(time(0));
+
+    ui->toolBar->toggleViewAction()->setVisible(false);
 }
 
 SimulatorMainWindow::~SimulatorMainWindow()
@@ -120,6 +122,8 @@ void SimulatorMainWindow::fillGUI()
         channelTunerAt(m_channelNum - 1)->setName(val.name);
         channelTunerAt(m_channelNum - 1)->setDescription(val.desc_ru);
     }
+
+    enableConfigure(false);
 }
 
 bool SimulatorMainWindow::unloadGraphPlugin()
@@ -302,10 +306,10 @@ void SimulatorMainWindow::onRun()
     m_state = RUN;
 
     while (m_state == RUN) {
-        AutoDisconnect(conn) = connect(&m_greqTimer, &QTimer::timeout, [&_loop]() {
+        AutoDisconnect(conn) = connect(&m_freqTimer, &QTimer::timeout, [&_loop]() {
             _loop.exit();
         });
-        m_greqTimer.start(1000.0 / ui->spinBox->value());
+        m_freqTimer.start(1000.0 / ui->spinBox->value());
         _loop.exec();
         for (auto val : allCurrentValues())
             emit newData(val);
