@@ -39,7 +39,7 @@ void GraphMainWindow::commonInit()
 
 GraphMainWindow::~GraphMainWindow()
 {
-    if (! m_isLoadFromJson || m_hasUpdate) {
+    if (m_hasUpdate) {
         int button = QMessageBox::question(this,
                                       tr("Внимание!"),
                                       tr("\n Есть несохраненные графики:"
@@ -149,7 +149,11 @@ void GraphMainWindow::saveJSONdialog()
 {
     m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить график как"), m_JSONPath, tr("(*.JSON)"));
 
-    saveJSON(m_JSONPath);
+    if (!m_JSONPath.endsWith(".json", Qt::CaseInsensitive))
+        m_JSONPath += ".json";
+
+    if (saveJSON(m_JSONPath))
+        m_hasUpdate = false;
 }
 
 bool GraphMainWindow::saveJSON(const QString &path) const
@@ -211,7 +215,8 @@ void GraphMainWindow::onRemoveJSON()
 {
     auto isOk = removeJSON();
 
-    emit deleteMe();
+    if (isOk)
+        emit deleteMe();
 }
 
 bool GraphMainWindow::removeJSON() const
