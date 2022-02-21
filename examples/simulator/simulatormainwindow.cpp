@@ -215,6 +215,8 @@ bool SimulatorMainWindow::writeGraphJSONs() const
 
         }
     }
+
+    return true;
 }
 
 bool SimulatorMainWindow::writeGraphJSON(const QString &path) const

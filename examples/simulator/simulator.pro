@@ -57,12 +57,17 @@ message(pluginsOUTPWD: $${OUT_PWD}/plugins)
 
 exists($$shell_path($${OUT_PWD}/plugins)) {
             first.depends = $(first) mkdir copydata copydata2
+            export(first.depends)
+            export(mkdir.commands)
+            export(copydata.commands)
+            export(copydata2.commands)
+            QMAKE_EXTRA_TARGETS += first mkdir copydata copydata2
 } else {
             first.depends = $(first) mkdir copydata mkdir2 copydata2
+            export(first.depends)
+            export(mkdir.commands)
+            export(copydata.commands)
+            export(mkdir2.commands)
+            export(copydata2.commands)
+            QMAKE_EXTRA_TARGETS += first mkdir copydata mkdir2 copydata2
 }
-export(first.depends)
-export(mkdir.commands)
-export(copydata.commands)
-export(mkdir2.commands)
-export(copydata2.commands)
-QMAKE_EXTRA_TARGETS += first mkdir copydata mkdir2 copydata2
