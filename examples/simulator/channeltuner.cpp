@@ -18,8 +18,10 @@ ChannelTuner::ChannelTuner(int channelNumber, GraphPluginConfig *config, QWidget
     connect(ui->toolButton, &QAbstractButton::pressed,
             this,           &ChannelTuner::slotToolButton);
 
-    if (!m_dialog)
+    if (!m_dialog) {
         m_dialog = new ChannelConfigurationDialog(m_config, this);
+        connect(m_dialog, &ChannelConfigurationDialog::edited, this, &ChannelTuner::edited);
+    }
 }
 
 ChannelTuner::~ChannelTuner()

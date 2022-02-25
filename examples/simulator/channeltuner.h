@@ -40,6 +40,7 @@ public:
     void setMeasurementUnits(const QStringList &names);
 
 signals:
+    void edited(bool isEdited);
 
 private slots:
     void slotToolButton();

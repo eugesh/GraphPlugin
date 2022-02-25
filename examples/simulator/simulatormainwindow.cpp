@@ -242,6 +242,8 @@ void SimulatorMainWindow::addChannel()
 
     ChannelTuner *ct = new ChannelTuner(m_channelNum, m_globalConfig);
 
+    connect(ct, &ChannelTuner::edited, this, &SimulatorMainWindow::enableConfigure);
+
     m_formLayout->addRow(ct);
 }
 

@@ -38,6 +38,7 @@ private slots:
     void onRun();
     void onStop();
     void onConfigure();
+    void enableConfigure(bool isEnabled = false);
 
 private:
     void fillGUI();
@@ -48,7 +49,6 @@ private:
     bool writeGraphJSON(const QString &path) const;
     bool writeGraphJSONs() const;
 
-    void enableConfigure(bool isEnabled = false);
     bool loadGraphPlugin();
     bool unloadGraphPlugin();
     MeasuredValue currentValue(const QString &name) const;

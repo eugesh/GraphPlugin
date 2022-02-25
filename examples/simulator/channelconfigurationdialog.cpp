@@ -13,6 +13,17 @@ ChannelConfigurationDialog::ChannelConfigurationDialog(GraphPluginConfig *config
     connect(ui->comboBox_physcs, &QComboBox::currentTextChanged,
             this, &ChannelConfigurationDialog::onComboBoxPhyscsChanged);
 
+    auto dialogEdited = [this]() {
+        m_isEdited = true;
+        emit edited(true);
+    };
+
+    connect(ui->lineEdit, &QLineEdit::textEdited,
+            this, dialogEdited);
+
+    connect(ui->lineEdit_description, &QLineEdit::textEdited,
+            this, dialogEdited);
+
     fillForm();
 }
 
@@ -24,6 +35,9 @@ ChannelConfigurationDialog::~ChannelConfigurationDialog()
 void ChannelConfigurationDialog::onComboBoxPhyscsChanged(const QString &physValName)
 {
     ui->comboBox_units->clear();
+
+    m_isEdited = true;
+    emit edited();
 
     for (auto unitName : m_config->measurementUnits(physValName))
         ui->comboBox_units->addItem(unitName["name_ru"].toString(), unitName["name"].toString());

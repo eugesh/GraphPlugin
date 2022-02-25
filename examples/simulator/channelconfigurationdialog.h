@@ -25,6 +25,8 @@ public:
     QString measurementUnitName() const;
     QString measurementUnitNameTr() const;
     bool isUseStandardPlot() const;
+    bool isEdited() const { return m_isEdited; }
+    void setEdited(bool isEdited) { m_isEdited = isEdited; }
 
     void setPhysicalValues(const QStringList &names);
     void setCurrentPhysicalValue(const QString &name);
@@ -32,6 +34,9 @@ public:
     void setName(const QString &name);
     void setDescription(const QString &name);
     // void setMeasurementUnits(const QStringList &names);
+
+signals:
+    void edited(bool isEdited = true);
 
 public slots:
     void onComboBoxPhyscsChanged(const QString &name);
@@ -42,6 +47,7 @@ private:
 private:
     Ui::ChannelConfigurationDialog *ui;
     GraphPluginConfig *m_config;
+    bool m_isEdited = false;
 };
 
 #endif // CHANNELCONFIGURATIONDIALOG_H
