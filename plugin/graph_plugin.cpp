@@ -205,6 +205,8 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
     dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
+    graphWindow->setConfig(m_config);
+    graphWindow->setValuesDescriptions(m_measValDescMap);
 
     connect(graphWindow, &GraphMainWindow::deleteMe, [=,this]() {
         m_graphsMainWins.remove(graphWindow->nameTr());
@@ -268,6 +270,8 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
         dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
 
         GraphMainWindow *graphWindow = new GraphMainWindow(customPlotName, prop, m_mainWindow);
+        graphWindow->setConfig(m_config);
+        graphWindow->setValuesDescriptions(m_measValDescMap);
 
         dock_widget->setWidget(graphWindow);
 

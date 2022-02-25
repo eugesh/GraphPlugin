@@ -1,3 +1,4 @@
+#include "graphpluginconfig.h"
 #include "graphplugintablemodel.h"
 
 

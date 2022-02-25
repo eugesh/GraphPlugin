@@ -55,6 +55,19 @@ GraphMainWindow::~GraphMainWindow()
     delete ui;
 }
 
+void GraphMainWindow::setConfig(GraphPluginConfig *config)
+{
+    m_config = config;
+}
+
+// ToDo: change on Add. Add necessary descriptions only.
+bool GraphMainWindow::setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd)
+{
+    m_measValDescMap = mvd;
+
+    return true;
+}
+
 void GraphMainWindow::createCustomPlot(const QString &name)
 {
     setWindowTitle(name);
@@ -284,7 +297,7 @@ void GraphMainWindow::saveImage(const QString &name) const
 
 void GraphMainWindow::addGraph(const QString &name)
 {
-    if (! m_properties.contains(name))
+    if (!m_properties.contains(name))
         return;
 
     auto prop = m_properties[name];
@@ -374,6 +387,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
     QCPGraph *graph;
 
     for (MeasuredValue val1 : packet) {
+        auto val1_desc = m_measValDescMap[val1.name];
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
@@ -391,6 +405,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 }
             } else {
                 for (MeasuredValue val2 : packet) {
+                    auto val2_desc = m_measValDescMap[val2.name];
                     if (val2_name == val2.name) {
                         GraphID gid;
                         gid.xName = val2.name;

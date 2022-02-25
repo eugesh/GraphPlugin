@@ -1,6 +1,7 @@
 #ifndef GRAPHMAINWINDOW_H
 #define GRAPHMAINWINDOW_H
 
+#include "common.h"
 #include "graph_interface.h"
 #include "qcustomplot.h"
 #include <QMainWindow>
@@ -67,6 +68,8 @@ struct GraphProperties {
     QColor color;
 };
 
+class GraphPluginConfig;
+
 inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
     if (g1.chNumber != g2.chNumber)
@@ -88,6 +91,8 @@ public:
 
     bool loadCSV();
     QString nameTr() const;
+    void setConfig(GraphPluginConfig *config);
+    bool setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd);
 
 public slots:
     void loadCSVdialog();
@@ -131,6 +136,8 @@ private:
     QString m_plotName;
     bool m_isLoadFromJson = false;
     bool m_hasUpdate = false;
+    GraphPluginConfig *m_config;
+    QMap<QString, MeasuredValueDescription> m_measValDescMap;
 };
 
 #endif // GRAPHMAINWINDOW_H
