@@ -40,13 +40,13 @@ windows:    copydata.commands = $(COPY_DIR) $$shell_path($${PWD}/../../configs) 
 unix:       copydata.commands = $(COPY_DIR) $$shell_path($${PWD}/../../configs) $$shell_path($${OUT_PWD}/)
 }
 
-#exists($$shell_path($${OUT_PWD}/plugins)) {
+exists($$shell_path($${OUT_PWD}/plugins)) {
 # ToDo: test it on Win32
-#} else {
+} else {
 
 windows:    mkdir2.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../../plugins)
 unix:       mkdir2.commands = $(MKDIR) $$shell_path($${OUT_PWD}/../../plugins)
-
+}
 # Copy plugin's dlls
 windows:    copydata2.commands = $(COPY_DIR) $$shell_path($${OUT_PWD}/../../plugins) $$shell_path($${OUT_PWD}/plugins)
 unix:       copydata2.commands = $(COPY_DIR) $$shell_path($${OUT_PWD}/../../plugins) $$shell_path($${OUT_PWD}/)
