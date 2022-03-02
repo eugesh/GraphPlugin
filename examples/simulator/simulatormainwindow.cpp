@@ -258,6 +258,25 @@ void SimulatorMainWindow::removeChannel()
 {
     enableConfigure(true);
 
+    for (int i = m_formLayout->count() - 1; i >= 0; --i) {
+        auto tunner = channelTunerAt(i);
+        if (tunner->isChecked()) {
+            m_channelNum--;
+            m_formLayout->removeRow(i);
+        }
+    }
+
+    // Update indices
+    for (int i = 0; i < m_formLayout->count(); ++i) {
+        auto tunner = channelTunerAt(i);
+        tunner->setNumber(i + 1);
+    }
+}
+
+/*void SimulatorMainWindow::removeChannel()
+{
+    enableConfigure(true);
+
     int lastRow = m_formLayout->count() - 1;
 
     if (!lastRow)
@@ -266,7 +285,7 @@ void SimulatorMainWindow::removeChannel()
     m_channelNum--;
 
     m_formLayout->removeRow(lastRow);
-}
+}*/
 
 QVector<MeasuredValue> SimulatorMainWindow::allCurrentValues() const
 {

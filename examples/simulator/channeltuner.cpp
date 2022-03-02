@@ -30,6 +30,11 @@ ChannelTuner::~ChannelTuner()
     delete ui;
 }
 
+void ChannelTuner::setNumber(int number)
+{
+    ui->label->setText("Source " + QString::number(number));
+}
+
 void ChannelTuner::slotToolButton()
 {
     if (!m_dialog)
@@ -66,6 +71,11 @@ double ChannelTuner::amplitude() const
 double ChannelTuner::deviation() const
 {
     return ui->doubleSpinBoxDeviation->value();
+}
+
+bool ChannelTuner::isChecked() const
+{
+    return ui->checkBox->isChecked();
 }
 
 QString ChannelTuner::name() const
