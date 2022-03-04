@@ -85,6 +85,9 @@ public:
     virtual bool loadJSONs() = 0;
     virtual bool saveGraphPluginGeometry() = 0;
     virtual QString aboutInfo() = 0;
+    // Change size of packet at runtime
+    virtual void setPacketSize(int size) = 0;
+    virtual int packetSize() const = 0;
 
 //signals:
     //void newDockWindow(QDockWidget*);

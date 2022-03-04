@@ -44,6 +44,16 @@ GraphPlugin::~GraphPlugin()
 
 }
 
+void GraphPlugin::setPacketSize(int size)
+{
+    m_tableModel->setPacketSize(size);
+}
+
+int GraphPlugin::packetSize() const
+{
+    return m_tableModel->packetSize();
+}
+
 QString GraphPlugin::aboutInfo()
 {
     return QString("%1.%2.%3").arg(GRAPH_PLUGIN_VERSION_MAJOR).arg(GRAPH_PLUGIN_VERSION_MINOR).arg(GRAPH_PLUGIN_VERSION_PATCH);

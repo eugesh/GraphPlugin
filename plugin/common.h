@@ -6,7 +6,7 @@
 
 enum GraphPluginMode {
     GRAPH_DATA_SYNCH,         //!< Data represents one packet, every value arrives synchronously (Telemetry packet mode)
-    GRAPH_DATA_ASYNC          //!< Values arrives asynchronously ()
+    GRAPH_DATA_ASYNC          //!< Values arrives asynchronously () // Not implemented yet
 };
 
 enum : int {

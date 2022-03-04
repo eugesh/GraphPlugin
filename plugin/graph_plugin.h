@@ -93,6 +93,9 @@ public:
     QString aboutInfo() override;
     void setMode(GraphPluginMode mode = GRAPH_DATA_SYNCH);
 
+    virtual void setPacketSize(int size) override;
+    virtual int packetSize() const override;
+
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
 

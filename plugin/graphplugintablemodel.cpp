@@ -44,7 +44,8 @@ void GraphPluginTableModel::clear()
 
 int GraphPluginTableModel::columnCount(const QModelIndex &parent) const
 {
-    return m_packetSize + 1; // + Timestamp
+    // return m_packetSize + 1; // + Timestamp
+    return m_coloumnNames.size();
 }
 
 QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
