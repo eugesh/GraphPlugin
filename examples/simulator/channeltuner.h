@@ -23,6 +23,7 @@ public:
 
     double amplitude() const;
     double deviation() const;
+    bool isChecked() const;
     QString name() const;
     QString description() const;
     // MeasuredValueDescription description() const;
@@ -38,6 +39,7 @@ public:
     void setName(const QString &name);
     void setDescription(const QString &name);
     void setMeasurementUnits(const QStringList &names);
+    void setNumber(int number);
 
 signals:
     void edited(bool isEdited);
