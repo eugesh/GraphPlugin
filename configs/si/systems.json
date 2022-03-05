@@ -1,5 +1,7 @@
 {
     "source origin": "https://github.com/forgedsoftware/measurementcommon/blob/master/systems.json",
+    "description": "Examples of different physical values and measurement units. Not used in the app",
+    "source origin": "https://github.com/forgedsoftware/measurementcommon/blob/master/systems.json",
 	"systems": {
 		"metric": {
 			"name": "Metric System",

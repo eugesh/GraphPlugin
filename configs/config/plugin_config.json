@@ -1,39 +1,44 @@
 {
-    "description" : "Названия физических величин, применямых в основном ПО.",
-    "values" : [
+    "values": [
         {
-            "name": "velocity",
-            "description": "Sound velocity",
-            "description_ru": "Скорость звука",
-            "physicalQuantity": "velocity",
-            "measure_unit": "metre per second",
-            "measure_unit_rus": "метр в секунду",
-            "symbol": "m/s",
-            "symbol_rus": "м/с",
-            "channel_modes" : [1,[1,2],[1,2,3,4]]
+            "description": "",
+            "description_ru": "Давление",
+            "measure_unit": "bar",
+            "measure_unit_rus": "бар",
+            "name": "pressure",
+            "physicalQuantity": "pressure",
+            "symbol": "bar",
+            "symbol_rus": "бар"
         },
         {
-            "name": "temperature",
-            "description": "Temperature",
+            "description": "",
             "description_ru": "Температура",
-            "physicalQuantity": "temperature",
             "measure_unit": "celsius",
             "measure_unit_rus": "градус Цельсия",
+            "name": "temperature",
+            "physicalQuantity": "temperature",
             "symbol": "°C",
-            "symbol_rus": "°C",
-            "channel_modes" : [1]
+            "symbol_rus": "°C"
         },
         {
-            "name": "pressure",
-            "description": "Pressure",
-            "description_ru": "Давление",
-            "physicalQuantity": "pressure",
-            "measure_unit": "Pascal",
-            "measure_unit_rus": "Паскаль",
-            "symbol": "Pa",
-            "symbol_rus": "Па",
-            "channel_modes" : [1,[1,2],[1,2,3,4]]
+            "description": "",
+            "description_ru": "Скорость звука",
+            "measure_unit": "metrePerSecond",
+            "measure_unit_rus": "метр в секунду",
+            "name": "velocity",
+            "physicalQuantity": "velocity",
+            "symbol": "m/s",
+            "symbol_rus": "м/с"
+        },
+        {
+            "description": "",
+            "description_ru": "Напряжение",
+            "measure_unit": "volt",
+            "measure_unit_rus": "вольт",
+            "name": "electricPotential",
+            "physicalQuantity": "electricPotential",
+            "symbol": "V",
+            "symbol_rus": "В"
         }
-    ],
-    "synch_mode" : "synchronous"
+    ]
 }
