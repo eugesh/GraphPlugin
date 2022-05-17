@@ -1,13 +1,17 @@
+#include "graphpluginconfig.h"
 #include "graphplugintablemodel.h"
 
 
-GraphPluginTableModel::GraphPluginTableModel(QObject *parent) :
-    QAbstractTableModel(parent)
+GraphPluginTableModel::GraphPluginTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode, QObject *parent) :
+    QAbstractTableModel(parent),
+    m_coloumnNames(QStringList() << "time" << names),
+    m_coloumnTitles(QStringList() << tr("Время") << titles),
+    m_syncMode(syncMode)
 {
     // ToDo: Must be read from JSON
     // m_coloumnTitles << "Timestamp" << "Pressure" << "Temperature" << "Sound Velocity";
-    m_coloumnTitles << tr("Время") << tr("Давление") << tr("Температура") << tr("Скорость звука");
-    m_coloumnNames << "time" << "pressure" << "temperature" << "velocity";
+    // m_coloumnTitles << tr("Время") << tr("Давление") << tr("Температура") << tr("Скорость звука");
+    // m_coloumnNames << "time" << "pressure" << "temperature" << "velocity";
 }
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
@@ -15,7 +19,7 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
     //m_dataMap[val.timestamp] = val;
     m_dataMap.insertMulti(val.timestamp, val);
 
-    if (m_dataMap.values(val.timestamp).size() == m_packetSize) {
+    if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
         emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         addRow(m_dataMap.values(val.timestamp));
         return;
@@ -40,7 +44,8 @@ void GraphPluginTableModel::clear()
 
 int GraphPluginTableModel::columnCount(const QModelIndex &parent) const
 {
-    return m_packetSize + 1; // + Timestamp
+    // return m_packetSize + 1; // + Timestamp
+    return m_coloumnNames.size();
 }
 
 QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
@@ -57,7 +62,7 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
         if (col == 0) { // Timestamp column
             return QDateTime::fromMSecsSinceEpoch(m_timeStamps[row]);
         }
-        for(MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
+        for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
             if (val.name == name)
                 return val.value; // ToDo * by SI convertion coefficient;
     }

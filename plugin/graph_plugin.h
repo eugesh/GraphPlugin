@@ -51,6 +51,7 @@
 #ifndef ECHOPLUGIN_H
 #define ECHOPLUGIN_H
 
+#include "common.h"
 #include "graph_interface.h"
 
 #include <QMainWindow>
@@ -90,6 +91,10 @@ public:
     bool loadJSONs() override;
     bool saveGraphPluginGeometry() override;
     QString aboutInfo() override;
+    void setMode(GraphPluginMode mode = GRAPH_DATA_SYNCH);
+
+    virtual void setPacketSize(int size) override;
+    virtual int packetSize() const override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
@@ -105,20 +110,20 @@ private:
     bool loadTableJSON(const QString &pathToJSON);
     bool loadSensorsMonitorJSON(const QString &pathToJSON);
 
-    bool saveGraphJSON(const QString &pathToJSON);
+    // bool saveGraphJSON(const QString &pathToJSON);
 
     bool restoreGraphPluginGeometry();
+    QStringList getValuesNames() const;
+    QStringList getDescriptionsTr() const;
 
 private:
     // Pointer to superior MainWindow
     QMainWindow *m_mainWindow;
     // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
     // Graphs
-    QList<QDockWidget*> m_graphsDocks;
+    QMap<QString, QDockWidget*> m_graphsDocks;
     // QList<GraphMainWindow*> m_graphsMainWins;
     QMap<QString, GraphMainWindow*> m_graphsMainWins;
-    // Score Board
-    QDockWidget *m_scoreBoardDock;
     // ToolBar
     QToolBar *m_toolbar;
     // Table
@@ -147,6 +152,7 @@ private:
     // Received Data
     // QMap<int64_t, QString> m_dataMap;
     QList<int64_t> m_timeStamps;
+    GraphPluginMode m_synchMode = GRAPH_DATA_SYNCH;
 };
 
 

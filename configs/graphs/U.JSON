@@ -1,0 +1,28 @@
+{
+    "name": {
+        "name": "Напряжение"
+    },
+    "plots": [
+        {
+            "channels": [
+                1
+            ],
+            "last_N_limit": 300000,
+            "name": "Напряжение",
+            "total_N": 3000,
+            "update_mode": "SHOW_ALL",
+            "x_dir": "right",
+            "x_name": "time",
+            "x_phisical_quantity": "time",
+            "x_scale": "LIN",
+            "x_title": "Время",
+            "x_unit": "second",
+            "y_dir": "up",
+            "y_name": "electricPotential",
+            "y_phisical_quantity": "electricPotential",
+            "y_scale": "LIN",
+            "y_title": "Напряжение",
+            "y_unit": "#4c4456"
+        }
+    ]
+}

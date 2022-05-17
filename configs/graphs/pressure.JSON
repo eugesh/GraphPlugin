@@ -1,0 +1,28 @@
+{
+    "name": {
+        "name": "Давление"
+    },
+    "plots": [
+        {
+            "channels": [
+                1
+            ],
+            "last_N_limit": 300000,
+            "name": "Давление",
+            "total_N": 3000,
+            "update_mode": "SHOW_ALL",
+            "x_dir": "right",
+            "x_name": "time",
+            "x_phisical_quantity": "time",
+            "x_scale": "LIN",
+            "x_title": "Время",
+            "x_unit": "second",
+            "y_dir": "up",
+            "y_name": "pressure",
+            "y_phisical_quantity": "pressure",
+            "y_scale": "LIN",
+            "y_title": "Давление",
+            "y_unit": "#db6633"
+        }
+    ]
+}

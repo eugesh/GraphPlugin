@@ -32,11 +32,14 @@ void GraphMainWindow::commonInit()
     m_JSONPath = "./configs/graphs";
 
     connect(ui->actionSaveJSON, &QAction::triggered, this, &GraphMainWindow::saveJSONdialog);
+    connect(ui->actionSaveCSV, &QAction::triggered, this, &GraphMainWindow::saveCSVdialog);
+    connect(ui->actionSaveImage, &QAction::triggered, this, &GraphMainWindow::saveImageDialog);
+    connect(ui->actionRemoveJSON, &QAction::triggered, this, &GraphMainWindow::onRemoveJSON);
 }
 
 GraphMainWindow::~GraphMainWindow()
 {
-    if (! m_isLoadFromJson || m_hasUpdate) {
+    if (m_hasUpdate) {
         int button = QMessageBox::question(this,
                                       tr("Внимание!"),
                                       tr("\n Есть несохраненные графики:"
@@ -50,6 +53,19 @@ GraphMainWindow::~GraphMainWindow()
     }
 
     delete ui;
+}
+
+void GraphMainWindow::setConfig(GraphPluginConfig *config)
+{
+    m_config = config;
+}
+
+// ToDo: change on Add. Add necessary descriptions only.
+bool GraphMainWindow::setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd)
+{
+    m_measValDescMap = mvd;
+
+    return true;
 }
 
 void GraphMainWindow::createCustomPlot(const QString &name)
@@ -80,6 +96,8 @@ QString GraphMainWindow::nameTr() const
 
 bool GraphMainWindow::readJSON(const QString &path)
 {
+    m_JSONPath = path;
+
     QFile loadFile(path);
 
     if (! loadFile.open(QIODevice::ReadOnly)) {
@@ -144,10 +162,14 @@ void GraphMainWindow::saveJSONdialog()
 {
     m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить график как"), m_JSONPath, tr("(*.JSON)"));
 
-    saveJSON(m_JSONPath);
+    if (!m_JSONPath.endsWith(".json", Qt::CaseInsensitive))
+        m_JSONPath += ".json";
+
+    if (saveJSON(m_JSONPath))
+        m_hasUpdate = false;
 }
 
-bool GraphMainWindow::saveJSON(const QString &path)
+bool GraphMainWindow::saveJSON(const QString &path) const
 {
     QFile saveFile(path);
 
@@ -161,7 +183,7 @@ bool GraphMainWindow::saveJSON(const QString &path)
     QJsonArray customPlotArray;
     QJsonObject graphObject;
 
-    docPropObject["name"] =  windowTitle();
+    docPropObject["name"] = windowTitle();
     docObject["name"] = docPropObject;
 
     for (auto prop : m_properties) {
@@ -202,9 +224,80 @@ bool GraphMainWindow::saveJSON(const QString &path)
     return true;
 }
 
+void GraphMainWindow::onRemoveJSON()
+{
+    auto isOk = removeJSON();
+
+    if (isOk)
+        emit deleteMe();
+}
+
+bool GraphMainWindow::removeJSON() const
+{
+    auto info = QFileInfo(m_JSONPath);
+
+    QDir dir = info.absoluteDir();
+
+    return dir.remove(info.absoluteFilePath());
+}
+
+void GraphMainWindow::saveCSVdialog()
+{
+    m_CSVPath = QFileDialog::getSaveFileName(this,
+                                             tr("Сохранить график в CSV"),
+                                             m_CSVPath,
+                                             tr("(*.CSV)"));
+
+    saveCSV(m_CSVPath);
+}
+
+void GraphMainWindow::saveCSV(const QString &name) const
+{
+    if (name.isEmpty())
+        return;
+
+    QFile file(name);
+
+    if (! file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical() << tr("Ошибка: Файл") << name << tr(" не был открыт на запись!");
+        // qCritical() << tr("File") << name << " wasn't opened on read";
+        return;
+    }
+
+    QTextStream *stream = new QTextStream(&file);
+
+    for (int i = 0; i < ui->customPlot->graphCount(); ++i) {
+        for (int k = 0; ui->customPlot->graph(i)->data().data()->size(); ++k) {
+            auto val = ui->customPlot->graph(i)->data().data()->at(k);
+            *stream << val << ",";
+        }
+        *stream << '\n';
+    }
+
+    delete stream;
+}
+
+void GraphMainWindow::saveImageDialog()
+{
+    m_ImagePath = QFileDialog::getSaveFileName(this,
+                                               tr("Сохранить график как изображение"),
+                                               m_ImagePath,
+                                               tr("Изображения (*.png *.bmp *.tif *.xpm *.jpg *.jpeg *.JPG)"));
+
+    saveImage(m_ImagePath);
+}
+
+void GraphMainWindow::saveImage(const QString &name) const
+{
+    if (name.isEmpty())
+        return;
+
+    ui->customPlot->saveJpg(name);
+}
+
 void GraphMainWindow::addGraph(const QString &name)
 {
-    if (! m_properties.contains(name))
+    if (!m_properties.contains(name))
         return;
 
     auto prop = m_properties[name];
@@ -289,16 +382,12 @@ void GraphMainWindow::loadCSVdialog()
 
 }
 
-void GraphMainWindow::saveCSVdialog()
-{
-
-}
-
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
     QCPGraph *graph;
 
     for (MeasuredValue val1 : packet) {
+        auto val1_desc = m_measValDescMap[val1.name];
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
@@ -316,6 +405,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 }
             } else {
                 for (MeasuredValue val2 : packet) {
+                    auto val2_desc = m_measValDescMap[val2.name];
                     if (val2_name == val2.name) {
                         GraphID gid;
                         gid.xName = val2.name;

@@ -1,6 +1,7 @@
 #ifndef GRAPHMAINWINDOW_H
 #define GRAPHMAINWINDOW_H
 
+#include "common.h"
 #include "graph_interface.h"
 #include "qcustomplot.h"
 #include <QMainWindow>
@@ -67,6 +68,8 @@ struct GraphProperties {
     QColor color;
 };
 
+class GraphPluginConfig;
+
 inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
     if (g1.chNumber != g2.chNumber)
@@ -88,21 +91,31 @@ public:
 
     bool loadCSV();
     QString nameTr() const;
+    void setConfig(GraphPluginConfig *config);
+    bool setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd);
 
 public slots:
     void loadCSVdialog();
     void saveCSVdialog();
     void saveJSONdialog();
+    void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
     void addGraph(const GraphProperties &prop);
+    void onRemoveJSON();
+
+signals:
+    void deleteMe();
 
 private:
     void commonInit();
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
-    bool saveJSON(const QString &path);
+    bool saveJSON(const QString &path) const;
+    bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);
+    void saveCSV(const QString &name) const;
+    void saveImage(const QString &name) const;
 
 private:
     Ui::GraphMainWindow *ui;
@@ -118,9 +131,13 @@ private:
     // Graph name -> properties
     QMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
+    QString m_CSVPath;
+    QString m_ImagePath;
     QString m_plotName;
     bool m_isLoadFromJson = false;
     bool m_hasUpdate = false;
+    GraphPluginConfig *m_config;
+    QMap<QString, MeasuredValueDescription> m_measValDescMap;
 };
 
 #endif // GRAPHMAINWINDOW_H

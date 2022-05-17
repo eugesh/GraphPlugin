@@ -30,7 +30,28 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
 
 GraphPlugin::~GraphPlugin()
 {
+    for (auto dock : m_graphsMainWins)
+        delete dock;
 
+    for (auto dock : m_graphsDocks)
+        delete dock;
+
+    delete m_config;
+    delete m_tableModel;
+    delete m_tableView;
+    delete m_tableDock;
+    delete m_boardDock;
+
+}
+
+void GraphPlugin::setPacketSize(int size)
+{
+    m_tableModel->setPacketSize(size);
+}
+
+int GraphPlugin::packetSize() const
+{
+    return m_tableModel->packetSize();
 }
 
 QString GraphPlugin::aboutInfo()
@@ -81,7 +102,7 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
 
     if (m_mainWindow->isMaximized())
-           m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
+        m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
 
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
@@ -109,35 +130,9 @@ bool GraphPlugin::saveGraphPluginGeometry()
 
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
 {
-    QFile loadFile(pathToJSON);
+    m_measValDescMap = loadConfigJSON(pathToJSON);
 
-    MeasuredValueDescription mvdesc_struct;
-
-    if (! loadFile.open(QIODevice::ReadOnly)) {
-        qCritical() << "Input file " << pathToJSON << " wasn't opened on read";
-        return false;
-    }
-
-    QByteArray loadData = loadFile.readAll();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
-
-    QJsonArray valuesArray = loadDoc.object()["values"].toArray();
-
-    for (int i = 0; i < valuesArray.size(); ++i) {
-        QJsonObject valueObject = valuesArray[i].toObject();
-        mvdesc_struct.name = valueObject["name"].toString();
-        mvdesc_struct.desc = valueObject["description"].toString();
-        mvdesc_struct.desc_ru = valueObject["description_ru"].toString();
-        mvdesc_struct.physQuant = valueObject["physicalQuantity"].toString();
-        mvdesc_struct.unit = valueObject["measure_unit"].toString();
-        mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
-        mvdesc_struct.symbol = valueObject["symbol"].toString();
-        mvdesc_struct.symbol_rus = valueObject["symbol_rus"].toString();
-        m_measValDescMap.insert(mvdesc_struct.name, mvdesc_struct);
-    }
-
-    return true;
+    return static_cast<bool>(m_measValDescMap.count());
 }
 
 bool GraphPlugin::loadConfig(const QString &pathToJSON)
@@ -150,9 +145,25 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
     return true;
 }
 
+QStringList GraphPlugin::getValuesNames() const
+{
+    return m_measValDescMap.uniqueKeys();
+}
+
+QStringList GraphPlugin::getDescriptionsTr() const
+{
+    QStringList descs;
+
+    for (auto valDesc : m_measValDescMap.values())
+        descs << valDesc.desc_ru;
+
+    return descs;
+}
+
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 {
-    m_tableModel = new GraphPluginTableModel(this);
+    m_tableModel = new GraphPluginTableModel(getDescriptionsTr(), getValuesNames(), m_synchMode, this);
+    m_tableModel->setPacketSize(m_measValDescMap.size());
     m_tableView = new GraphTableView(m_mainWindow);
     m_tableView->setModel(m_tableModel);
     m_tableView->setConfig(m_config);
@@ -193,22 +204,31 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     return true;
 }
 
-bool GraphPlugin::saveGraphJSON(const QString &pathToJSON)
+/*bool GraphPlugin::saveGraphJSON(const QString &pathToJSON)
 {
 
     return true;
-}
+}*/
 
 bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 {
     QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
     dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
+    graphWindow->setConfig(m_config);
+    graphWindow->setValuesDescriptions(m_measValDescMap);
+
+    connect(graphWindow, &GraphMainWindow::deleteMe, [=,this]() {
+        m_graphsMainWins.remove(graphWindow->nameTr());
+        m_mainWindow->removeDockWidget(dock_widget);
+        m_graphsDocks.remove(graphWindow->nameTr());
+        dock_widget->deleteLater();
+    });
 
     dock_widget->setWidget(graphWindow);
     dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName()).arg("Dock"));
 
-    m_graphsDocks.append(dock_widget);
+    m_graphsDocks.insert(graphWindow->nameTr(), dock_widget);
     m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);
 
     dock_widget->toggleViewAction()->setText(graphWindow->nameTr());
@@ -216,6 +236,11 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 
     return true;
+}
+
+void GraphPlugin::setMode(GraphPluginMode mode)
+{
+    m_synchMode = mode;
 }
 
 void GraphPlugin::addData(const MeasuredValue &value)
@@ -234,9 +259,9 @@ QList<QDockWidget*> GraphPlugin::dockWindows() const
 {
     QList<QDockWidget*> list;
 
-    list.append(m_graphsDocks);
+    list.append(m_graphsDocks.values());
     list.append(m_tableDock);
-    list.append(m_scoreBoardDock);
+    list.append(m_boardDock);
 
     return list;
 }
@@ -255,10 +280,12 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
         dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
 
         GraphMainWindow *graphWindow = new GraphMainWindow(customPlotName, prop, m_mainWindow);
+        graphWindow->setConfig(m_config);
+        graphWindow->setValuesDescriptions(m_measValDescMap);
 
         dock_widget->setWidget(graphWindow);
 
-        m_graphsDocks.append(dock_widget);
+        m_graphsDocks.insert(graphWindow->nameTr(), dock_widget);
         m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);
 
         m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);

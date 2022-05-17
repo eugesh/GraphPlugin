@@ -1,6 +1,14 @@
 #include "common.h"
 
-QColor nameToColorConverter(const QString &name) {
+#include <QDebug>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMap>
+
+QColor nameToColorConverter(const QString &name)
+{
     if (name.contains("black", Qt::CaseInsensitive))
         return Qt::black;
     else if (name.contains("white", Qt::CaseInsensitive))
@@ -46,7 +54,8 @@ QColor nameToColorConverter(const QString &name) {
     return QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
 }
 
- QString ColorToNameConverter(const QColor &color) {
+ QString ColorToNameConverter(const QColor &color)
+ {
     switch (color.rgb()) {
     case Qt::black:
         return QString("black");
@@ -84,3 +93,40 @@ QColor nameToColorConverter(const QString &name) {
         return color.name();
     }
 }
+
+ QMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
+ {
+     QFile loadFile(pathToJSON);
+
+     if (!loadFile.open(QIODevice::ReadOnly)) {
+         qCritical() << "Input file " << pathToJSON << " wasn't opened on read";
+         return {};
+     }
+
+     QByteArray loadData = loadFile.readAll();
+
+     QMap<QString, MeasuredValueDescription> measValDescMap;
+
+     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
+
+     QJsonArray valuesArray = loadDoc.object()["values"].toArray();
+
+     for (int i = 0; i < valuesArray.size(); ++i) {
+         QJsonObject valueObject = valuesArray[i].toObject();
+         if (valueObject["name"].toString().contains("time", Qt::CaseInsensitive))
+             continue;
+
+         MeasuredValueDescription mvdesc_struct;
+         mvdesc_struct.name = valueObject["name"].toString();
+         mvdesc_struct.desc = valueObject["description"].toString();
+         mvdesc_struct.desc_ru = valueObject["description_ru"].toString();
+         mvdesc_struct.physQuant = valueObject["physicalQuantity"].toString();
+         mvdesc_struct.unit = valueObject["measure_unit"].toString();
+         mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
+         mvdesc_struct.symbol = valueObject["symbol"].toString();
+         mvdesc_struct.symbol_rus = valueObject["symbol_rus"].toString();
+         measValDescMap.insert(mvdesc_struct.name, mvdesc_struct);
+     }
+
+     return measValDescMap;
+ }

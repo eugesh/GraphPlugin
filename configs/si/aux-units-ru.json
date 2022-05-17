@@ -1,4 +1,6 @@
 {
+    "description": "Document used for comboboxes filling out",
+    "description_ru": "Документ, используемый для заполнения выпадающих списков с различными единицами измерений",
     "length":{
         "name_ru": "длина",
         "baseUnit": "meter",
@@ -92,6 +94,21 @@
                 "type": "customary",
                 "systems": ["legacyMetric"],
                 "multiplier": 133.3224
+            },
+			"meter":{
+                "name_ru": "метр",
+                "symbol": "m",
+                "symbol_ru": "м",
+                "type": "customary",
+                "prefixes": ["kilo", "deci", "centi", "milli"],
+				"multiplier": 9806.65
+            },
+            "foot":{
+                "name_ru": "фут",
+                "symbol": "ft",
+                "symbol_ru": "фут",
+                "type": "custom",
+                "multiplier": 3024.37086
             }
         }
     },
@@ -111,7 +128,7 @@
                 "notes": "As a postpositional adjective, the plural kelvin is used instead of kelvins"
             },
             "celsius": {
-                "name_ru": "цельсий",
+                "name_ru": "градус Цельсия",
                 "name": "celsius",
                 "otherNames": ["degree celsius", "degrees celsius"],
                 "symbol": "°C",
@@ -121,7 +138,7 @@
                 "offset": -273.15
             },
             "fahrenheit": {
-                "name_ru": "фаренгейт",
+                "name_ru": "градус Фаренгейта",
                 "name": "fahrenheit",
                 "otherNames": ["degree fahrenheit", "degrees fahrenheit"],
                 "symbol": "°F",

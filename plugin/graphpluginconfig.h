@@ -31,7 +31,10 @@ class GraphPluginConfig
 {
 public:
     GraphPluginConfig(const QString &pathToUnits, const QString &pathToPrefixes);
+
     QMap<QString, MeasUnit> measurementUnits() const;
+    QList<MeasUnit> measurementUnits(const QString &name) const;
+
     QList<QMap<QString, QVariant>> auxMeasUnits(const QString &physValName) const;
     QStringList physicalValuesNames() const;
     QMap<QString, SIPrefix> prefixes() const;

@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
+#include <QStringList>
 #include <qcustomplot.h>
 
 #include "common.h"
@@ -12,9 +13,10 @@ class GraphPluginTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    GraphPluginTableModel(QObject *parent = nullptr);
+    // GraphPluginTableModel(GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
+    explicit GraphPluginTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
 
-    void setPacketSize(int n);
+    void setPacketSize(int n) { m_packetSize = n; }
     int packetSize() const { return m_packetSize; }
 
     void clear();
@@ -44,8 +46,9 @@ private:
     int m_ringBufferSize;
     QMap<uint64_t, MeasuredValue> m_dataMap;
     QList<uint64_t> m_timeStamps;
-    QList<QString> m_coloumnNames;
-    QList<QString> m_coloumnTitles;
+    QStringList m_coloumnNames;
+    QStringList m_coloumnTitles;
+    GraphPluginMode m_syncMode = GRAPH_DATA_SYNCH;
 };
 
 #endif // GRAPHPLUGINTABLEMODEL_H

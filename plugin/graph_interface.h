@@ -58,7 +58,8 @@
 struct MeasuredValue {
     uint64_t timestamp; //!< [мс], временная метка, возможно одна для разных параметров (одна на пакет)
     QString name; //!< Уникальное имя измеряемого параметра (velocity, time, temperature, pressure)
-    int SI_to_current; //!< Коэффициент преобразования в единицу СИ, по умолчанию 1
+    int SI_to_current_mult = 1; //!< Коэффициент преобразования в единицу СИ, по умолчанию 1. [current / SI]
+    int SI_to_current_shift = 0; //!< Сдвиг при преобразовании в единицу СИ, по умолчанию 0. [current - SI]
     double value; //!< Измеренное значение
     int channel; //!< Номер канала устройства
 };
@@ -72,7 +73,7 @@ class GraphInterface
 {
 public:
     // GraphInterface(QObject *parent = nullptr) {}
-    //GraphInterface(QMainWindow *parent = nullptr) {}
+    // GraphInterface(QMainWindow *parent = nullptr) {}
 
     virtual ~GraphInterface() = default;
     //virtual QObject* getObject() = 0;
@@ -84,6 +85,9 @@ public:
     virtual bool loadJSONs() = 0;
     virtual bool saveGraphPluginGeometry() = 0;
     virtual QString aboutInfo() = 0;
+    // Change size of packet at runtime
+    virtual void setPacketSize(int size) = 0;
+    virtual int packetSize() const = 0;
 
 //signals:
     //void newDockWindow(QDockWidget*);

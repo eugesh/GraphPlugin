@@ -37,7 +37,7 @@ DigitalBoardItem::DigitalBoardItem(const QString &name, const QString &mainUnit,
         // Convert current value to main unit
         double val = (m_currVal - m_measUnitsOffsets[m_prevText]) * m_measUnitsMult[m_prevText];
         val += m_fixedOffset;
-        val *= m_fixedMultiplier;
+        val /= m_fixedMultiplier;
         // Set converted value to LCD
         setCurrentValue(val);
         // Remember unit name
@@ -48,7 +48,7 @@ DigitalBoardItem::DigitalBoardItem(const QString &name, const QString &mainUnit,
 void DigitalBoardItem::setCurrentValue(double val)
 {
     val -= m_fixedOffset;
-    val /= m_fixedMultiplier;
+    val *= m_fixedMultiplier;
     m_prevText = ui->comboBox->currentText();
     m_currVal = val / m_measUnitsMult[m_prevText] +
                 m_measUnitsOffsets[m_prevText];
