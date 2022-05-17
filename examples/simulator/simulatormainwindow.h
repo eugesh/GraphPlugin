@@ -29,6 +29,8 @@ public:
     explicit SimulatorMainWindow(QWidget *parent = nullptr);
     ~SimulatorMainWindow();
 
+    void closeEvent(QCloseEvent *event) override;
+
 signals:
     void newData(const MeasuredValue &value);
 

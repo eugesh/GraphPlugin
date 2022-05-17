@@ -5,6 +5,7 @@
 #include "simulatormainwindow.h"
 #include "ui_simulatormainwindow.h"
 
+#include <QCloseEvent>
 #include <QDateTime>
 #include <QDebug>
 #include <QDockWidget>
@@ -63,6 +64,8 @@ SimulatorMainWindow::SimulatorMainWindow(QWidget *parent) :
 
 SimulatorMainWindow::~SimulatorMainWindow()
 {
+    onStop();
+
     if (m_graphInterface) {
         m_graphInterface->saveGraphPluginGeometry();
     }
@@ -70,6 +73,13 @@ SimulatorMainWindow::~SimulatorMainWindow()
     unloadGraphPlugin();
 
     delete ui;
+}
+
+void SimulatorMainWindow::closeEvent(QCloseEvent *event)
+{
+    if (event->type() == QEvent::Close) {
+        onStop();
+    }
 }
 
 bool SimulatorMainWindow::loadGraphPlugin()
