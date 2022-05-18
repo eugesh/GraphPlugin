@@ -33,7 +33,8 @@ GraphTableView::GraphTableView(QWidget *parent)
             contextMenu.addAction(&action1);
         contextMenu.addAction(&action2);
 
-        contextMenu.exec(mapToGlobal(pos));
+        // contextMenu.exec(mapToGlobal(pos));
+        contextMenu.popup(mapToGlobal(pos));
     });
 
     // QHeaderView *header = new QHeaderView(Qt::Orientation::Horizontal, this);
