@@ -118,26 +118,26 @@ private:
 
 private:
     // Pointer to superior MainWindow
-    QMainWindow *m_mainWindow;
+    QMainWindow *m_mainWindow = nullptr;
     // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
     // Graphs
     QMap<QString, QDockWidget*> m_graphsDocks;
     // QList<GraphMainWindow*> m_graphsMainWins;
     QMap<QString, GraphMainWindow*> m_graphsMainWins;
     // ToolBar
-    QToolBar *m_toolbar;
+    QToolBar *m_toolbar = nullptr;
     // Table
-    QDockWidget *m_tableDock;
-    GraphPluginTableModel *m_tableModel;
+    QDockWidget *m_tableDock = nullptr;
+    GraphPluginTableModel *m_tableModel = nullptr;
     // QTableView *m_tableView;
-    GraphTableView *m_tableView;
+    GraphTableView *m_tableView = nullptr;
 
-    QDockWidget *m_boardDock;
-    DigitalDisplayBoard *m_digitalBoard;
+    QDockWidget *m_boardDock = nullptr;
+    DigitalDisplayBoard *m_digitalBoard = nullptr;
     // QList<GraphMainWindow*> m_graphMainWins;
 
     // Config
-    GraphPluginConfig *m_config;
+    GraphPluginConfig *m_config = nullptr;
 
     // Data Dispatcher
     //!< Timestamp -> value, one key - multple values

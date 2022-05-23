@@ -31,17 +31,27 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
 GraphPlugin::~GraphPlugin()
 {
     for (auto dock : m_graphsMainWins)
-        delete dock;
+        if (dock)
+            delete dock;
 
     for (auto dock : m_graphsDocks)
-        delete dock;
+        if (dock)
+            delete dock;
 
-    delete m_config;
-    delete m_tableModel;
-    delete m_tableView;
-    delete m_tableDock;
-    delete m_boardDock;
+    if (m_config)
+        delete m_config;
 
+    if (m_tableModel)
+        delete m_tableModel;
+
+    if (m_tableView)
+        delete m_tableView;
+
+    if (m_tableDock)
+        delete m_tableDock;
+
+    if (m_boardDock)
+        delete m_boardDock;
 }
 
 void GraphPlugin::setPacketSize(int size)
