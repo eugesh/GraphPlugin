@@ -144,6 +144,7 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.y_scale = plotObject["y_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
                         plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.color = nameToColorConverter(plotObject["color"].toString());
+        properties.is_parametric = plotObject["is_parametric"].toBool();
         // "channels": [1],
         QJsonArray arr = plotObject["channels"].toArray();
         for (auto ch : arr)
@@ -212,6 +213,7 @@ bool GraphMainWindow::saveJSON(const QString &path) const
             channelsArray.append(ch);
         }
         graphObject["channels"] = channelsArray;
+        graphObject["is_parametric"] = prop.is_parametric;
 
         customPlotArray.append(graphObject);
     }
@@ -295,11 +297,8 @@ void GraphMainWindow::saveImage(const QString &name) const
     ui->customPlot->saveJpg(name);
 }
 
-void GraphMainWindow::addGraph(const QString &name)
+void GraphMainWindow::addXYGraph(const QString &name)
 {
-    if (!m_properties.contains(name))
-        return;
-
     auto prop = m_properties[name];
 
     int chNum = 1;
@@ -353,6 +352,27 @@ void GraphMainWindow::addGraph(const QString &name)
         m_valueGraphMap.insert(gid, graph);
         // m_valueGraphMap.insert(yx, graph);
         chNum++;
+    }
+}
+
+void GraphMainWindow::addParametricGraph(const QString &name)
+{
+    auto prop = m_properties[name];
+
+    QCPCurve *newParametricCurve = new QCPCurve(ui->customPlot->xAxis, ui->customPlot->yAxis);
+}
+
+void GraphMainWindow::addGraph(const QString &name)
+{
+    if (!m_properties.contains(name))
+        return;
+
+    auto prop = m_properties[name];
+
+    if (prop.is_parametric) {
+        addParametricGraph(name);
+    } else {
+        addXYGraph(name);
     }
 }
 

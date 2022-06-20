@@ -66,6 +66,7 @@ struct GraphProperties {
     GraphScaleType y_scale;
     QVector<int> channels; // e.g. 1, 2, 3, 4
     QColor color;
+    bool is_parametric = false;
 };
 
 class GraphPluginConfig;
@@ -114,6 +115,8 @@ private:
     bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);
+    void addXYGraph(const QString &name);
+    void addParametricGraph(const QString &name);
     void saveCSV(const QString &name) const;
     void saveImage(const QString &name) const;
 
