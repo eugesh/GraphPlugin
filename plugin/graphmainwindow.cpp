@@ -206,7 +206,7 @@ bool GraphMainWindow::saveJSON(const QString &path) const
         graphObject["x_scale"] = prop.x_scale == GraphScaleType::LOG ? "LOG" : "LIN";
         graphObject["y_scale"] = prop.y_scale == GraphScaleType::LOG ? "LOG" : "LIN";
 
-        graphObject["y_unit"] = ColorToNameConverter(prop.color);
+        graphObject["color"] = ColorToNameConverter(prop.color);
 
         QJsonArray channelsArray;
         for (auto ch : prop.channels) {
