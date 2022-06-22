@@ -119,6 +119,8 @@ private:
     void addParametricGraph(const QString &name);
     void saveCSV(const QString &name) const;
     void saveImage(const QString &name) const;
+    void updateGraphs(const GraphID& id, double x, double y);
+    void updateCurves(const GraphID& id, uint64_t ts, double x, double y);
 
 private:
     Ui::GraphMainWindow *ui;
@@ -127,6 +129,8 @@ private:
     //!< Value name, pointer to Graph
     // QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
     QMap<GraphID, QCPGraph*> m_valueGraphMap;
+    // Parametric curves (x, y, t)
+    QMap<GraphID, QCPCurve*> m_valueCurveMap;
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     //QMap<QString, QString> m_valueNameXY;

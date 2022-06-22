@@ -360,6 +360,27 @@ void GraphMainWindow::addParametricGraph(const QString &name)
     auto prop = m_properties[name];
 
     QCPCurve *newParametricCurve = new QCPCurve(ui->customPlot->xAxis, ui->customPlot->yAxis);
+
+    GraphID gid;
+    gid.graphName = name;
+    gid.chNumber = 1;
+    gid.xName = prop.x_name;
+    gid.yName = prop.y_name;
+
+    ui->customPlot->xAxis->setLabel(prop.x_title);
+    ui->customPlot->yAxis->setLabel(prop.y_title);
+    ui->customPlot->legend->setVisible(true);
+
+    QPen graphPen;
+    // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));
+    graphPen.setColor(prop.color);
+    graphPen.setWidthF(1);
+    //ui->customPlot->graph()->setPen(graphPen);
+    ui->customPlot->replot();
+    // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
+    m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
+
+    m_valueCurveMap.insert(gid, newParametricCurve);
 }
 
 void GraphMainWindow::addGraph(const QString &name)
@@ -402,6 +423,31 @@ void GraphMainWindow::loadCSVdialog()
 
 }
 
+void GraphMainWindow::updateGraphs(const GraphID& gid, double x, double y)
+{
+    QCPGraph *graph = nullptr;
+
+    graph = m_valueGraphMap[gid];
+
+    if (graph) {
+        graph->addData(x, y);
+        graph->rescaleAxes();
+    }
+}
+
+void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, double x, double y)
+{
+    QCPCurve *curve = nullptr;
+
+    curve = m_valueCurveMap[gid];
+
+    if (curve) {
+        QCPCurveData point(timestamp, x, y);
+        curve->data()->add(point);
+        curve->rescaleAxes();
+    }
+}
+
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
     QCPGraph *graph;
@@ -416,13 +462,14 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 gid.yName = val1.name;
                 gid.chNumber = val1.channel;
                 // graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
-                graph = m_valueGraphMap[gid];
                 ui->customPlot->xAxis->setTickLabels(true);
+                updateGraphs(gid, val1.timestamp, val1.value);
+                /*graph = m_valueGraphMap[gid];
                 if (graph) {
                     //auto date = QDateTime::fromMSecsSinceEpoch(val1.timestamp);
                     graph->addData(val1.timestamp, val1.value);
                     graph->rescaleAxes();
-                }
+                }*/
             } else {
                 for (MeasuredValue val2 : packet) {
                     auto val2_desc = m_measValDescMap[val2.name];
@@ -432,11 +479,13 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                         gid.yName = val1.name;
                         gid.chNumber = val1.channel;
                         // graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
-                        graph = m_valueGraphMap[gid];
+                        updateGraphs(gid, val2.value, val1.value);
+                        updateCurves(gid, val2.timestamp, val2.value, val1.value);
+                        /*graph = m_valueGraphMap[gid];
                         if (graph) {
                             graph->addData(val2.value, val1.value);
                             graph->rescaleAxes();
-                        }
+                        }*/
                     }
                 }
             }
