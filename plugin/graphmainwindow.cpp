@@ -145,6 +145,7 @@ bool GraphMainWindow::readJSON(const QString &path)
                         plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.color = nameToColorConverter(plotObject["color"].toString());
         properties.is_parametric = plotObject["is_parametric"].toBool();
+        properties.is_integral = plotObject["is_integral"].toBool();
         // "channels": [1],
         QJsonArray arr = plotObject["channels"].toArray();
         for (auto ch : arr)
@@ -214,6 +215,7 @@ bool GraphMainWindow::saveJSON(const QString &path) const
         }
         graphObject["channels"] = channelsArray;
         graphObject["is_parametric"] = prop.is_parametric;
+        graphObject["is_integral"] = prop.is_integral;
 
         customPlotArray.append(graphObject);
     }
@@ -441,16 +443,35 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
 
     curve = m_valueCurveMap[gid];
 
+    QString name;
+    if (gid.graphName.isEmpty()) {
+        name = m_valueCurveMap.find(gid).key().graphName;
+    }
+
     if (curve) {
-        QCPCurveData point(timestamp, x, y);
-        curve->data()->add(point);
+        if (m_properties[name].is_integral) {
+            if (curve->dataCount() >= 1) {
+                double tsPrev = curve->data()->at(curve->dataCount() - 1)->t;
+                double dt = (timestamp - tsPrev) / 1000;
+                double newX = curve->data()->at(curve->dataCount() - 1)->key + x * dt;
+                double newY = curve->data()->at(curve->dataCount() - 1)->value + y * dt;
+                QCPCurveData point(timestamp, newX, newY);
+                curve->data()->add(point);
+            } else {
+                QCPCurveData point(timestamp, 0, 0);
+                curve->data()->add(point);
+            }
+        } else {
+            QCPCurveData point(timestamp, x, y);
+            curve->data()->add(point);
+        }
         curve->rescaleAxes();
     }
 }
 
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
-    QCPGraph *graph;
+    //QCPGraph *graph;
 
     for (MeasuredValue val1 : packet) {
         auto val1_desc = m_measValDescMap[val1.name];

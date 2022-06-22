@@ -109,6 +109,7 @@ void AddOnPlotDialog::setProp(const GraphProperties &prop)
     ui->xScaleTypeCbBox->setCurrentText(prop.x_scale == GraphScaleType::LIN ? tr("Линейная") : tr("Логарифмическая"));
     ui->yScaleTypeCbBox->setCurrentText(prop.y_scale == GraphScaleType::LIN ? tr("Линейная") : tr("Логарифмическая"));
     ui->parametricCurveCheckBox->setChecked(prop.is_parametric ? true : false);
+    ui->integrateCheckBox->setChecked(prop.is_integral ? true : false);
 
     for (auto ch : prop.channels) {
         if (ch < ui->horizontalLayoutCh->count()) {
@@ -148,6 +149,7 @@ GraphProperties AddOnPlotDialog::getProp() const
     prop.y_scale = ui->yScaleTypeCbBox->currentText().contains(tr("Линейная")) ? GraphScaleType::LIN : GraphScaleType::LOG;
     prop.color = nameToColorConverter(ui->colorComboBox->currentText());
     prop.is_parametric = ui->parametricCurveCheckBox->isChecked();
+    prop.is_integral = ui->integrateCheckBox->isChecked();
 
     for (int i = 1; i < ui->horizontalLayoutCh->count(); ++i) {
         auto obj = qobject_cast<QCheckBox*> (ui->horizontalLayoutCh->itemAt(i)->widget());

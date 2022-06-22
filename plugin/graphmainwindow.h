@@ -67,6 +67,7 @@ struct GraphProperties {
     QVector<int> channels; // e.g. 1, 2, 3, 4
     QColor color;
     bool is_parametric = false;
+    bool is_integral = false;
 };
 
 class GraphPluginConfig;
