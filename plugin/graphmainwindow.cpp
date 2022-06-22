@@ -374,7 +374,6 @@ void GraphMainWindow::addParametricGraph(const QString &name)
     ui->customPlot->legend->setVisible(true);
 
     QPen graphPen;
-    // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));
     graphPen.setColor(prop.color);
     graphPen.setWidthF(1);
     //ui->customPlot->graph()->setPen(graphPen);
@@ -471,8 +470,6 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
 
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
-    //QCPGraph *graph;
-
     for (MeasuredValue val1 : packet) {
         auto val1_desc = m_measValDescMap[val1.name];
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
@@ -482,15 +479,8 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 gid.xName = tr("time");
                 gid.yName = val1.name;
                 gid.chNumber = val1.channel;
-                // graph = m_valueGraphMap[qMakePair(val1.name, tr("time"))];
                 ui->customPlot->xAxis->setTickLabels(true);
                 updateGraphs(gid, val1.timestamp, val1.value);
-                /*graph = m_valueGraphMap[gid];
-                if (graph) {
-                    //auto date = QDateTime::fromMSecsSinceEpoch(val1.timestamp);
-                    graph->addData(val1.timestamp, val1.value);
-                    graph->rescaleAxes();
-                }*/
             } else {
                 for (MeasuredValue val2 : packet) {
                     auto val2_desc = m_measValDescMap[val2.name];
@@ -499,14 +489,8 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                         gid.xName = val2.name;
                         gid.yName = val1.name;
                         gid.chNumber = val1.channel;
-                        // graph = m_valueGraphMap[qMakePair(val1.name, val2.name)];
                         updateGraphs(gid, val2.value, val1.value);
                         updateCurves(gid, val2.timestamp, val2.value, val1.value);
-                        /*graph = m_valueGraphMap[gid];
-                        if (graph) {
-                            graph->addData(val2.value, val1.value);
-                            graph->rescaleAxes();
-                        }*/
                     }
                 }
             }
