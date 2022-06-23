@@ -32,7 +32,9 @@ SOURCES += \
     graphplugintablemodel.cpp \
     ../QCustomPlot/qcustomplot.cpp \
     graphtableview.cpp \
-    graphtoolbar.cpp
+    graphtoolbar.cpp \
+    vectorindicatorsboard.cpp \
+    vectorindicatorwidget.cpp
 
 HEADERS += \
     addonplotdialog.h \
@@ -45,13 +47,17 @@ HEADERS += \
     graphplugintablemodel.h \
     ../QCustomPlot/qcustomplot.h \
     graphtableview.h \
-    graphtoolbar.h
+    graphtoolbar.h \
+    vectorindicatorsboard.h \
+    vectorindicatorwidget.h
 
 FORMS += \
     addonplotdialog.ui \
     digitalboarditem.ui \
     digitaldisplayboard.ui \
-    graphmainwindow.ui
+    graphmainwindow.ui \
+    vectorindicatorsboard.ui \
+    vectorindicatorwidget.ui
 
 # install
 target.path = ../plugins
