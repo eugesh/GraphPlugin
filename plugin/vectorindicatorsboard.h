@@ -54,7 +54,9 @@ private:
     QMap<QString, QDockWidget*> m_itemsDocks;
     QList<QString> m_activeSensorsNames;
     // Key - abscissa, value - ordinate
-    QMap<QString, QString> m_VxVyMap;
+    QMap<QString, QString> m_xyMap;
+    QMap<QString, GraphProperties> m_namePropMap;
+    QMap<QPair<QString, QString>, QString> m_xyNameMap;
 };
 
 #endif // VECTORINDICATORSBOARD_H

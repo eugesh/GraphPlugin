@@ -196,6 +196,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 
     connect (m_tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
     connect (m_tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
+    connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -230,7 +231,7 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_vectorIndictorsDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_vectorIndictorsDock->setWidget(m_vectorIndicatorsBoard);
     m_vectorIndictorsDock->setObjectName("VectorIndicatorsDock");
-    m_vectorIndictorsDock->toggleViewAction()->setText(tr("Табло"));
+    m_vectorIndictorsDock->toggleViewAction()->setText(tr("Стрелочные индикаторы"));
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_vectorIndictorsDock);
 
     connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);

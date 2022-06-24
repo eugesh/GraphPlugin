@@ -19,6 +19,8 @@ public:
     ~VectorIndicatorWidget();
     void setAngle(double angle);
     double getAngle() const;
+    void setMagnitude(double mag);
+    double getMagnitude() const;
     bool readJSON(const QString &path);
 
 public slots:
@@ -26,6 +28,7 @@ public slots:
 
 private:
     Ui::VectorIndicatorWidget *ui;
+    double m_magnitude = 0;
 };
 
 #endif // VECTORINDICATORWIDGET_H

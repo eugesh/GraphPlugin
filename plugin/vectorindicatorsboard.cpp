@@ -6,6 +6,7 @@
 
 #include <QDockWidget>
 #include <QSettings>
+#include <cmath>
 
 VectorIndicatorsBoard::VectorIndicatorsBoard(QWidget *parent) :
     QMainWindow(parent),
@@ -78,13 +79,29 @@ void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
     dock->toggleViewAction()->setText(prop.name); //desc.desc_ru);
     m_itemsDocks.insert(prop.name, dock);
     addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
+
+    m_xyMap.insert(prop.x_name, prop.y_name);
+    m_namePropMap.insert(prop.name, prop);
+    QPair<QString, QString> xy = qMakePair<QString, QString> (prop.x_name, prop.y_name);
+    m_xyNameMap.insert(xy, prop.name);
 }
 
 void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
 {
-    for (auto val : vals) {
-        /*if (m_items.contains(val.name))
-            m_items[val.name]->setCurrentValue(val.value);*/
+    for (auto xval : vals) {
+        if (m_xyMap.contains(xval.name)) {
+            auto xValName = xval.name;
+            auto yVAlName = m_xyMap[xval.name];
+            auto widgetName = m_xyNameMap[qMakePair<QString, QString> (xValName, yVAlName)];
+            for (auto yval : vals) {
+                if (yval.name == yVAlName) {
+                    auto angle = atan2(yval.value, xval.value);
+                    auto mag = sqrt(yval.value * yval.value + xval.value * xval.value);
+                    m_items[widgetName]->setAngle(angle * 180 / M_PI);
+                    m_items[widgetName]->setMagnitude(mag);
+                }
+            }
+        }
     }
 }
 
