@@ -49,13 +49,16 @@ GraphTableView::GraphTableView(QWidget *parent)
 
         QAction action1(tr("Копировать"), this);
         QAction action2(tr("Вывести на график"), this);
+        QAction action3(tr("Вывести на индикатор"), this);
 
         connect(&action1, &QAction::triggered, this, &GraphTableView::copyColumn);
         connect(&action2, &QAction::triggered, this, &GraphTableView::placeOnPlot);
+        connect(&action3, &QAction::triggered, this, &GraphTableView::placeOnVectorIndicator);
 
         if (selectedIndexes().count())
             contextMenu.addAction(&action1);
         contextMenu.addAction(&action2);
+        contextMenu.addAction(&action3);
 
         contextMenu.exec(mapToGlobal(pos));
     });
@@ -65,18 +68,18 @@ void GraphTableView::setConfig(GraphPluginConfig *config)
 {
     m_config = config;
 
-    m_addPointDialog = new AddOnPlotDialog(this);
-    m_addPointDialog->setConfig(config);
+    m_addPlotDialog = new AddOnPlotDialog(this);
+    m_addPlotDialog->setConfig(config);
 }
 
 void GraphTableView::setMeasValues(const QMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValuesDesc = mvd;
-    if (! m_addPointDialog) {
+    if (! m_addPlotDialog) {
         qCritical() << "Error: setConfig first!";
         return;
     }
-    m_addPointDialog->setMeasValDesc(mvd);
+    m_addPlotDialog->setMeasValDesc(mvd);
 }
 
 void GraphTableView::setModel(QAbstractItemModel *model)
@@ -141,14 +144,29 @@ void GraphTableView::placeOnPlot()
 
     auto prop = graphPropertiesFromSelectedColoumn(yPhysQuant);
 
-    m_addPointDialog->setProp(prop);
+    m_addPlotDialog->setProp(prop);
 
-    if (m_addPointDialog->exec()) {
+    if (m_addPlotDialog->exec()) {
         //GraphProperties prop;
 
         //prop = m_addPointDialog->getProp();
 
-        emit createNewGraph(m_addPointDialog->getCustomPlotName(), m_addPointDialog->getProp());
+        emit createNewGraph(m_addPlotDialog->getCustomPlotName(), m_addPlotDialog->getProp());
+    }
+}
+
+void GraphTableView::placeOnVectorIndicator()
+{
+    auto yName = model()->headerData(m_currentColumn, Qt::Horizontal).toString();
+    auto yPhysQuant = model()->headerData(m_currentColumn, Qt::Horizontal, DataRole).toString();
+    yPhysQuant = model()->headerData(m_currentColumn, Qt::Horizontal, PhysQuantRole).toString();
+
+    auto prop = graphPropertiesFromSelectedColoumn(yPhysQuant);
+
+    m_addPlotDialog->setProp(prop);
+
+    if (m_addPlotDialog->exec()) {
+        emit createNewVectorIndicator(m_addPlotDialog->getCustomPlotName(), m_addPlotDialog->getProp());
     }
 }
 

@@ -5,6 +5,7 @@
 #include "graphpluginconfig.h"
 #include "graphplugintablemodel.h"
 #include "graphtableview.h"
+#include "vectorindicatorsboard.h"
 
 #include <QApplication>
 #include <QDockWidget>
@@ -92,6 +93,9 @@ bool GraphPlugin::loadJSONs()
 
     // Read JSON for Score Board description
     loadSensorsMonitorJSON("");
+
+    // Read JSON for Vector Indicators Board description
+    loadVectorIndicatorsJSON("");
 
     restoreGraphPluginGeometry();
 
@@ -191,6 +195,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
     }
 
     connect (m_tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
+    connect (m_tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
 
     return true;
 }
@@ -210,6 +215,25 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
     connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
+
+    return true;
+}
+
+bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
+{
+    m_vectorIndicatorsBoard = new VectorIndicatorsBoard();
+    m_vectorIndicatorsBoard->setConfig(m_config);
+    m_vectorIndicatorsBoard->setValuesDescriptions(m_measValDescMap);
+    bool is_ok = m_vectorIndicatorsBoard->initFromJSON("");
+
+    m_vectorIndictorsDock = new QDockWidget(m_mainWindow);
+    m_vectorIndictorsDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    m_vectorIndictorsDock->setWidget(m_vectorIndicatorsBoard);
+    m_vectorIndictorsDock->setObjectName("VectorIndicatorsDock");
+    m_vectorIndictorsDock->toggleViewAction()->setText(tr("Табло"));
+    m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_vectorIndictorsDock);
+
+    connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -302,4 +326,9 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
 
         connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphWindow, &GraphMainWindow::addData);
     }
+}
+
+void GraphPlugin::onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop)
+{
+    m_vectorIndicatorsBoard->addNewIndicator(prop);
 }

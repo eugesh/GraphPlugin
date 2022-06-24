@@ -64,6 +64,7 @@ class GraphMainWindow;
 class GraphPluginConfig;
 class GraphPluginTableModel;
 class GraphTableView;
+class VectorIndicatorsBoard;
 struct GraphProperties;
 struct MeasuredValueDescription;
 class QTableView;
@@ -98,6 +99,7 @@ public:
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
+    void onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop);
 
 private:
     // Values types, measurement units
@@ -109,6 +111,7 @@ private:
     bool loadGraphJSON(const QString &pathToJSON);
     bool loadTableJSON(const QString &pathToJSON);
     bool loadSensorsMonitorJSON(const QString &pathToJSON);
+    bool loadVectorIndicatorsJSON(const QString &pathToJSON);
 
     // bool saveGraphJSON(const QString &pathToJSON);
 
@@ -134,6 +137,9 @@ private:
 
     QDockWidget *m_boardDock = nullptr;
     DigitalDisplayBoard *m_digitalBoard = nullptr;
+
+    QDockWidget *m_vectorIndictorsDock = nullptr;
+    VectorIndicatorsBoard *m_vectorIndicatorsBoard = nullptr;
     // QList<GraphMainWindow*> m_graphMainWins;
 
     // Config

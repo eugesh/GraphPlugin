@@ -24,17 +24,19 @@ protected:
 
 signals:
     void createNewGraph(const QString &customPlotName, const GraphProperties &prop);
+    void createNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop);
 
 protected slots:
     void copyColumn();
     void copyRow();
     void placeOnPlot();
+    void placeOnVectorIndicator();
 
 private:
     GraphProperties graphPropertiesFromSelectedColoumn(const QString &name) const;
 
 private:
-    AddOnPlotDialog *m_addPointDialog = nullptr;
+    AddOnPlotDialog *m_addPlotDialog = nullptr;
     QMap<QString, MeasuredValueDescription> m_measValuesDesc;
     // Config
     GraphPluginConfig *m_config = nullptr;

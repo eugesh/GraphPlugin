@@ -1,3 +1,4 @@
+#include "common.h"
 #include "graphpluginconfig.h"
 #include "vectorindicatorsboard.h"
 #include "vectorindicatorwidget.h".h"
@@ -44,7 +45,7 @@ void VectorIndicatorsBoard::setConfig(GraphPluginConfig *config)
 // Apply the last custom settings
 bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
 {
-    for (auto name : m_activeSensorsNames) {
+    /*for (auto name : m_activeSensorsNames) {
         auto desc = m_measValDescMap[name];
 
         auto title = desc.desc_ru;
@@ -61,7 +62,22 @@ bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
         addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
     }
 
-    return restoreBoardGeometry();
+    return restoreBoardGeometry();*/
+}
+
+void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
+{
+    auto *item = new VectorIndicatorWidget(prop.name, this);
+    item->setWindowTitle(prop.name);
+
+    auto *dock = new QDockWidget(this);
+    m_items.insert(prop.name, item);
+    dock->setWidget(item);
+    dock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    dock->setObjectName(tr("%1%2").arg(prop.name).arg("Dock"));
+    dock->toggleViewAction()->setText(prop.name); //desc.desc_ru);
+    m_itemsDocks.insert(prop.name, dock);
+    addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
 }
 
 void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)

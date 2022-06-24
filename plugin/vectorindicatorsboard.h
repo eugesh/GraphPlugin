@@ -14,6 +14,8 @@ class VectorIndicatorsBoard;
 
 class VectorIndicatorWidget;
 class GraphPluginConfig;
+struct GraphProperties;
+
 
 class VectorIndicatorsBoard : public QMainWindow
 {
@@ -35,6 +37,7 @@ protected:
 
 public slots:
     void addData(const QList<MeasuredValue> &vals);
+    void addNewIndicator(const GraphProperties &prop);
 
 private:
     bool readJSON();
