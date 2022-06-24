@@ -53,13 +53,13 @@ VectorIndicatorWidget::~VectorIndicatorWidget()
 
 void VectorIndicatorWidget::setAngle(double angle)
 {
-    ui->dial->setValue(fitAngleIn360(270 - angle));
-    ui->lcdNumber->display(angle);
+    ui->dial->setValue(fitAngleIn360(angle - 180));
+    ui->lcdNumber->display(fitAngleIn360(angle));
 }
 
 double VectorIndicatorWidget::getAngle() const
 {
-    return fitAngleIn360(270 - ui->dial->value());
+    return fitAngleIn360(ui->dial->value() - 180);
 }
 
 void VectorIndicatorWidget::setMagnitude(double mag)
