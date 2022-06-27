@@ -162,7 +162,7 @@ bool GraphMainWindow::readJSON(const QString &path)
 
 void GraphMainWindow::saveJSONdialog()
 {
-    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить график как"), m_JSONPath, tr("(*.JSON)"));
+    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить график как"), m_JSONPath, tr("JSON файлы(*.json)"));
 
     if (!m_JSONPath.endsWith(".json", Qt::CaseInsensitive))
         m_JSONPath += ".json";

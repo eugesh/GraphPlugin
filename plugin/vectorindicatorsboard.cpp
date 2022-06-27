@@ -22,9 +22,13 @@ VectorIndicatorsBoard::VectorIndicatorsBoard(QWidget *parent) :
 
     ui->setupUi(this);
 
+    // Disallow user to hide toolbar
     ui->toolBar->toggleViewAction()->setEnabled(false);
     ui->toolBar->toggleViewAction()->setVisible(false);
     removeAction(ui->toolBar->toggleViewAction());
+
+    connect(ui->actionSaveJson, &QAction::triggered, this, &VectorIndicatorsBoard::onSaveJsonAs);
+    connect(ui->actionRemoveJson, &QAction::triggered, this, &VectorIndicatorsBoard::onRemoveJson);
 }
 
 VectorIndicatorsBoard::~VectorIndicatorsBoard()
@@ -68,9 +72,9 @@ bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
         dock->toggleViewAction()->setText(desc.desc_ru);
         m_itemsDocks.insert(name, dock);
         addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
-    }
+    }*/
 
-    return restoreBoardGeometry();*/
+    return restoreBoardGeometry();
 }
 
 void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
@@ -114,7 +118,8 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
 
 void VectorIndicatorsBoard::onSaveJsonAs()
 {
-    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить конфигурацию панели стрелочных индикаторов в JSON"), m_JSONPath, tr("(*.JSON)"));
+    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить конфигурацию панели стрелочных индикаторов в JSON"),
+                                              m_JSONPath, tr("JSON файлы (*.json)"));
 
     if (!m_JSONPath.endsWith(".json", Qt::CaseInsensitive))
         m_JSONPath += ".json";
@@ -125,7 +130,14 @@ void VectorIndicatorsBoard::onSaveJsonAs()
 
 void VectorIndicatorsBoard::onRemoveJson()
 {
+    auto info = QFileInfo(m_JSONPath);
 
+    QDir dir = info.absoluteDir();
+
+    auto isOk = dir.remove(info.absoluteFilePath());
+
+    if (isOk)
+        emit deleteMe();
 }
 
 bool VectorIndicatorsBoard::readJSON(const QString &path)
@@ -146,15 +158,17 @@ bool VectorIndicatorsBoard::readJSON(const QString &path)
     QJsonArray widgetsArray = loadDoc["indicators"].toArray();
 
     for (int i = 0; i < widgetsArray.size(); ++i) {
-        QJsonObject plotObject = widgetsArray[i].toObject();
+        QJsonObject indicatorObject = widgetsArray[i].toObject();
         GraphProperties properties;
-        properties.name = plotObject["name"].toString();
-        properties.x_name = plotObject["x_name"].toString();
-        properties.y_name = plotObject["y_name"].toString();
-        properties.x_title = plotObject["x_title"].toString();
-        properties.y_title = plotObject["y_title"].toString();
-        properties.x_unit = plotObject["x_unit"].toString();
-        properties.y_unit = plotObject["y_unit"].toString();
+        properties.name = indicatorObject["name"].toString();
+        properties.x_name = indicatorObject["x_name"].toString();
+        properties.y_name = indicatorObject["y_name"].toString();
+        properties.x_title = indicatorObject["x_title"].toString();
+        properties.y_title = indicatorObject["y_title"].toString();
+        properties.x_unit = indicatorObject["x_unit"].toString();
+        properties.y_unit = indicatorObject["y_unit"].toString();
+        properties.x_phisical_quantity = indicatorObject["x_phisical_quantity"].toString();
+        properties.y_phisical_quantity = indicatorObject["y_phisical_quantity"].toString();
         // "channels": [1],
         // QJsonArray arr = plotObject["channels"].toArray();
         // for (auto ch : arr)
@@ -169,8 +183,47 @@ bool VectorIndicatorsBoard::readJSON(const QString &path)
     return true;
 }
 
-bool VectorIndicatorsBoard::saveJSON(const QString &path)
+bool VectorIndicatorsBoard::saveJSON(const QString &path) const
 {
+    QFile saveFile(path);
+
+    if (! saveFile.open(QIODevice::WriteOnly)) {
+        qCritical() << "Output file " << path << " wasn't opened on write";
+        return false;
+    }
+
+    QJsonObject docObject;
+    //QJsonObject docPropObject;
+    QJsonArray widgetsPlotArray;
+    QJsonObject indicatorObject;
+
+    // docPropObject["name"] = windowTitle();
+    // docObject["name"] = docPropObject;
+
+    for (auto prop : m_properties) {
+        indicatorObject["name"] = prop.name;
+        indicatorObject["x_name"] = prop.x_name;
+        indicatorObject["y_name"] = prop.y_name;
+        indicatorObject["x_title"] = prop.x_title;
+        indicatorObject["y_title"] = prop.y_title;
+        indicatorObject["x_unit"] = prop.x_unit;
+        indicatorObject["y_unit"] = prop.y_unit;
+        indicatorObject["x_phisical_quantity"] = prop.x_phisical_quantity;
+        indicatorObject["y_phisical_quantity"] = prop.y_phisical_quantity;
+        //graphObject["color"] = ColorToNameConverter(prop.color);
+
+        /*QJsonArray channelsArray;
+        for (auto ch : prop.channels) {
+            channelsArray.append(ch);
+        }*/
+        //graphObject["channels"] = channelsArray;
+        widgetsPlotArray.append(indicatorObject);
+    }
+
+    docObject["indicators"] = widgetsPlotArray;
+
+    QJsonDocument saveDoc(docObject);
+    saveFile.write(saveDoc.toJson());
 
     return true;
 }

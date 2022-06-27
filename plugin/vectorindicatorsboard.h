@@ -41,9 +41,12 @@ public slots:
     void onSaveJsonAs();
     void onRemoveJson();
 
+signals:
+    void deleteMe();
+
 private:
     bool readJSON(const QString &path);
-    bool saveJSON(const QString &path);
+    bool saveJSON(const QString &path) const;
     bool restoreBoardGeometry();
     bool saveBoardGeometry();
 
