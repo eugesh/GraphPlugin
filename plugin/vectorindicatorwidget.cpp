@@ -44,6 +44,11 @@ VectorIndicatorWidget::VectorIndicatorWidget(const QString &name, QWidget *paren
     ui->dial->setPalette(palette);
     ui->dial->setStyle(style);
     ui->dial->show();
+    auto theta = QChar(0x98, 0x03);
+    ui->label_angle->setText(theta + ':');
+    ui->label_mag->setText("A:");
+    ui->comboBox->setVisible(false);
+    ui->comboBox_2->setVisible(false);
 }
 
 VectorIndicatorWidget::~VectorIndicatorWidget()
