@@ -16,6 +16,7 @@
 static const char* graphConfigsFolder = "configs/graphs";
 static const char* pluginConfigsFolder = "configs/config";
 static const char* SIConfigsFolder = "configs/si";
+static const char* arrayIndicatorsJson = "configs/config/indicatorsBoard.json";
 
 GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
   , m_mainWindow(mw)
@@ -225,7 +226,7 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_vectorIndicatorsBoard = new VectorIndicatorsBoard();
     m_vectorIndicatorsBoard->setConfig(m_config);
     m_vectorIndicatorsBoard->setValuesDescriptions(m_measValDescMap);
-    bool is_ok = m_vectorIndicatorsBoard->initFromJSON("");
+    bool is_ok = m_vectorIndicatorsBoard->initFromJSON(arrayIndicatorsJson);
 
     m_vectorIndictorsDock = new QDockWidget(m_mainWindow);
     m_vectorIndictorsDock->setAllowedAreas(Qt::AllDockWidgetAreas);

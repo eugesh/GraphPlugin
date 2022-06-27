@@ -38,15 +38,20 @@ protected:
 public slots:
     void addData(const QList<MeasuredValue> &vals);
     void addNewIndicator(const GraphProperties &prop);
+    void onSaveJsonAs();
+    void onRemoveJson();
 
 private:
-    bool readJSON();
+    bool readJSON(const QString &path);
+    bool saveJSON(const QString &path);
     bool restoreBoardGeometry();
     bool saveBoardGeometry();
 
 private:
     Ui::VectorIndicatorsBoard *ui;
 
+    QString m_JSONPath;
+    bool m_hasUpdate;
     GraphPluginConfig *m_config;
     QMap<QString, MeasuredValueDescription> m_measValDescMap;
     QMap<QString, VectorIndicatorWidget*> m_items;
@@ -57,6 +62,7 @@ private:
     QMap<QString, QString> m_xyMap;
     QMap<QString, GraphProperties> m_namePropMap;
     QMap<QPair<QString, QString>, QString> m_xyNameMap;
+    QMap<QString, GraphProperties> m_properties;
 };
 
 #endif // VECTORINDICATORSBOARD_H

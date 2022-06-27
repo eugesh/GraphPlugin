@@ -4,7 +4,13 @@
 #include "vectorindicatorwidget.h".h"
 #include "ui_vectorindicatorsboard.h"
 
+#include <QDebug>
 #include <QDockWidget>
+#include <QFile>
+#include <QFileDialog>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QSettings>
 #include <cmath>
 
@@ -46,6 +52,7 @@ void VectorIndicatorsBoard::setConfig(GraphPluginConfig *config)
 // Apply the last custom settings
 bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
 {
+    readJSON(pathToJSON);
     /*for (auto name : m_activeSensorsNames) {
         auto desc = m_measValDescMap[name];
 
@@ -105,9 +112,67 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
     }
 }
 
-bool VectorIndicatorsBoard::readJSON()
+void VectorIndicatorsBoard::onSaveJsonAs()
+{
+    m_JSONPath = QFileDialog::getSaveFileName(this, tr("Сохранить конфигурацию панели стрелочных индикаторов в JSON"), m_JSONPath, tr("(*.JSON)"));
+
+    if (!m_JSONPath.endsWith(".json", Qt::CaseInsensitive))
+        m_JSONPath += ".json";
+
+    if (saveJSON(m_JSONPath))
+        m_hasUpdate = false;
+}
+
+void VectorIndicatorsBoard::onRemoveJson()
 {
 
+}
+
+bool VectorIndicatorsBoard::readJSON(const QString &path)
+{
+    m_JSONPath = path;
+
+    QFile loadFile(path);
+
+    if (! loadFile.open(QIODevice::ReadOnly)) {
+        qCritical() << "Input file " << path << " wasn't opened on read";
+        return false;
+    }
+
+    QByteArray loadData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
+
+    QJsonArray widgetsArray = loadDoc["indicators"].toArray();
+
+    for (int i = 0; i < widgetsArray.size(); ++i) {
+        QJsonObject plotObject = widgetsArray[i].toObject();
+        GraphProperties properties;
+        properties.name = plotObject["name"].toString();
+        properties.x_name = plotObject["x_name"].toString();
+        properties.y_name = plotObject["y_name"].toString();
+        properties.x_title = plotObject["x_title"].toString();
+        properties.y_title = plotObject["y_title"].toString();
+        properties.x_unit = plotObject["x_unit"].toString();
+        properties.y_unit = plotObject["y_unit"].toString();
+        // "channels": [1],
+        // QJsonArray arr = plotObject["channels"].toArray();
+        // for (auto ch : arr)
+           // properties.channels << ch.toInt();
+
+        m_properties[properties.name] = properties;
+        addNewIndicator(properties);
+    }
+
+    // m_isLoadFromJson = true;
+
+    return true;
+}
+
+bool VectorIndicatorsBoard::saveJSON(const QString &path)
+{
+
+    return true;
 }
 
 bool VectorIndicatorsBoard::restoreBoardGeometry()
