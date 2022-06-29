@@ -315,7 +315,8 @@ void GraphMainWindow::addXYGraph(const QString &name)
         }
         ui->customPlot->graph()->setName(graphSubTitle);
         ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
-        ui->customPlot->graph()->setScatterStyle(QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(chNum)));
+        ui->customPlot->graph()->setScatterStyle(
+            QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(ui->customPlot->graphCount() + 1)));
 
         ui->customPlot->xAxis->setLabel(prop.x_title);
 
@@ -382,6 +383,8 @@ void GraphMainWindow::addParametricGraph(const QString &name)
     m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
 
     m_valueCurveMap.insert(gid, newParametricCurve);
+    newParametricCurve->setScatterStyle(
+        QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(ui->customPlot->plottableCount() + 1)));
 }
 
 void GraphMainWindow::addGraph(const QString &name)
