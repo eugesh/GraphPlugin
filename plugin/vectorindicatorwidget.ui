@@ -42,7 +42,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QDial" name="dial">
+      <widget class="DialIndicator" name="dial">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -148,6 +148,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DialIndicator</class>
+   <extends>QDial</extends>
+   <header>dialindicator.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

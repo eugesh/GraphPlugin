@@ -24,6 +24,7 @@ EXAMPLE_FILES = graph_plugin.json
 SOURCES += \
     addonplotdialog.cpp \
     common.cpp \
+    dialindicator.cpp \
     digitalboarditem.cpp \
     digitaldisplayboard.cpp \
     graph_plugin.cpp \
@@ -39,6 +40,7 @@ SOURCES += \
 HEADERS += \
     addonplotdialog.h \
     common.h \
+    dialindicator.h \
     digitalboarditem.h \
     digitaldisplayboard.h \
     graph_plugin.h \
