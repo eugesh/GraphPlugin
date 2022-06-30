@@ -20,13 +20,14 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
     m_dataMap.insertMulti(val.timestamp, val);
 
     if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
-        emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         addRow(m_dataMap.values(val.timestamp));
+        emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         return;
     }
 
     // Unique timestamps
-    if (!m_timeStamps.contains(val.timestamp))
+    // if (!m_timeStamps.contains(val.timestamp)) // Correct but this is O(N)
+    if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
         m_timeStamps.append(val.timestamp);
 }
 

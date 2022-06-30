@@ -42,7 +42,7 @@ private:
 private:
     int m_packetSize = 3; // 1 (t) + number of values
     // Data Dispatcher
-    //!< Timestamp -> value, one key - multple values
+    //!< Timestamp -> value, one key - multiple values
     int m_ringBufferSize;
     QMap<uint64_t, MeasuredValue> m_dataMap;
     QList<uint64_t> m_timeStamps;

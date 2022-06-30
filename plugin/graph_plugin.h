@@ -146,7 +146,7 @@ private:
     GraphPluginConfig *m_config = nullptr;
 
     // Data Dispatcher
-    //!< Timestamp -> value, one key - multple values
+    //!< Timestamp -> value, one key - multiple values
     // Data config
     int m_ringBufferSize;
     QMap<QString, MeasuredValueDescription> m_measValDescMap;
@@ -155,15 +155,7 @@ private:
     //!< Values descriptions
     QList<QString> m_valueDescs;
 
-    // Received Data
-    // QMap<int64_t, QString> m_dataMap;
-    QList<int64_t> m_timeStamps;
     GraphPluginMode m_synchMode = GRAPH_DATA_SYNCH;
 };
-
-
-//signals:
-//  void newDockWindow(QDockWidget*);
-// virtual QObject* getObject() override { return this; }
 
 #endif
