@@ -2,7 +2,9 @@
 #include "ui_digitalboarditem.h"
 
 #include <QMap>
+#include <cmath>
 
+static const double EPS = 0e-10;
 /**
  * @brief DigitalBoardItem::DigitalBoardItem
  * @param name name of item;
@@ -30,12 +32,23 @@ DigitalBoardItem::DigitalBoardItem(const QString &name, const QString &mainUnit,
     }
 
     ui->comboBox->setCurrentText(mainUnit);
-    m_fixedMultiplier = measUnitsMult[mainUnit];
-    m_fixedOffset = measUnitsOffsets[mainUnit];
+    m_prevText = mainUnit;
+    if (mainUnit.isEmpty() || mainUnit == "%") {
+        ui->comboBox->setCurrentText(QString("\%1").arg("\"%\""));
+        m_fixedMultiplier = 1.0;
+        m_fixedOffset = 0.0;
+        m_measUnitsMult.clear();
+        m_measUnitsMult.insert(QString("%"), 1.0);
+        m_measUnitsOffsets.clear();
+        m_measUnitsOffsets.insert(QString("%"), 0.0);
+    } else {
+        m_fixedMultiplier = measUnitsMult[mainUnit];
+        m_fixedOffset = measUnitsOffsets[mainUnit];
+    }
 
     connect(ui->comboBox, &QComboBox::currentTextChanged, [&](const QString &text) {
         // Convert current value to main unit
-        double val = (m_currVal - m_measUnitsOffsets[m_prevText]) * m_measUnitsMult[m_prevText];
+        double val = (m_currVal - m_measUnitsOffsets.value(m_prevText)) * m_measUnitsMult.value(m_prevText);
         val += m_fixedOffset;
         val /= m_fixedMultiplier;
         // Set converted value to LCD
@@ -50,8 +63,10 @@ void DigitalBoardItem::setCurrentValue(double val)
     val -= m_fixedOffset;
     val *= m_fixedMultiplier;
     m_prevText = ui->comboBox->currentText();
-    m_currVal = val / m_measUnitsMult[m_prevText] +
-                m_measUnitsOffsets[m_prevText];
+
+    auto currMult = (fabs(m_measUnitsMult.value(m_prevText)) > EPS ? m_measUnitsMult.value(m_prevText) : 1.0);
+    m_currVal = val / currMult +
+                m_measUnitsOffsets.value(m_prevText);
     updateValue();
 }
 
