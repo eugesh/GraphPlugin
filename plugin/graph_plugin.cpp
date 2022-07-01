@@ -284,8 +284,6 @@ void GraphPlugin::setMode(GraphPluginMode mode)
 
 void GraphPlugin::addData(const MeasuredValue &value)
 {
-    // m_dataMap[value.timestamp] = value.name;
-
     m_tableModel->appendValue(value);
 }
 

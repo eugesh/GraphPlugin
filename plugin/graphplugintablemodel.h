@@ -43,12 +43,12 @@ private:
     int m_packetSize = 3; // 1 (t) + number of values
     // Data Dispatcher
     //!< Timestamp -> value, one key - multiple values
-    int m_ringBufferSize;
     QMap<uint64_t, MeasuredValue> m_dataMap;
-    QList<uint64_t> m_timeStamps;
+    QQueue<uint64_t> m_timeStamps;
     QStringList m_coloumnNames;
     QStringList m_coloumnTitles;
     GraphPluginMode m_syncMode = GRAPH_DATA_SYNCH;
+    int m_ringBufferSize = 3000;
 };
 
 #endif // GRAPHPLUGINTABLEMODEL_H
