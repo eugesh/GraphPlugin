@@ -224,6 +224,7 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
 bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
 {
     m_vectorIndicatorsBoard = new VectorIndicatorsBoard();
+
     m_vectorIndicatorsBoard->setConfig(m_config);
     m_vectorIndicatorsBoard->setValuesDescriptions(m_measValDescMap);
     bool is_ok = m_vectorIndicatorsBoard->initFromJSON(arrayIndicatorsJson);
@@ -233,6 +234,8 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_vectorIndictorsDock->setWidget(m_vectorIndicatorsBoard);
     m_vectorIndictorsDock->setObjectName("VectorIndicatorsDock");
     m_vectorIndictorsDock->toggleViewAction()->setText(tr("Стрелочные индикаторы"));
+    //m_vectorIndicatorsBoard->setAutoDisableOnIdle(1000);
+
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_vectorIndictorsDock);
 
     connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);

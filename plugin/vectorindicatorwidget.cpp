@@ -3,6 +3,7 @@
 #include "ui_vectorindicatorwidget.h"
 
 #include <QStyleFactory>
+#include <QTimer>
 
 inline double fitAngleIn360(double angle) {
     double outAngle = angle;
@@ -49,6 +50,7 @@ VectorIndicatorWidget::VectorIndicatorWidget(const QString &name, QWidget *paren
     ui->label_mag->setText("A:");
     ui->comboBox->setVisible(false);
     ui->comboBox_2->setVisible(false);
+    setEnabled(false);
 }
 
 VectorIndicatorWidget::~VectorIndicatorWidget()
@@ -60,6 +62,8 @@ void VectorIndicatorWidget::setAngle(double angle)
 {
     ui->dial->setValue(fitAngleIn360(angle - 180));
     ui->lcdNumber->display(fitAngleIn360(angle));
+    if (m_autoDisableTimeout > 0)
+        m_hideTimer->start(m_autoDisableTimeout);
 }
 
 double VectorIndicatorWidget::getAngle() const
@@ -71,11 +75,27 @@ void VectorIndicatorWidget::setMagnitude(double mag)
 {
     m_magnitude = mag;
     ui->lcdNumber_2->display(mag);
+    if (m_autoDisableTimeout > 0)
+        m_hideTimer->start(m_autoDisableTimeout);
 }
 
 double VectorIndicatorWidget::getMagnitude() const
 {
     return m_magnitude;
+}
+
+void VectorIndicatorWidget::setAutoDisableOnIdle(int timeout)
+{
+    m_autoDisableTimeout = timeout;
+
+    if (! m_hideTimer)
+        m_hideTimer = new QTimer;
+
+    connect(m_hideTimer, &QTimer::timeout, [this] () {
+        setEnabled(false);
+    });
+
+    m_hideTimer->start(timeout);
 }
 
 bool VectorIndicatorWidget::readJSON(const QString &path)

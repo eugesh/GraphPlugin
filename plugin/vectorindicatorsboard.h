@@ -31,6 +31,7 @@ public:
 
     // Apply the last custom settings
     bool initFromJSON(const QString &pathToJSON);
+    void setAutoDisableOnIdle(int timeout);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -66,6 +67,7 @@ private:
     QMap<QString, GraphProperties> m_namePropMap;
     QMap<QPair<QString, QString>, QString> m_xyNameMap;
     QMap<QString, GraphProperties> m_properties;
+    int m_autoHideTimeout = -1;
 };
 
 #endif // VECTORINDICATORSBOARD_H

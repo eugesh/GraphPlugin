@@ -22,6 +22,7 @@ public:
     void setMagnitude(double mag);
     double getMagnitude() const;
     bool readJSON(const QString &path);
+    void setAutoDisableOnIdle(int timeout);
 
 public slots:
     void addData(const QList<MeasuredValue> &vals);
@@ -29,6 +30,8 @@ public slots:
 private:
     Ui::VectorIndicatorWidget *ui;
     double m_magnitude = 0;
+    int m_autoDisableTimeout = -1; // -1 - not disable
+    QTimer *m_hideTimer = nullptr;
 };
 
 #endif // VECTORINDICATORWIDGET_H

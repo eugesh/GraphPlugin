@@ -57,22 +57,6 @@ void VectorIndicatorsBoard::setConfig(GraphPluginConfig *config)
 bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
 {
     readJSON(pathToJSON);
-    /*for (auto name : m_activeSensorsNames) {
-        auto desc = m_measValDescMap[name];
-
-        auto title = desc.desc_ru;
-
-        auto *item = new VectorIndicatorWidget(title, this);
-        item->setWindowTitle(title);
-        auto *dock = new QDockWidget(this);
-        m_items.insert(name, item);
-        dock->setWidget(item);
-        dock->setAllowedAreas(Qt::AllDockWidgetAreas);
-        dock->setObjectName(tr("%1%2").arg(name).arg("Dock"));
-        dock->toggleViewAction()->setText(desc.desc_ru);
-        m_itemsDocks.insert(name, dock);
-        addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
-    }*/
 
     return restoreBoardGeometry();
 }
@@ -110,6 +94,7 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
                     auto mag = sqrt(yval.value * yval.value + xval.value * xval.value);
                     m_items[widgetName]->setAngle(angle * 180 / M_PI);
                     m_items[widgetName]->setMagnitude(mag);
+                    m_items[widgetName]->setEnabled(true);
                 }
             }
         }
@@ -176,6 +161,7 @@ bool VectorIndicatorsBoard::readJSON(const QString &path)
 
         m_properties[properties.name] = properties;
         addNewIndicator(properties);
+        m_items[properties.name]->setAutoDisableOnIdle(indicatorObject["disable_timeout_ms"].toInt());
     }
 
     // m_isLoadFromJson = true;
@@ -268,4 +254,13 @@ void VectorIndicatorsBoard::closeEvent(QCloseEvent *event)
 {
     saveBoardGeometry(); // ToDo: test on Linux or delete
     QWidget::closeEvent(event);
+}
+
+void VectorIndicatorsBoard::setAutoDisableOnIdle(int timeout)
+{
+    m_autoHideTimeout = timeout;
+
+    for (auto item : m_items.values()) {
+        item->setAutoDisableOnIdle(timeout);
+    }
 }
