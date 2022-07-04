@@ -135,14 +135,9 @@ bool DigitalDisplayBoard::readJSON()
 void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto val : vals) {
-        /*if (val.name.isEmpty()) {
-            qWarning() << "Warning: empty MeasuredValue name!";
-            continue;
-        } else {
+        if (m_items.contains(val.name) && val.is_valid)
             m_items[val.name]->setCurrentValue(val.value);
-        }*/
-
-        if (m_items.contains(val.name))
-            m_items[val.name]->setCurrentValue(val.value);
+        else
+            m_items[val.name]->setEnabled(false);
     }
 }

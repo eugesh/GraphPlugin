@@ -84,11 +84,15 @@ void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
 void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto xval : vals) {
+        if (!xval.is_valid)
+            continue;
         if (m_xyMap.contains(xval.name)) {
             auto xValName = xval.name;
             auto yVAlName = m_xyMap[xval.name];
             auto widgetName = m_xyNameMap[qMakePair<QString, QString> (xValName, yVAlName)];
             for (auto yval : vals) {
+                if (!yval.is_valid)
+                    continue;
                 if (yval.name == yVAlName) {
                     auto angle = atan2(yval.value, xval.value);
                     auto mag = sqrt(yval.value * yval.value + xval.value * xval.value);

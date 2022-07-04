@@ -62,6 +62,7 @@ struct MeasuredValue {
     int SI_to_current_shift = 0; //!< Сдвиг при преобразовании в единицу СИ, по умолчанию 0. [current - SI]
     double value; //!< Измеренное значение
     int channel; //!< Номер канала устройства
+    bool is_valid = true;
 };
 
 class QDockWidget;

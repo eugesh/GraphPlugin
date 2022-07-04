@@ -474,6 +474,8 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 {
     for (MeasuredValue val1 : packet) {
+        if (!val1.is_valid)
+            continue;
         auto val1_desc = m_measValDescMap[val1.name];
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
@@ -486,6 +488,8 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 updateGraphs(gid, val1.timestamp, val1.value);
             } else {
                 for (MeasuredValue val2 : packet) {
+                    if (!val2.is_valid)
+                        continue;
                     auto val2_desc = m_measValDescMap[val2.name];
                     if (val2_name == val2.name) {
                         GraphID gid;
