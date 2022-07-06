@@ -339,6 +339,8 @@ void GraphMainWindow::addXYGraph(const QString &name)
         graphPen.setWidthF(1);
         ui->customPlot->graph()->setPen(graphPen);
         ui->customPlot->replot();
+        ui->customPlot->graph()->setAdaptiveSampling(true);
+        ui->customPlot->graph()->setMaxCount(m_properties[name].total_N);
         // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
         m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
 
