@@ -23,7 +23,7 @@ public:
 
     void setConfig(GraphPluginConfig *config);
     void setGraphProperties(const GraphProperties &defaultProp);
-    void setMeasValDesc(const QMap<QString, MeasuredValueDescription> &mvd);
+    void setMeasValDesc(const QMultiMap<QString, MeasuredValueDescription> &mvd);
 
     QString getCustomPlotName() const;
     GraphProperties getProp() const;
@@ -34,7 +34,7 @@ public:
 private:
     Ui::AddOnPlotDialog *ui;
     GraphPluginConfig *m_config;
-    QMap<QString, MeasuredValueDescription> m_measValuesDesc;
+    QMultiMap<QString, MeasuredValueDescription> m_measValuesDesc;
 };
 
 #endif // ADDONPLOTDIALOG_H

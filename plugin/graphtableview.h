@@ -17,7 +17,7 @@ public:
     explicit GraphTableView(QWidget *parent = nullptr);
     void setModel(QAbstractItemModel *model) final; // ToDo: place to constructor
     void setConfig(GraphPluginConfig *config); // ToDo: place to constructor
-    void setMeasValues(const QMap<QString, MeasuredValueDescription> &mvd);
+    void setMeasValues(const QMultiMap<QString, MeasuredValueDescription> &mvd);
 
 protected:
     void keyPressEvent(QKeyEvent *event) final;
@@ -37,7 +37,7 @@ private:
 
 private:
     AddOnPlotDialog *m_addPlotDialog = nullptr;
-    QMap<QString, MeasuredValueDescription> m_measValuesDesc;
+    QMultiMap<QString, MeasuredValueDescription> m_measValuesDesc;
     // Config
     GraphPluginConfig *m_config = nullptr;
     // Header's view column index, on which context menu activated

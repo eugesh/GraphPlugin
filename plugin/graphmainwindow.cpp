@@ -61,7 +61,7 @@ void GraphMainWindow::setConfig(GraphPluginConfig *config)
 }
 
 // ToDo: change on Add. Add necessary descriptions only.
-bool GraphMainWindow::setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd)
+bool GraphMainWindow::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
 
@@ -151,7 +151,7 @@ bool GraphMainWindow::readJSON(const QString &path)
         for (auto ch : arr)
             properties.channels << ch.toInt();
 
-        m_properties[properties.name] = properties;
+        m_properties.insert(properties.name, properties);
         addGraph(properties.name);
     }
 
@@ -301,7 +301,7 @@ void GraphMainWindow::saveImage(const QString &name) const
 
 void GraphMainWindow::addXYGraph(const QString &name)
 {
-    auto prop = m_properties[name];
+    auto prop = m_properties.value(name);
 
     int chNum = 1;
     for (auto ch : prop.channels) {
@@ -340,14 +340,14 @@ void GraphMainWindow::addXYGraph(const QString &name)
         ui->customPlot->graph()->setPen(graphPen);
         ui->customPlot->replot();
         ui->customPlot->graph()->setAdaptiveSampling(true);
-        ui->customPlot->graph()->setMaxCount(m_properties[name].total_N);
+        ui->customPlot->graph()->setMaxCount(m_properties.value(name).total_N);
         // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
         m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
 
         // QPair<QString, QString> xy = qMakePair<QString, QString> (m_properties[name].x_name, m_properties[name].y_name);
         // m_valueGraphMap.insert(xy, graph);
 
-        QPair<QString, QString> yx = qMakePair<QString, QString> (prop.y_name, prop.x_name);
+        // std::pair<QString, QString> yx = std::make_pair(prop.y_name, prop.x_name);
         GraphID gid;
         gid.graphName = name;
         gid.chNumber = ch;
@@ -362,7 +362,7 @@ void GraphMainWindow::addXYGraph(const QString &name)
 
 void GraphMainWindow::addParametricGraph(const QString &name)
 {
-    auto prop = m_properties[name];
+    auto prop = m_properties.value(name);
 
     QCPCurve *newParametricCurve = new QCPCurve(ui->customPlot->xAxis, ui->customPlot->yAxis);
 
@@ -394,7 +394,7 @@ void GraphMainWindow::addGraph(const QString &name)
     if (!m_properties.contains(name))
         return;
 
-    auto prop = m_properties[name];
+    auto prop = m_properties.value(name);
 
     if (prop.is_parametric) {
         addParametricGraph(name);
@@ -453,7 +453,7 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
     }
 
     if (curve) {
-        if (m_properties[name].is_integral) {
+        if (m_properties.value(name).is_integral) {
             if (curve->dataCount() >= 1) {
                 double tsPrev = curve->data()->at(curve->dataCount() - 1)->t;
                 double dt = (timestamp - tsPrev) / 1000;
@@ -478,7 +478,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
     for (MeasuredValue val1 : packet) {
         if (!val1.is_valid)
             continue;
-        auto val1_desc = m_measValDescMap[val1.name];
+        auto val1_desc = m_measValDescMap.value(val1.name);
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
@@ -492,7 +492,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 for (MeasuredValue val2 : packet) {
                     if (!val2.is_valid)
                         continue;
-                    auto val2_desc = m_measValDescMap[val2.name];
+                    auto val2_desc = m_measValDescMap.value(val2.name);
                     if (val2_name == val2.name) {
                         GraphID gid;
                         gid.xName = val2.name;

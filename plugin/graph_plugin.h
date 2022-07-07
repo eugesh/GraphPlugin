@@ -149,7 +149,7 @@ private:
     //!< Timestamp -> value, one key - multiple values
     // Data config
     int m_ringBufferSize;
-    QMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
     //!< Unique Names of values
     QList<QString> m_valueNames;
     //!< Values descriptions

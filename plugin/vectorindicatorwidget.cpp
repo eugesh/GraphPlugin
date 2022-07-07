@@ -40,7 +40,7 @@ VectorIndicatorWidget::VectorIndicatorWidget(const QString &name, QWidget *paren
     // style->polish(palette);
     // palette.setColor(QPalette::Background, Qt::black);
     palette.setColor(QPalette::Button, Qt::darkGreen);
-    palette.setColor(QPalette::Foreground, Qt::darkGreen);
+    palette.setColor(QPalette::WindowText, Qt::darkGreen);
     ui->dial->setAutoFillBackground(true);
     ui->dial->setPalette(palette);
     ui->dial->setStyle(style);
