@@ -96,7 +96,7 @@ bool GraphPlugin::loadJSONs()
     loadSensorsMonitorJSON("");
 
     // Read JSON for Vector Indicators Board description
-    loadVectorIndicatorsJSON("");
+    loadVectorIndicatorsJSON(arrayIndicatorsJson);
 
     restoreGraphPluginGeometry();
 
@@ -197,7 +197,8 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
 
     connect (m_tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
     connect (m_tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
-    connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
+    if (m_vectorIndicatorsBoard)
+        connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -227,7 +228,13 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
 
     m_vectorIndicatorsBoard->setConfig(m_config);
     m_vectorIndicatorsBoard->setValuesDescriptions(m_measValDescMap);
-    bool is_ok = m_vectorIndicatorsBoard->initFromJSON(arrayIndicatorsJson);
+    bool is_ok = m_vectorIndicatorsBoard->initFromJSON(pathToJSON);
+
+    if (!is_ok) {
+        delete m_vectorIndicatorsBoard;
+        m_vectorIndicatorsBoard = nullptr;
+        return false;
+    }
 
     m_vectorIndictorsDock = new QDockWidget(m_mainWindow);
     m_vectorIndictorsDock->setAllowedAreas(Qt::AllDockWidgetAreas);
@@ -333,5 +340,6 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
 
 void GraphPlugin::onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop)
 {
-    m_vectorIndicatorsBoard->addNewIndicator(prop);
+    if (m_vectorIndicatorsBoard)
+        m_vectorIndicatorsBoard->addNewIndicator(prop);
 }
