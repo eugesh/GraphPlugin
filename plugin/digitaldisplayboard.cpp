@@ -93,7 +93,7 @@ void DigitalDisplayBoard::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
-bool DigitalDisplayBoard::setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd)
+bool DigitalDisplayBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
 
@@ -105,7 +105,7 @@ bool DigitalDisplayBoard::setValuesDescriptions(const QMap<QString, MeasuredValu
 bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
 {
     for (auto name : m_activeSensorsNames) {
-        auto desc = m_measValDescMap[name];
+        auto desc = m_measValDescMap.value(name);
 
         auto title = desc.desc_ru;
         //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();

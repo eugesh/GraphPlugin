@@ -94,7 +94,7 @@ QColor nameToColorConverter(const QString &name)
     }
 }
 
- QMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
+ QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
  {
      QFile loadFile(pathToJSON);
 
@@ -105,7 +105,7 @@ QColor nameToColorConverter(const QString &name)
 
      QByteArray loadData = loadFile.readAll();
 
-     QMap<QString, MeasuredValueDescription> measValDescMap;
+     QMultiMap<QString, MeasuredValueDescription> measValDescMap;
 
      QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
 

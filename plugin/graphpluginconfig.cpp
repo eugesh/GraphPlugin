@@ -33,7 +33,7 @@ GraphPluginConfig::GraphPluginConfig(const QString &pathToUnits, const QString &
     readAuxUnits(pathToUnits);
 }
 
-QMap<QString, MeasUnit> GraphPluginConfig::measurementUnits() const
+QMultiMap<QString, MeasUnit> GraphPluginConfig::measurementUnits() const
 {
     return m_measUnits;
 }
@@ -43,7 +43,7 @@ QList<MeasUnit> GraphPluginConfig::measurementUnits(const QString &name) const
     return m_measUnits.values(name);
 }
 
-QList<QMap<QString, QVariant>> GraphPluginConfig::auxMeasUnits(const QString &physValName) const
+QList<QMultiMap<QString, QVariant>> GraphPluginConfig::auxMeasUnits(const QString &physValName) const
 {
     return m_measUnits.values(physValName);
 }
@@ -110,8 +110,8 @@ bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
 QVariant GraphPluginConfig::getProperty(const QString &physQuantName, const QString &unit, const QString &key) const
 {
     for (auto val : m_measUnits.values(physQuantName)) {
-        if (val["name"].toString() == unit)
-           return  val[key];
+        if (val.value("name").toString() == unit)
+           return  val.value(key);
     }
     return {};
 }
@@ -198,7 +198,7 @@ QMap<QString, double> GraphPluginConfig::getMultipliers(const QString &physQuant
     auto unitsMap = m_measUnits.values(physQuantityName);
 
     for (auto unitMap : unitsMap) {
-        map.insert(unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble());
+        map.insert(unitMap.value("symbol_ru").toString(), unitMap.value("multiplier").toDouble());
     }
 
     return map;
@@ -210,12 +210,12 @@ QMap<QString, double> GraphPluginConfig::getMultipliersWithPrefixes(const QStrin
 
     auto unitsMap = m_measUnits.values(physQuantityName);
     for (auto unitMap : unitsMap) {
-        map.insert(unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble());
+        map.insert(unitMap.value("symbol_ru").toString(), unitMap.value("multiplier").toDouble());
         for (auto prefix : unitMap.values("prefixes")) {
             QString prefNameRu = m_prefixes[prefix.toString()].symbol_ru;
             double mult = m_prefixes[prefix.toString()].multiplier;
 
-            map.insert(prefNameRu + unitMap["symbol_ru"].toString(), unitMap["multiplier"].toDouble() * mult);
+            map.insert(prefNameRu + unitMap.value("symbol_ru").toString(), unitMap.value("multiplier").toDouble() * mult);
         }
     }
 
@@ -229,7 +229,7 @@ QMap<QString, double> GraphPluginConfig::getOffsets(const QString &physQuantityN
     auto unitsMap = m_measUnits.values(physQuantityName);
 
     for (auto unitMap : unitsMap) {
-        map.insert(unitMap["symbol_ru"].toString(), unitMap["offset"].toDouble());
+        map.insert(unitMap.value("symbol_ru").toString(), unitMap.value("offset").toDouble());
     }
 
     return map;

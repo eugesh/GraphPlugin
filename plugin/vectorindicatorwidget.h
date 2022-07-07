@@ -1,6 +1,8 @@
 #ifndef VECTORINDICATORWIDGET_H
 #define VECTORINDICATORWIDGET_H
 
+#include "graph_interface.h"
+
 #include <QWidget>
 
 struct MeasuredValueDescription;

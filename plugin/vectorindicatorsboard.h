@@ -26,7 +26,7 @@ public:
     ~VectorIndicatorsBoard();
 
     // Call at first!
-    bool setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd);
+    bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
     void setConfig(GraphPluginConfig *config);
 
     // Apply the last custom settings
@@ -57,7 +57,7 @@ private:
     QString m_JSONPath;
     bool m_hasUpdate;
     GraphPluginConfig *m_config;
-    QMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
     QMap<QString, VectorIndicatorWidget*> m_items;
     // Key - abscissa, value - widget with vector indicator
     QMap<QString, QDockWidget*> m_itemsDocks;
@@ -65,7 +65,7 @@ private:
     // Key - abscissa, value - ordinate
     QMap<QString, QString> m_xyMap;
     QMap<QString, GraphProperties> m_namePropMap;
-    QMap<QPair<QString, QString>, QString> m_xyNameMap;
+    QMap<std::pair<QString, QString>, QString> m_xyNameMap;
     QMap<QString, GraphProperties> m_properties;
     int m_autoHideTimeout = -1;
 };

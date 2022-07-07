@@ -72,7 +72,7 @@ void GraphTableView::setConfig(GraphPluginConfig *config)
     m_addPlotDialog->setConfig(config);
 }
 
-void GraphTableView::setMeasValues(const QMap<QString, MeasuredValueDescription> &mvd)
+void GraphTableView::setMeasValues(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValuesDesc = mvd;
     if (! m_addPlotDialog) {
@@ -174,18 +174,18 @@ GraphProperties GraphTableView::graphPropertiesFromSelectedColoumn(const QString
 {
     GraphProperties prop;
 
-    prop.name = m_measValuesDesc[physicalQuantityName].desc_ru;
+    prop.name = m_measValuesDesc.value(physicalQuantityName).desc_ru;
     prop.x_dir = GraphDir::RIGHT;
     prop.y_dir = GraphDir::UP;
     prop.color = Qt::red;
     prop.x_name = "time";
-    prop.y_name = m_measValuesDesc[physicalQuantityName].name;
+    prop.y_name = m_measValuesDesc.value(physicalQuantityName).name;
     prop.x_phisical_quantity = "time";
     prop.y_phisical_quantity = physicalQuantityName;
     prop.x_unit = "second";
-    prop.y_unit = m_config->getProperty(physicalQuantityName, m_measValuesDesc[physicalQuantityName].unit, "name").toString();
+    prop.y_unit = m_config->getProperty(physicalQuantityName, m_measValuesDesc.value(physicalQuantityName).unit, "name").toString();
     prop.x_title = tr("Время");
-    prop.y_title = m_measValuesDesc[physicalQuantityName].desc_ru;
+    prop.y_title = m_measValuesDesc.value(physicalQuantityName).desc_ru;
     prop.update_mode = SHOW_ALL;
     //prop.channels // ToDo
     prop.x_scale = LIN;

@@ -39,7 +39,7 @@ VectorIndicatorsBoard::~VectorIndicatorsBoard()
 }
 
 // Call at first!
-bool VectorIndicatorsBoard::setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd)
+bool VectorIndicatorsBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
 
@@ -56,9 +56,9 @@ void VectorIndicatorsBoard::setConfig(GraphPluginConfig *config)
 // Apply the last custom settings
 bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
 {
-    readJSON(pathToJSON);
+    bool is_ok = readJSON(pathToJSON);
 
-    return restoreBoardGeometry();
+    return is_ok && restoreBoardGeometry();
 }
 
 void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
@@ -77,7 +77,9 @@ void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
 
     m_xyMap.insert(prop.x_name, prop.y_name);
     m_namePropMap.insert(prop.name, prop);
-    QPair<QString, QString> xy = qMakePair<QString, QString> (prop.x_name, prop.y_name);
+    //QPair<QString, QString> xy = qMakePair<QString, QString> (const_cast<QString>(prop).x_name, const_cast<QString>(prop).y_name);
+    GraphProperties prop_tmp = prop;
+    std::pair<QString, QString> xy = std::make_pair(prop_tmp.x_name, prop_tmp.y_name);
     m_xyNameMap.insert(xy, prop.name);
 }
 
@@ -89,7 +91,7 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
         if (m_xyMap.contains(xval.name)) {
             auto xValName = xval.name;
             auto yVAlName = m_xyMap[xval.name];
-            auto widgetName = m_xyNameMap[qMakePair<QString, QString> (xValName, yVAlName)];
+            auto widgetName = m_xyNameMap[std::make_pair(xValName, yVAlName)];
             for (auto yval : vals) {
                 if (!yval.is_valid)
                     continue;

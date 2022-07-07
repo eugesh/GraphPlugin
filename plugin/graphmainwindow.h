@@ -53,7 +53,7 @@ public:
     bool loadCSV();
     QString nameTr() const;
     void setConfig(GraphPluginConfig *config);
-    bool setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd);
+    bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
 
 public slots:
     void loadCSVdialog();
@@ -94,9 +94,9 @@ private:
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     //QMap<QString, QString> m_valueNameXY;
-    QMap<QString, QString> m_valueNameYX;
+    QMultiMap<QString, QString> m_valueNameYX;
     // Graph name -> properties
-    QMap<QString, GraphProperties> m_properties;
+    QMultiMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
     QString m_CSVPath;
     QString m_ImagePath;
@@ -104,7 +104,7 @@ private:
     bool m_isLoadFromJson = false;
     bool m_hasUpdate = false;
     GraphPluginConfig *m_config;
-    QMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
 };
 
 #endif // GRAPHMAINWINDOW_H

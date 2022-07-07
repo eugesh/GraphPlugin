@@ -13,14 +13,14 @@ AddOnPlotDialog::AddOnPlotDialog(QWidget *parent, int channelsNum) :
     connect(ui->xPhysQuantCbBox, &QComboBox::currentTextChanged, [&](const QString &text) {
         ui->xUnitComboBox->clear();
         for (auto measUnit :  m_config->auxMeasUnits(text)) {
-            ui->xUnitComboBox->addItem(measUnit["name"].toString());
+            ui->xUnitComboBox->addItem(measUnit.value("name").toString());
         }
     });
 
     connect(ui->yPhysQuantCbBox, &QComboBox::currentTextChanged, [&](const QString &text) {
         ui->yUnitComboBox->clear();
         for (auto measUnit :  m_config->auxMeasUnits(text)) {
-            ui->yUnitComboBox->addItem(measUnit["name"].toString());
+            ui->yUnitComboBox->addItem(measUnit.value("name").toString());
         }
     });
 
@@ -52,7 +52,7 @@ void AddOnPlotDialog::setConfig(GraphPluginConfig *config)
     }
 }
 
-void AddOnPlotDialog::setMeasValDesc(const QMap<QString, MeasuredValueDescription> &mvd)
+void AddOnPlotDialog::setMeasValDesc(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValuesDesc = mvd;
 

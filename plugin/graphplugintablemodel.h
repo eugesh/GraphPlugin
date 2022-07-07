@@ -43,7 +43,7 @@ private:
     int m_packetSize = 3; // 1 (t) + number of values
     // Data Dispatcher
     //!< Timestamp -> value, one key - multiple values
-    QMap<uint64_t, MeasuredValue> m_dataMap;
+    QMultiMap<uint64_t, MeasuredValue> m_dataMap;
     QQueue<uint64_t> m_timeStamps;
     QStringList m_coloumnNames;
     QStringList m_coloumnTitles;
