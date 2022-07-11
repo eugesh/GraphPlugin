@@ -456,7 +456,7 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
         if (m_properties.value(name).is_integral) {
             if (curve->dataCount() >= 1) {
                 double tsPrev = curve->data()->at(curve->dataCount() - 1)->t;
-                double dt = (timestamp - tsPrev) / 1000;
+                double dt = (timestamp - tsPrev) / 1000; // Msec to sec
                 double newX = curve->data()->at(curve->dataCount() - 1)->key + x * dt;
                 double newY = curve->data()->at(curve->dataCount() - 1)->value + y * dt;
                 QCPCurveData point(timestamp, newX, newY);
@@ -478,7 +478,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
     for (MeasuredValue val1 : packet) {
         if (!val1.is_valid)
             continue;
-        auto val1_desc = m_measValDescMap.value(val1.name);
+        // auto val1_desc = m_measValDescMap.value(val1.name);
         for (QString val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
@@ -492,7 +492,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 for (MeasuredValue val2 : packet) {
                     if (!val2.is_valid)
                         continue;
-                    auto val2_desc = m_measValDescMap.value(val2.name);
+                    // auto val2_desc = m_measValDescMap.value(val2.name);
                     if (val2_name == val2.name) {
                         GraphID gid;
                         gid.xName = val2.name;
