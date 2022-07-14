@@ -135,7 +135,9 @@ bool DigitalDisplayBoard::readJSON()
 void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto val : vals) {
-        if (m_items.contains(val.name) && val.is_valid)
+        if (!m_items.contains(val.name))
+            continue;
+        if (val.is_valid)
             m_items[val.name]->setCurrentValue(val.value);
         else
             m_items[val.name]->setEnabled(false);
