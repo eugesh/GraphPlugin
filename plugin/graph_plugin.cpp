@@ -116,8 +116,12 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     auto geomData = settings.value("geometry").toByteArray();
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
 
-    /*if (m_mainWindow->isMaximized())
-        m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));*/
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    if (m_mainWindow->isMaximized()) {
+        // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry()); // Valid but not tested. Buildable with Qt5 and Qt6.
+        m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
+    }
+#endif
 
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
