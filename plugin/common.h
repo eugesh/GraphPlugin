@@ -45,6 +45,13 @@ enum GraphScaleType {
     LOG
 };
 
+enum GraphType {
+    GraphScatter,
+    GraphParametric,
+    GraphIntegral,
+    GraphColorMap
+};
+
 struct GraphProperties {
     QString name;
     QString x_name;
@@ -64,12 +71,15 @@ struct GraphProperties {
     GraphScaleType y_scale;
     QVector<int> channels; // e.g. 1, 2, 3, 4
     QColor color;
-    bool is_parametric = false;
-    bool is_integral = false;
+    GraphType graphType;
+    // bool is_parametric = false;
+    // bool is_integral = false;
 };
 
 QString ColorToNameConverter(const QColor &color);
 QColor nameToColorConverter(const QString &name);
+GraphType nameToGraphTypeConverter(const QString &name);
+QString graphTypeToNameConverter(const GraphType &type);
 QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON);
 
 #endif // COMMON_H

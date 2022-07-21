@@ -144,8 +144,10 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.y_scale = plotObject["y_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
                         plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.color = nameToColorConverter(plotObject["color"].toString());
-        properties.is_parametric = plotObject["is_parametric"].toBool();
-        properties.is_integral = plotObject["is_integral"].toBool();
+        properties.graphType = nameToGraphTypeConverter(plotObject["graph_type"].toString());
+                // static_cast<GraphType> (plotObject["graph_type"].toInt());
+        // properties.is_parametric = plotObject["is_parametric"].toBool();
+        // properties.is_integral = plotObject["is_integral"].toBool();
         // "channels": [1],
         QJsonArray arr = plotObject["channels"].toArray();
         for (auto ch : arr)
@@ -214,8 +216,9 @@ bool GraphMainWindow::saveJSON(const QString &path) const
             channelsArray.append(ch);
         }
         graphObject["channels"] = channelsArray;
-        graphObject["is_parametric"] = prop.is_parametric;
-        graphObject["is_integral"] = prop.is_integral;
+        graphObject["graph_type"] = graphTypeToNameConverter(prop.graphType);
+        // graphObject["is_parametric"] = prop.is_parametric;
+        // graphObject["is_integral"] = prop.is_integral;
 
         customPlotArray.append(graphObject);
     }
@@ -360,7 +363,7 @@ void GraphMainWindow::addXYGraph(const QString &name)
     }
 }
 
-void GraphMainWindow::addParametricGraph(const QString &name)
+void GraphMainWindow::addParametricGraph(const QString &name, bool isIntegral)
 {
     auto prop = m_properties.value(name);
 
@@ -391,6 +394,11 @@ void GraphMainWindow::addParametricGraph(const QString &name)
         QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(ui->customPlot->plottableCount() + 1)));
 }
 
+void GraphMainWindow::addWaterfallGraph(const QString &name)
+{
+
+}
+
 void GraphMainWindow::addGraph(const QString &name)
 {
     if (!m_properties.contains(name))
@@ -398,11 +406,26 @@ void GraphMainWindow::addGraph(const QString &name)
 
     auto prop = m_properties.value(name);
 
-    if (prop.is_parametric) {
+    switch (prop.graphType) {
+    case GraphScatter:
+        addXYGraph(name);
+        break;
+    case GraphParametric:
+        addParametricGraph(name);
+        break;
+    case GraphIntegral:
+        addParametricGraph(name);
+        break;
+    case GraphColorMap:
+        addWaterfallGraph(name);
+        break;
+    }
+
+    /* if (prop.is_parametric) {
         addParametricGraph(name);
     } else {
         addXYGraph(name);
-    }
+    }*/
 }
 
 void GraphMainWindow::addGraph(const GraphProperties &prop)
@@ -455,7 +478,7 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
     }
 
     if (curve) {
-        if (m_properties.value(name).is_integral) {
+        if (m_properties.value(name).graphType == GraphIntegral) {
             if (curve->dataCount() >= 1) {
                 double tsPrev = curve->data()->at(curve->dataCount() - 1)->t;
                 double dt = (timestamp - tsPrev) / 1000; // Msec to sec

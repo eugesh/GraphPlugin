@@ -76,7 +76,8 @@ private:
     // bool applyProperties();
     void addGraph(const QString &name);
     void addXYGraph(const QString &name);
-    void addParametricGraph(const QString &name);
+    void addParametricGraph(const QString &name, bool isIntegral = false);
+    void addWaterfallGraph(const QString &name);
     void saveCSV(const QString &name) const;
     void saveImage(const QString &name) const;
     void updateGraphs(const GraphID& id, double x, double y);

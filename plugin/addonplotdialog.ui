@@ -170,17 +170,27 @@
      <item row="20" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_19">
        <item>
-        <widget class="QCheckBox" name="parametricCurveCheckBox">
-         <property name="text">
-          <string>Параметрическая</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="integrateCheckBox">
-         <property name="text">
-          <string>Интегрировать по t</string>
-         </property>
+        <widget class="QComboBox" name="graphTypeCbBox">
+         <item>
+          <property name="text">
+           <string extracomment="График по точкам">X, Y</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string extracomment="Параметрическая кривая">X, Y, t</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string extracomment="Интеграл по времени">Интегрировать по t</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string extracomment="Двумерный график - цветовая карта">Цветовая карта</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>

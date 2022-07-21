@@ -94,6 +94,36 @@ QColor nameToColorConverter(const QString &name)
     }
 }
 
+GraphType nameToGraphTypeConverter(const QString &name)
+{
+    if (name.contains("scatter", Qt::CaseInsensitive))
+        return GraphType::GraphScatter;
+    else if (name.contains("param", Qt::CaseInsensitive))
+        return GraphType::GraphParametric;
+    else if (name.contains("integr", Qt::CaseInsensitive))
+        return GraphType::GraphIntegral;
+    else if(name.contains("map", Qt::CaseInsensitive))
+        return GraphType::GraphColorMap;
+
+    // Default
+    return GraphType::GraphScatter;
+}
+
+QString graphTypeToNameConverter(const GraphType &type)
+{
+    switch (type) {
+    case GraphScatter:
+        return QString("scatter");
+    case GraphParametric:
+        return QString("parametric");
+    case GraphIntegral:
+        return QString("integral");
+    case GraphColorMap:
+        return QString("colorMap");
+    default:
+        return QString("scatter");
+    }
+}
  QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
  {
      QFile loadFile(pathToJSON);
