@@ -366,6 +366,8 @@ void GraphMainWindow::addParametricGraph(const QString &name)
 
     QCPCurve *newParametricCurve = new QCPCurve(ui->customPlot->xAxis, ui->customPlot->yAxis);
 
+    newParametricCurve->setMaxCount(m_properties.value(name).total_N);
+
     GraphID gid;
     gid.graphName = name;
     gid.chNumber = 1;
@@ -459,15 +461,12 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
                 double dt = (timestamp - tsPrev) / 1000; // Msec to sec
                 double newX = curve->data()->at(curve->dataCount() - 1)->key + x * dt;
                 double newY = curve->data()->at(curve->dataCount() - 1)->value + y * dt;
-                QCPCurveData point(timestamp, newX, newY);
-                curve->data()->add(point);
+                curve->addData(timestamp, newX, newY);
             } else {
-                QCPCurveData point(timestamp, 0, 0);
-                curve->data()->add(point);
+                curve->addData(timestamp, 0, 0);
             }
         } else {
-            QCPCurveData point(timestamp, x, y);
-            curve->data()->add(point);
+            curve->addData(timestamp, x, y);
         }
         curve->rescaleAxes();
     }
