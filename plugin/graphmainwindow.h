@@ -85,6 +85,7 @@ private:
     void saveImage(const QString &name) const;
     void updateGraphs(const GraphID& id, double x, double y);
     void updateCurves(const GraphID& id, uint64_t ts, double x, double y);
+    void updateColorMaps(const GraphID& id, uint64_t ts, double x, double y);
 
 private:
     Ui::GraphMainWindow *ui;
@@ -95,6 +96,7 @@ private:
     QMap<GraphID, QCPGraph*> m_valueGraphMap;
     // Parametric curves (x, y, t)
     QMap<GraphID, QCPCurve*> m_valueCurveMap;
+    QMap<GraphID, QCPColorMap*> m_valueColorMap;
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     //QMap<QString, QString> m_valueNameXY;

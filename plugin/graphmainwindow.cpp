@@ -402,7 +402,64 @@ void GraphMainWindow::addParametricGraph(const QString &name, bool isIntegral)
 
 void GraphMainWindow::addWaterfallGraph(const QString &name)
 {
+    // setGeometry(400, 250, 542, 390);
+    auto prop = m_properties.value(name);
 
+    ui->customPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
+    ui->customPlot->axisRect()->setupFullAxesBox(true);
+    ui->customPlot->xAxis->setLabel(prop.x_title);
+    ui->customPlot->yAxis->setLabel(prop.y_title);
+
+    QCPColorMap *colorMap = new QCPColorMap(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    int nx = 256;
+    int ny = 256;
+    colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
+    colorMap->data()->setRange(QCPRange(-4, 4), QCPRange(-4, 4)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
+
+
+    // now we assign some data, by accessing the QCPColorMapData instance of the color map:
+    double x, y, z;
+    for (int xIndex=0; xIndex < nx; ++xIndex) {
+        for (int yIndex=0; yIndex < ny; ++yIndex) {
+            colorMap->data()->cellToCoord(xIndex, yIndex, &x, &y);
+            double r = 3 * qSqrt(x * x + y * y) + 1e-2;
+            z = 2 * x * (qCos(r + 2) / r - qSin(r + 2) / r); // the B field strength of dipole radiation (modulo physical constants)
+            colorMap->data()->setCell(xIndex, yIndex, z);
+        }
+    }
+
+    // add a color scale:
+    QCPColorScale *colorScale = new QCPColorScale(ui->customPlot);
+    ui->customPlot->plotLayout()->addElement(1, 1, colorScale); // add it to the right of the main axis rect
+    colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
+    colorMap->setColorScale(colorScale); // associate the color map with the color scale
+    colorScale->axis()->setLabel(prop.z_title);
+
+    // set the color gradient of the color map to one of the presets:
+    colorMap->setGradient(QCPColorGradient::gpPolar);
+    // we could have also created a QCPColorGradient instance and added own colors to
+    // the gradient, see the documentation of QCPColorGradient for what's possible.
+
+    // rescale the data dimension (color) such that all data points lie in the span visualized by the color gradient:
+    colorMap->rescaleDataRange();
+
+    // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+    QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->customPlot);
+    ui->customPlot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+    colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+
+    // rescale the key (x) and value (y) axes so the whole color map is visible:
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->replot();
+
+    GraphID gid;
+    gid.graphName = name;
+    gid.chNumber = 1;
+    gid.xName = prop.x_name;
+    gid.yName = prop.y_name;
+    gid.zName = prop.z_name;
+
+    m_valueColorMap.insert(gid, colorMap);
 }
 
 void GraphMainWindow::addGraph(const QString &name)
@@ -498,6 +555,27 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
             curve->addData(timestamp, x, y);
         }
         curve->rescaleAxes();
+    }
+}
+
+void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, double x, double y)
+{
+    QCPColorMap *colorMap = nullptr;
+
+    colorMap = m_valueColorMap[gid];
+
+    QString name;
+    if (gid.graphName.isEmpty()) {
+        name = m_valueColorMap.find(gid).key().graphName;
+    }
+
+    if (colorMap) {
+        if (m_properties.value(name).graphType == GraphColorMap) {
+            // QCPColorMapData data;
+            // data.setData(timestamp, x, y);
+            // colorMap->setData(data);
+
+        }
     }
 }
 
