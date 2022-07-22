@@ -56,12 +56,16 @@ struct GraphProperties {
     QString name;
     QString x_name;
     QString y_name;
+    QString z_name; // For color maps and waterfalls
     QString x_title;
     QString y_title;
+    QString z_title;
     QString x_unit;
     QString y_unit;
+    QString z_unit;
     QString x_phisical_quantity;
     QString y_phisical_quantity;
+    QString z_phisical_quantity;
     GraphDir x_dir;
     GraphDir y_dir;
     unsigned int total_N;
@@ -69,6 +73,7 @@ struct GraphProperties {
     GraphUpdateMode update_mode;
     GraphScaleType x_scale;
     GraphScaleType y_scale;
+    GraphScaleType z_scale;
     QVector<int> channels; // e.g. 1, 2, 3, 4
     QColor color;
     GraphType graphType;

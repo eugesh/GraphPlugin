@@ -27,6 +27,7 @@ struct GraphID {
     // Names of axes
     QString xName;
     QString yName;
+    QString zName;
 };
 
 class GraphPluginConfig;
@@ -37,8 +38,10 @@ inline bool operator<(const GraphID &g1, const GraphID &g2)
         return g1.chNumber < g2.chNumber;
     else if (g1.yName != g2.yName)
         return g1.yName < g2.yName;
-    else
+    else if (g1.xName != g2.xName)
         return g1.xName < g2.xName;
+    else
+        return g1.zName < g2.zName;
 }
 
 class GraphMainWindow : public QMainWindow

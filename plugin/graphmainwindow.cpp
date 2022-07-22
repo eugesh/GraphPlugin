@@ -127,12 +127,16 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.name = plotObject["name"].toString();
         properties.x_name = plotObject["x_name"].toString();
         properties.y_name = plotObject["y_name"].toString();
+        properties.z_name = plotObject["z_name"].toString();
         properties.x_title = plotObject["x_title"].toString();
         properties.y_title = plotObject["y_title"].toString();
+        properties.z_title = plotObject["z_title"].toString();
         properties.x_unit = plotObject["x_unit"].toString();
         properties.y_unit = plotObject["y_unit"].toString();
+        properties.z_unit = plotObject["z_unit"].toString();
         properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
         properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
+        properties.z_phisical_quantity = plotObject["z_phisical_quantity"].toString();
         properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
         properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
         properties.total_N = static_cast<unsigned int >(plotObject["total_N"].toInt());
@@ -143,6 +147,8 @@ bool GraphMainWindow::readJSON(const QString &path)
                 plotObject["x_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.y_scale = plotObject["y_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
                         plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
+        properties.z_scale = plotObject["z_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
+                        plotObject["z_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.color = nameToColorConverter(plotObject["color"].toString());
         properties.graphType = nameToGraphTypeConverter(plotObject["graph_type"].toString());
                 // static_cast<GraphType> (plotObject["graph_type"].toInt());
