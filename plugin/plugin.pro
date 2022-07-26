@@ -34,6 +34,7 @@ SOURCES += \
     ../QCustomPlot/qcustomplot.cpp \
     graphtableview.cpp \
     graphtoolbar.cpp \
+    qcpwaterfall.cpp \
     vectorindicatorsboard.cpp \
     vectorindicatorwidget.cpp
 
@@ -50,6 +51,7 @@ HEADERS += \
     ../QCustomPlot/qcustomplot.h \
     graphtableview.h \
     graphtoolbar.h \
+    qcpwaterfall.h \
     vectorindicatorsboard.h \
     vectorindicatorwidget.h
 

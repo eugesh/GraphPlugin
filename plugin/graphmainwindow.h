@@ -31,6 +31,7 @@ struct GraphID {
 };
 
 class GraphPluginConfig;
+class QCPWaterfall;
 
 inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
@@ -96,7 +97,8 @@ private:
     QMap<GraphID, QCPGraph*> m_valueGraphMap;
     // Parametric curves (x, y, t)
     QMap<GraphID, QCPCurve*> m_valueCurveMap;
-    QMap<GraphID, QCPColorMap*> m_valueColorMap;
+    // QMap<GraphID, QCPColorMap*> m_valueColorMap;
+    QMap<GraphID, QCPWaterfall*> m_valueColorMap;
     // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     //QMap<QString, QString> m_valueNameXY;
