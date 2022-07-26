@@ -54,13 +54,15 @@
 #include <QObject>
 #include <QtPlugin>
 #include <QString>
+#include <QVariant>
 
 struct MeasuredValue {
     uint64_t timestamp; //!< [мс], временная метка, возможно одна для разных параметров (одна на пакет)
     QString name; //!< Уникальное имя измеряемого параметра (velocity, time, temperature, pressure)
     int SI_to_current_mult = 1; //!< Коэффициент преобразования в единицу СИ, по умолчанию 1. [current / SI]
     int SI_to_current_shift = 0; //!< Сдвиг при преобразовании в единицу СИ, по умолчанию 0. [current - SI]
-    double value; //!< Измеренное значение
+    // double value; //!< Измеренное значение
+    QVariant value; //!< Измеренное значение или вектор значений (QVariantList)
     int channel; //!< Номер канала устройства
     bool is_valid = true;
 };

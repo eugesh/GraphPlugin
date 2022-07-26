@@ -593,7 +593,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 gid.yName = val1.name;
                 gid.chNumber = val1.channel;
                 ui->customPlot->xAxis->setTickLabels(true);
-                updateGraphs(gid, val1.timestamp, val1.value);
+                updateGraphs(gid, val1.timestamp, val1.value.toDouble());
             } else {
                 for (MeasuredValue val2 : packet) {
                     if (!val2.is_valid)
@@ -604,8 +604,8 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                         gid.xName = val2.name;
                         gid.yName = val1.name;
                         gid.chNumber = val1.channel;
-                        updateGraphs(gid, val2.value, val1.value);
-                        updateCurves(gid, val2.timestamp, val2.value, val1.value);
+                        updateGraphs(gid, val2.value.toDouble(), val1.value.toDouble());
+                        updateCurves(gid, val2.timestamp, val2.value.toDouble(), val1.value.toDouble());
                     }
                 }
             }

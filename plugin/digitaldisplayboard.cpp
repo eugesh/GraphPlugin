@@ -135,10 +135,10 @@ bool DigitalDisplayBoard::readJSON()
 void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto val : vals) {
-        if (!m_items.contains(val.name))
+        if (!m_items.contains(val.name) || val.value.type() == QVariant::List || val.value.type() == QVariant::Map)
             continue;
         if (val.is_valid)
-            m_items[val.name]->setCurrentValue(val.value);
+            m_items[val.name]->setCurrentValue(val.value.toDouble());
         else
             m_items[val.name]->setEnabled(false);
     }

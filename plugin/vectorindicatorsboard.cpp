@@ -96,8 +96,10 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
                 if (!yval.is_valid)
                     continue;
                 if (yval.name == yVAlName) {
-                    auto angle = atan2(yval.value, xval.value);
-                    auto mag = sqrt(yval.value * yval.value + xval.value * xval.value);
+                    auto X = xval.value.toDouble();
+                    auto Y = yval.value.toDouble();
+                    auto angle = atan2(Y, X);
+                    auto mag = sqrt(Y * Y + X * X);
                     m_items[widgetName]->setAngle(angle * 180 / M_PI);
                     m_items[widgetName]->setMagnitude(mag);
                     m_items[widgetName]->setEnabled(true);
