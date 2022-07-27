@@ -86,7 +86,7 @@ private:
     void saveImage(const QString &name) const;
     void updateGraphs(const GraphID& id, double x, double y);
     void updateCurves(const GraphID& id, uint64_t ts, double x, double y);
-    void updateColorMaps(const GraphID& id, uint64_t ts, double x, double y);
+    void updateColorMaps(const GraphID& id, uint64_t ts, QVariantList x, QVariantList y);
 
 private:
     Ui::GraphMainWindow *ui;

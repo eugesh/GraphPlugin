@@ -624,7 +624,7 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
     }
 }
 
-void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, double x, double y)
+void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QVariantList x, QVariantList y)
 {
     QCPColorMap *colorMap = nullptr;
 
@@ -640,7 +640,6 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, do
             // QCPColorMapData data;
             // data.setData(timestamp, x, y);
             // colorMap->setData(data);
-
         }
     }
 }
@@ -671,7 +670,15 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                         gid.yName = val1.name;
                         gid.chNumber = val1.channel;
                         updateGraphs(gid, val2.value.toDouble(), val1.value.toDouble());
-                        updateCurves(gid, val2.timestamp, val2.value.toDouble(), val1.value.toDouble());
+                        auto value2 = val2.value.toDouble();
+                        if (val2.value.type() == QVariant::List)
+                            value2 = val2.value.toList().first().toDouble();
+                        auto value1 = val1.value.toDouble();
+                        if (val1.value.type() == QVariant::List) {
+                            value1 = val1.value.toList().first().toDouble();
+                            updateColorMaps(gid, val2.timestamp, val2.value.toList(), val1.value.toList());
+                        }
+                        updateCurves(gid, val2.timestamp, value2, value1);
                     }
                 }
             }
