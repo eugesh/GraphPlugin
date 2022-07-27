@@ -15,14 +15,14 @@ public:
     explicit QCPWaterfall(QCPAxis *keyAxis, QCPAxis *valueAxis);
 
     void setSize(const QSize &size, double defVal);
-    void addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient);
+    void addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient = Qt::Vertical);
 
 private:
     double m_defValue = 255;
     QList<bool> m_verticalFillMask;
     QList<bool> m_horizontalFillMask;
-    int m_lastColumnIndex;
-    int m_lastRowIndex;
+    int m_lastColumnIndex = 0;
+    int m_lastRowIndex = 0;
 };
 
 #endif // QCPWATERFALL_H

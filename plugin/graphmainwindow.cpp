@@ -461,6 +461,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     gid.zName = prop.z_name;
 
     m_valueColorMap.insert(gid, colorMap);
+    m_valueNameYX.insertMulti(prop.y_name, prop.z_name);
 }
 
 
@@ -626,7 +627,7 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
 
 void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QVariantList x, QVariantList y)
 {
-    QCPColorMap *colorMap = nullptr;
+    QCPWaterfall *colorMap = nullptr;
 
     colorMap = m_valueColorMap[gid];
 
@@ -635,12 +636,21 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
         name = m_valueColorMap.find(gid).key().graphName;
     }
 
-    if (colorMap) {
-        if (m_properties.value(name).graphType == GraphColorMap) {
-            // QCPColorMapData data;
-            // data.setData(timestamp, x, y);
-            // colorMap->setData(data);
-        }
+    if (!colorMap)
+        return;
+
+    // Calculate magnitudes
+    QList<double> magnitudes;
+    for (auto val : y)
+        magnitudes << val.toDouble();
+
+    // Calculate angles
+    QList<double> angles;
+
+    if (m_properties.value(name).graphType == GraphColorMap) {
+        // QCPColorMapData data;
+        // data.setData(timestamp, x, y);
+        colorMap->addData(timestamp, magnitudes);
     }
 }
 
@@ -676,7 +686,12 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                         auto value1 = val1.value.toDouble();
                         if (val1.value.type() == QVariant::List) {
                             value1 = val1.value.toList().first().toDouble();
-                            updateColorMaps(gid, val2.timestamp, val2.value.toList(), val1.value.toList());
+                            GraphID gid_;
+                            gid_.xName = "time";
+                            gid_.yName = val1.name;
+                            gid_.zName = val2.name;
+                            gid_.chNumber = 1;
+                            updateColorMaps(gid_, val2.timestamp, val1.value.toList(), val2.value.toList());
                         }
                         updateCurves(gid, val2.timestamp, value2, value1);
                     }

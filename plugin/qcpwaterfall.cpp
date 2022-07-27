@@ -15,6 +15,12 @@ void QCPWaterfall::setSize(const QSize &size, double defVal)
 {
     data()->setSize(size.width(), size.height());
     m_defValue = defVal;
+
+    for (int i = 0; i < size.height(); ++i) {
+        for (int j = 0; j < size.width(); ++j) {
+            data()->setCell(j, i, defVal);
+        }
+    }
 }
 
 /**
