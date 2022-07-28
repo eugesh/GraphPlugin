@@ -30,18 +30,22 @@ void QCPWaterfall::setSize(const QSize &size, double defVal)
  */
 void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient)
 {
-    data()->keySize();
-    data()->valueSize();
+    auto W = data()->keySize();
+    auto H = data()->valueSize();
 
     if (orient == Qt::Horizontal) {
-        int pos = data()->valueSize() > m_lastRowIndex ? m_lastRowIndex++ : data()->valueSize();
-        for (int i = 0; i < vector.size(); ++i) {
-            data()->setCell(pos, i, vector[i]);
-        }
-    } else {
-        int pos = data()->keySize() > m_lastColumnIndex ? m_lastColumnIndex++ : data()->valueSize();
+        int pos = H > m_lastRowIndex ? m_lastRowIndex++ : H - 1;
         for (int i = 0; i < vector.size(); ++i) {
             data()->setCell(i, pos, vector[i]);
         }
+        if (H == m_lastRowIndex)
+            data()->removeRow(0);
+    } else {
+        int pos = W > m_lastColumnIndex ? m_lastColumnIndex++ : W - 1;
+        for (int i = 0; i < vector.size(); ++i) {
+            data()->setCell(pos, i, vector[i]);
+        }
+        if (W == m_lastColumnIndex)
+            data()->removeColumn(0);
     }
 }

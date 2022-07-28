@@ -18,9 +18,9 @@ public:
     void addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient = Qt::Vertical);
 
 private:
+    // Default value
     double m_defValue = 255;
-    QList<bool> m_verticalFillMask;
-    QList<bool> m_horizontalFillMask;
+    // Indes of latest added row or column
     int m_lastColumnIndex = 0;
     int m_lastRowIndex = 0;
 };

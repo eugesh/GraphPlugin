@@ -413,7 +413,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
 
     QCPWaterfall *colorMap = new QCPWaterfall(ui->customPlot->xAxis, ui->customPlot->yAxis);
     int nx = 256;
-    int ny = 256;
+    int ny = 16;
     colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
     colorMap->data()->setRange(QCPRange(-4, 4), QCPRange(-4, 4)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
 
