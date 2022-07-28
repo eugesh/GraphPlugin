@@ -18,6 +18,8 @@ public:
     void addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient = Qt::Vertical);
 
 private:
+    // Vector of timestamps
+    QQueue<int64_t> m_timeVector;
     // Default value
     double m_defValue = 255;
     // Indes of latest added row or column

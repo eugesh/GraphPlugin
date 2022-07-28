@@ -417,6 +417,13 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
     colorMap->data()->setRange(QCPRange(-4, 4), QCPRange(-4, 4)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
 
+    if (prop.x_phisical_quantity.contains("time", Qt::CaseInsensitive)) {
+        m_ticker = QSharedPointer<QCPAxisTickerDateTime>::create();
+        m_ticker->setDateTimeFormat(QLatin1String("hh:mm:ss"));
+        ui->customPlot->xAxis->setTicker(m_ticker);
+        ui->customPlot->xAxis->setTickLabels(true);
+        m_ticker->setTickStepStrategy(QCPAxisTicker::tssMeetTickCount);
+    }
 
     // now we assign some data, by accessing the QCPColorMapData instance of the color map:
     double x, y, z;

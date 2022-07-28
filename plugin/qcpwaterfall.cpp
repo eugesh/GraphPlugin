@@ -32,20 +32,28 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::
 {
     auto W = data()->keySize();
     auto H = data()->valueSize();
+    m_timeVector.enqueue(timestamp);
 
     if (orient == Qt::Horizontal) {
         int pos = H > m_lastRowIndex ? m_lastRowIndex++ : H - 1;
         for (int i = 0; i < vector.size(); ++i) {
             data()->setCell(i, pos, vector[i]);
         }
-        if (H == m_lastRowIndex)
+        if (H == m_lastRowIndex) {
             data()->removeRow(0);
+            m_timeVector.dequeue();
+        }
     } else {
         int pos = W > m_lastColumnIndex ? m_lastColumnIndex++ : W - 1;
         for (int i = 0; i < vector.size(); ++i) {
             data()->setCell(pos, i, vector[i]);
         }
-        if (W == m_lastColumnIndex)
+        if (W == m_lastColumnIndex) {
             data()->removeColumn(0);
+            m_timeVector.dequeue();
+        }
     }
+
+    data()->setKeyRange(QCPRange(m_timeVector.first(), m_timeVector.last()));
+    rescaleAxes();
 }
