@@ -438,7 +438,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     }
 
     // add a color scale:
-    QCPColorScale *colorScale = new QCPColorScale(ui->customPlot);
+    QCPWaterfallScale *colorScale = new QCPWaterfallScale(ui->customPlot);
     ui->customPlot->plotLayout()->addElement(1, 1, colorScale); // add it to the right of the main axis rect
     colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
     colorMap->setColorScale(colorScale); // associate the color map with the color scale

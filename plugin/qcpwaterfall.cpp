@@ -1,5 +1,7 @@
 #include "qcpwaterfall.h"
 
+#include <QAction>
+
 double estimatePeriod(QVector<uint64_t> tsVec)
 {
     double sum = 0;
@@ -96,4 +98,46 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
     colorScale()->setDataRange(data()->dataBounds());
 
     rescaleAxes();
+}
+/*
+     gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
+    ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
+    ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)
+    ,gpNight     ///< Continuous lightness from black over weak blueish colors to white (suited for non-biased data representation)
+    ,gpCandy     ///< Blue over pink to white
+    ,gpGeography ///< Colors suitable to represent different elevations on geographical maps
+    ,gpIon       ///< Half hue spectrum from black over purple to blue and finally green (creates banding illusion but allows more precise magnitude estimates)
+    ,gpThermal   ///< Colors suitable for thermal imaging, ranging from dark blue over purple to orange, yellow and white
+    ,gpPolar     ///< Colors suitable to emphasize polarity around the center, with blue for negative, black in the middle and red for positive values
+    ,gpSpectrum  ///< An approximation of the visible light spectrum (creates banding illusion but allows more precise magnitude estimates)
+    ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
+    ,gpHues
+ */
+
+const QStringList GradientNames = {"Grayscale", "Hot", "Cold", "Night", "Candy", "Geo", "Ion", "Thermal", "Polar", "Spectrum", "Jet", "Hues"};
+
+QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
+    : QCPColorScale(parentPlot)
+{
+    parentPlot->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(parentPlot, &QWidget::customContextMenuRequested,
+        [this] (const QPoint &pos) {
+        QMenu contextMenu(tr("Context menu"), static_cast<QWidget*>(this->parentPlot()));
+
+        QList<QAction*> actVector;
+        for (int i = 0; i < QCPColorGradient::gpHues; ++i) {
+            actVector.push_back(new QAction(GradientNames[i], this));
+            actVector.back()->setData(i);
+            auto action = actVector.back();
+            connect(action, &QAction::triggered, [&, action]() {
+                // QAction *act = static_cast<QAction*>(sender());
+                setGradient(static_cast<QCPColorGradient::GradientPreset>(action->data().toInt()));
+                this->parentPlot()->update();
+            });
+            contextMenu.addAction(action);
+        }
+        contextMenu.exec(this->parentPlot()->mapToGlobal(pos));
+    });
+
 }

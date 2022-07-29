@@ -27,4 +27,11 @@ private:
     int m_lastRowIndex = 0;
 };
 
+class QCPWaterfallScale : public QCPColorScale
+{
+    Q_OBJECT
+public:
+    explicit QCPWaterfallScale(QCustomPlot *parentPlot);
+};
+
 #endif // QCPWATERFALL_H
