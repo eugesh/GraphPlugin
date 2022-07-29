@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "qcustomplot.h"
+
 #include <qnamespace.h>
 #include <QColor>
 #include <QVector>
@@ -77,6 +79,7 @@ struct GraphProperties {
     QVector<int> channels; // e.g. 1, 2, 3, 4
     QColor color;
     GraphType graphType;
+    QCPColorGradient::GradientPreset colorScale;
     // bool is_parametric = false;
     // bool is_integral = false;
 };
@@ -86,5 +89,7 @@ QColor nameToColorConverter(const QString &name);
 GraphType nameToGraphTypeConverter(const QString &name);
 QString graphTypeToNameConverter(const GraphType &type);
 QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON);
+QCPColorGradient::GradientPreset nameToColorScaleTypeConverter(const QString &name);
+QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &type);
 
 #endif // COMMON_H

@@ -152,6 +152,7 @@ bool GraphMainWindow::readJSON(const QString &path)
                         plotObject["z_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
         properties.color = nameToColorConverter(plotObject["color"].toString());
         properties.graphType = nameToGraphTypeConverter(plotObject["graph_type"].toString());
+        properties.colorScale = nameToColorScaleTypeConverter(plotObject["color_scale"].toString());
                 // static_cast<GraphType> (plotObject["graph_type"].toInt());
         // properties.is_parametric = plotObject["is_parametric"].toBool();
         // properties.is_integral = plotObject["is_integral"].toBool();
@@ -224,6 +225,7 @@ bool GraphMainWindow::saveJSON(const QString &path) const
         }
         graphObject["channels"] = channelsArray;
         graphObject["graph_type"] = graphTypeToNameConverter(prop.graphType);
+        graphObject["color_scale"] = colorScaleTypeToNameConverter(prop.colorScale);
         // graphObject["is_parametric"] = prop.is_parametric;
         // graphObject["is_integral"] = prop.is_integral;
 
@@ -445,7 +447,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     colorScale->axis()->setLabel(prop.z_title);
 
     // set the color gradient of the color map to one of the presets:
-    colorMap->setGradient(QCPColorGradient::gpPolar);
+    colorMap->setGradient(prop.colorScale);//QCPColorGradient::gpPolar);
     // we could have also created a QCPColorGradient instance and added own colors to
     // the gradient, see the documentation of QCPColorGradient for what's possible.
 
