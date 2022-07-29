@@ -47,6 +47,9 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
     m_timeVector.enqueue(timestamp);
 
     // Y
+    if (yVec.size() != data()->valueSize())
+        data()->setValueSize(yVec.size());
+
     if (m_timeVector.size() < 2) {
         double maxY = qMax(yVec.first(), yVec.last());
         double minY = qMin(yVec.first(), yVec.last());
@@ -89,6 +92,8 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
         double period = estimatePeriod(m_timeVector.toVector());
         data()->setKeyRange(QCPRange(m_timeVector.first(), m_timeVector.first() + period * data()->keySize()));
     }
+
+    colorScale()->setDataRange(data()->dataBounds());
 
     rescaleAxes();
 }
