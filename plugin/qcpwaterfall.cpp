@@ -1,5 +1,15 @@
 #include "qcpwaterfall.h"
 
+double estimatePeriod(QVector<uint64_t> tsVec)
+{
+    double sum = 0;
+    for (int i = 0; i < tsVec.size() - 1; i++) {
+        sum += tsVec[i + 1] - tsVec[i];
+    }
+
+    return sum / (tsVec.size() - 1);
+}
+
 QCPWaterfall::QCPWaterfall(QCPAxis *keyAxis, QCPAxis *valueAxis)
     : QCPColorMap(keyAxis, valueAxis)
 {
@@ -34,6 +44,8 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::
     auto H = data()->valueSize();
     m_timeVector.enqueue(timestamp);
 
+    bool doUpdate = false;
+
     if (orient == Qt::Horizontal) {
         int pos = H > m_lastRowIndex ? m_lastRowIndex++ : H - 1;
         for (int i = 0; i < vector.size(); ++i) {
@@ -41,7 +53,7 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::
         }
         if (H == m_lastRowIndex) {
             data()->removeRow(0);
-            m_timeVector.dequeue();
+            doUpdate = true;
         }
     } else {
         int pos = W > m_lastColumnIndex ? m_lastColumnIndex++ : W - 1;
@@ -50,10 +62,17 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::
         }
         if (W == m_lastColumnIndex) {
             data()->removeColumn(0);
-            m_timeVector.dequeue();
+            doUpdate = true;
         }
     }
 
-    data()->setKeyRange(QCPRange(m_timeVector.first(), m_timeVector.last()));
+    if (doUpdate) {
+        m_timeVector.dequeue();
+        data()->setKeyRange(QCPRange(m_timeVector.first(), m_timeVector.last()));
+    } else {
+        double period = estimatePeriod(m_timeVector.toVector());
+        data()->setKeyRange(QCPRange(m_timeVector.first(), m_timeVector.first() + period * data()->keySize()));
+    }
+
     rescaleAxes();
 }

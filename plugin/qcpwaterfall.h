@@ -19,7 +19,7 @@ public:
 
 private:
     // Vector of timestamps
-    QQueue<int64_t> m_timeVector;
+    QQueue<uint64_t> m_timeVector;
     // Default value
     double m_defValue = 255;
     // Indes of latest added row or column
