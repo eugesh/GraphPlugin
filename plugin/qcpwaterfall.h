@@ -15,7 +15,7 @@ public:
     explicit QCPWaterfall(QCPAxis *keyAxis, QCPAxis *valueAxis);
 
     void setSize(const QSize &size, double defVal);
-    void addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient = Qt::Vertical);
+    void addData(uint64_t timestamp, const QList<double> &xVec, const QList<double> &yVec, Qt::Orientation orient = Qt::Vertical);
 
 private:
     // Vector of timestamps

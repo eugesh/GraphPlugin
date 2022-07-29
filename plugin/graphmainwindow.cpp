@@ -410,12 +410,13 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     ui->customPlot->axisRect()->setupFullAxesBox(true);
     ui->customPlot->xAxis->setLabel(prop.x_title);
     ui->customPlot->yAxis->setLabel(prop.y_title);
+    ui->customPlot->yAxis->setRangeReversed(true);
 
     QCPWaterfall *colorMap = new QCPWaterfall(ui->customPlot->xAxis, ui->customPlot->yAxis);
     int nx = 256;
     int ny = 16;
     colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
-    colorMap->data()->setRange(QCPRange(-4, 4), QCPRange(-4, 4)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
+    // colorMap->data()->setRange(QCPRange(-4, 4), QCPRange(0, 4)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
 
     if (prop.x_phisical_quantity.contains("time", Qt::CaseInsensitive)) {
         m_ticker = QSharedPointer<QCPAxisTickerDateTime>::create();
@@ -646,18 +647,23 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
     if (!colorMap)
         return;
 
-    // Calculate magnitudes
+    // Depth
+    QList<double> depths;
+    for (auto val : x)
+        depths << val.toDouble();
+
+    // Magnitudes
     QList<double> magnitudes;
     for (auto val : y)
         magnitudes << val.toDouble();
 
-    // Calculate angles
+    // Angles
     QList<double> angles;
 
     if (m_properties.value(name).graphType == GraphColorMap) {
         // QCPColorMapData data;
         // data.setData(timestamp, x, y);
-        colorMap->addData(timestamp, magnitudes);
+        colorMap->addData(timestamp, depths, magnitudes);
     }
 }
 

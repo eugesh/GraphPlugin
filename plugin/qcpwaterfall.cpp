@@ -38,18 +38,34 @@ void QCPWaterfall::setSize(const QSize &size, double defVal)
  * @param vector row r column
  * @param orient horizontal or vertical
  */
-void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::Orientation orient)
+void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const QList<double> &zVec, Qt::Orientation orient)
 {
     auto W = data()->keySize();
     auto H = data()->valueSize();
+
+    // t
     m_timeVector.enqueue(timestamp);
 
+    // Y
+    if (m_timeVector.size() < 2) {
+        double maxY = qMax(yVec.first(), yVec.last());
+        double minY = qMin(yVec.first(), yVec.last());
+        data()->setValueRange({minY, maxY});
+    } else {
+        bool isOk;
+        auto rangeY = getValueRange(isOk);
+        double maxY = qMax(qMax(rangeY.upper, yVec.first()), yVec.last());
+        double minY = qMin(qMin(rangeY.lower, yVec.first()), yVec.last());
+        data()->setValueRange({minY, maxY});
+    }
+
+    // t, Z
     bool doUpdate = false;
 
     if (orient == Qt::Horizontal) {
         int pos = H > m_lastRowIndex ? m_lastRowIndex++ : H - 1;
-        for (int i = 0; i < vector.size(); ++i) {
-            data()->setCell(i, pos, vector[i]);
+        for (int i = 0; i < zVec.size(); ++i) {
+            data()->setCell(i, pos, zVec[i]);
         }
         if (H == m_lastRowIndex) {
             data()->removeRow(0);
@@ -57,8 +73,8 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &vector, Qt::
         }
     } else {
         int pos = W > m_lastColumnIndex ? m_lastColumnIndex++ : W - 1;
-        for (int i = 0; i < vector.size(); ++i) {
-            data()->setCell(pos, i, vector[i]);
+        for (int i = 0; i < zVec.size(); ++i) {
+            data()->setCell(pos, i, zVec[i]);
         }
         if (W == m_lastColumnIndex) {
             data()->removeColumn(0);
