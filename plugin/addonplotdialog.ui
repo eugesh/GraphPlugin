@@ -178,6 +178,11 @@
          </item>
          <item>
           <property name="text">
+           <string>Полярные (phi, mag)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string extracomment="Параметрическая кривая">X, Y, t</string>
           </property>
          </item>

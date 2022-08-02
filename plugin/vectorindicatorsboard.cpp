@@ -96,10 +96,16 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
                 if (!yval.is_valid)
                     continue;
                 if (yval.name == yVAlName) {
-                    auto X = xval.value.toDouble();
-                    auto Y = yval.value.toDouble();
-                    auto angle = atan2(Y, X);
-                    auto mag = sqrt(Y * Y + X * X);
+                    double mag, angle;
+                    if (m_properties.value(xval.name).graphType == GraphPolar) {
+                        mag = xval.value.toDouble();
+                        angle = yval.value.toDouble();
+                    } else {
+                        auto X = xval.value.toDouble();
+                        auto Y = yval.value.toDouble();
+                        angle = atan2(Y, X);
+                        mag = sqrt(Y * Y + X * X);
+                    }
                     m_items[widgetName]->setAngle(angle * 180 / M_PI);
                     m_items[widgetName]->setMagnitude(mag);
                     m_items[widgetName]->setEnabled(true);

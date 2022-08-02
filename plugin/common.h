@@ -49,6 +49,7 @@ enum GraphScaleType {
 
 enum GraphType {
     GraphScatter,
+    GraphPolar,
     GraphParametric,
     GraphIntegral,
     GraphColorMap
