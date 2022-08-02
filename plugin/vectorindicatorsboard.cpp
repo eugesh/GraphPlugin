@@ -168,6 +168,7 @@ bool VectorIndicatorsBoard::readJSON(const QString &path)
         properties.y_unit = indicatorObject["y_unit"].toString();
         properties.x_phisical_quantity = indicatorObject["x_phisical_quantity"].toString();
         properties.y_phisical_quantity = indicatorObject["y_phisical_quantity"].toString();
+        properties.graphType = nameToGraphTypeConverter(indicatorObject["graph_type"].toString());
         // "channels": [1],
         // QJsonArray arr = plotObject["channels"].toArray();
         // for (auto ch : arr)
