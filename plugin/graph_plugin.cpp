@@ -30,6 +30,11 @@ GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
 
 }
 
+void GraphPlugin::setName(const QString &name)
+{
+    setObjectName(tr("%1%2").arg(name).arg("GraphPlugin"));
+}
+
 GraphPlugin::~GraphPlugin()
 {
     for (auto dock : m_graphsMainWins)
@@ -111,7 +116,8 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     auto keys = settings.childKeys();
     auto groups = settings.childGroups();
 
-    settings.beginGroup("MainWindow");
+    auto groupName = QString("%1%2").arg("MainWindow_").arg(objectName());
+    settings.beginGroup(groupName);
 
     auto geomData = settings.value("geometry").toByteArray();
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
@@ -135,7 +141,8 @@ bool GraphPlugin::saveGraphPluginGeometry()
 {
     QSettings settings(QApplication::organizationName(), QApplication::applicationName());
 
-    settings.beginGroup("MainWindow");
+    auto groupName = QString("%1%2").arg("MainWindow_").arg(objectName());
+    settings.beginGroup(groupName);
 
     auto geom = m_mainWindow->saveGeometry();
     settings.setValue("geometry", geom);

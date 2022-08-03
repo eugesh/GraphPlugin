@@ -80,6 +80,7 @@ public:
     explicit GraphPlugin(QMainWindow *mw = nullptr);
     ~GraphPlugin() override;
 
+    void setName(const QString &name) override;
     //!<
     virtual void addData(const MeasuredValue &value) override;
     //!<
