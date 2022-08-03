@@ -13,10 +13,15 @@
 #include <QTableView>
 #include <QToolBar>
 
-static const char* graphConfigsFolder = "configs/graphs";
-static const char* pluginConfigsFolder = "configs/config";
+//   configs/{[deviceName]|si}/{config|graph}
+static const char* allConfigsFolder = "configs";
+/*static const char* adcpConfigsFolder = "adcp";
+static const char* dvlConfigsFolder = "dvl";
+static const char* gpsConfigsFolder = "gps";*/
+static const char* graphConfigsFolder = "graphs";
+static const char* pluginConfigsFolder = "config";
 static const char* SIConfigsFolder = "configs/si";
-static const char* arrayIndicatorsJson = "configs/config/indicatorsBoard.json";
+static const char* arrayIndicatorsJson = "indicatorsBoard.json";
 
 GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
   , m_mainWindow(mw)
@@ -43,27 +48,30 @@ GraphPlugin::~GraphPlugin()
     if (m_config)
         delete m_config;
 
-    if (m_tableModel)
-        delete m_tableModel;
+    if (!m_tableModelMap.isEmpty())
+        for (auto tableModel : m_tableModelMap)
+            delete tableModel;
 
-    if (m_tableView)
-        delete m_tableView;
+    if (!m_tableViewMap.isEmpty())
+        for (auto tableView : m_tableViewMap)
+            delete tableView;
 
-    if (m_tableDock)
-        delete m_tableDock;
+    if (!m_tableDockMap.isEmpty())
+        for (auto tableDock : m_tableDockMap)
+            delete tableDock;
 
     if (m_boardDock)
         delete m_boardDock;
 }
 
-void GraphPlugin::setPacketSize(int size)
+void GraphPlugin::setPacketSize(int size, const QString tableName)
 {
-    m_tableModel->setPacketSize(size);
+    m_tableModelMap[tableName]->setPacketSize(size);
 }
 
-int GraphPlugin::packetSize() const
+int GraphPlugin::packetSize(const QString tableName) const
 {
-    return m_tableModel->packetSize();
+    return m_tableModelMap[tableName]->packetSize();
 }
 
 QString GraphPlugin::aboutInfo()
@@ -71,39 +79,50 @@ QString GraphPlugin::aboutInfo()
     return QString("%1.%2.%3").arg(GRAPH_PLUGIN_VERSION_MAJOR).arg(GRAPH_PLUGIN_VERSION_MINOR).arg(GRAPH_PLUGIN_VERSION_PATCH);
 }
 
-bool GraphPlugin::loadJSONs()
+bool GraphPlugin::loadJSONs(QStringList subdirsNames)
 {
-    // Load SI units and prefixes
-    auto prefPath = QString("%1/%2").arg(SIConfigsFolder).arg("prefixes.json");
-    auto siPath = QString("%1/%2").arg(SIConfigsFolder).arg("aux-units-ru.json");
-    m_config = new GraphPluginConfig(siPath, prefPath);
+    if (!subdirsNames.isEmpty()) {
+        QDir allConfigs(QCoreApplication::applicationDirPath() + "/" + allConfigsFolder);
+        const QStringList entries = allConfigs.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString &dirName : entries) {
+            qDebug() << dirName;
+            if (subdirsNames.contains(dirName)) {
 
-    // Load used in project values
-    auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
-    loadValuesJSON(path);
+            }
+        }
+    } else {
+        // Load SI units and prefixes
+        auto prefPath = QString("%1/%2").arg(SIConfigsFolder).arg("prefixes.json");
+        auto siPath = QString("%1/%2").arg(SIConfigsFolder).arg("aux-units-ru.json");
+        m_config = new GraphPluginConfig(siPath, prefPath);
 
-    // Read all JSON files with Graph Plot Windows descriptions
-    QDir graphConfigsDir(graphConfigsFolder);
-    for (auto name : graphConfigsDir.entryList({"*.json"})) {
-        auto path = QString("%1/%2").arg(graphConfigsFolder).arg(name);
-        loadGraphJSON(path);
+        // Load used in project values
+        auto path = QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json");
+        loadValuesJSON(path);
+
+        // Read all JSON files with Graph Plot Windows descriptions
+        QDir graphConfigsDir(graphConfigsFolder);
+        for (auto name : graphConfigsDir.entryList({"*.json"})) {
+            auto path = QString("%1/%2").arg(graphConfigsFolder).arg(name);
+            loadGraphJSON(path);
+        }
+
+        // Read JSON for Table and it's model
+        loadTableJSON(QString("%1/%2").arg(pluginConfigsFolder).arg("plugin_config.json"));
+
+        // Read JSON for Score Board description
+        loadSensorsMonitorJSON("");
+
+        // Read JSON for Vector Indicators Board description
+        loadVectorIndicatorsJSON(arrayIndicatorsJson);
+
+        restoreGraphPluginGeometry();
     }
-
-    // Read JSON for Table and it's model
-    loadTableJSON(QString("%1/%2").arg(graphConfigsFolder).arg("plugin_config.json"));
-
-    // Read JSON for Score Board description
-    loadSensorsMonitorJSON("");
-
-    // Read JSON for Vector Indicators Board description
-    loadVectorIndicatorsJSON(arrayIndicatorsJson);
-
-    restoreGraphPluginGeometry();
 
     return true;
 }
 
-bool GraphPlugin::restoreGraphPluginGeometry()
+bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
 {
     //  Restore Geometry
     QSettings settings(QApplication::organizationName(), QApplication::applicationName());
@@ -111,7 +130,7 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     auto keys = settings.childKeys();
     auto groups = settings.childGroups();
 
-    settings.beginGroup("MainWindow");
+    settings.beginGroup("MainWindow" + suffix);
 
     auto geomData = settings.value("geometry").toByteArray();
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
@@ -131,7 +150,7 @@ bool GraphPlugin::restoreGraphPluginGeometry()
     return is_ok;
 }
 
-bool GraphPlugin::saveGraphPluginGeometry()
+bool GraphPlugin::saveGraphPluginGeometry(const QString &suffix)
 {
     QSettings settings(QApplication::organizationName(), QApplication::applicationName());
 
@@ -147,9 +166,9 @@ bool GraphPlugin::saveGraphPluginGeometry()
     return true;
 }
 
-bool GraphPlugin::loadValuesJSON(const QString &pathToJSON)
+bool GraphPlugin::loadValuesJSON(const QString &pathToJSON, const QString &tableName)
 {
-    m_measValDescMap = loadConfigJSON(pathToJSON);
+    m_measValDescMap[tableName] = loadConfigJSON(pathToJSON);
 
     return static_cast<bool>(m_measValDescMap.count());
 }
@@ -195,14 +214,20 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON)
     m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, m_tableDock);
 
     for (auto graphMainWindow : m_graphsMainWins.keys()) {
-        connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
-        connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_tableView, &QAbstractItemView::scrollToBottom);
+        for (auto key : m_tableModelMap.keys()) {
+            connect(m_tableModelMap.value(key), &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
+            connect(m_tableModelMap.value(key), &GraphPluginTableModel::packetFormed, m_tableViewMap.value(key), &QAbstractItemView::scrollToBottom);
+        }
     }
 
-    connect (m_tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
-    connect (m_tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
+    for (auto tableView : m_tableViewMap.values()) {
+        connect (tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
+        connect (tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
+    }
+
     if (m_vectorIndicatorsBoard)
-        connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
+        for (auto tableModel : m_tableModelMap.values())
+            connect(tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -221,7 +246,8 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
     m_boardDock->toggleViewAction()->setText(tr("Табло"));
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
-    connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
+    for (auto tableModel : m_tableModelMap.values())
+        connect(tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
 
     return true;
 }
@@ -249,7 +275,8 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
 
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_vectorIndictorsDock);
 
-    connect(m_tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
+    for (auto tableModel : m_tableModelMap.values())
+        connect(tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -268,7 +295,7 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     graphWindow->setConfig(m_config);
     graphWindow->setValuesDescriptions(m_measValDescMap);
 
-    connect(graphWindow, &GraphMainWindow::deleteMe, [=,this]() {
+    connect(graphWindow, &GraphMainWindow::deleteMe, [=, this]() {
         m_graphsMainWins.remove(graphWindow->nameTr());
         m_mainWindow->removeDockWidget(dock_widget);
         m_graphsDocks.remove(graphWindow->nameTr());

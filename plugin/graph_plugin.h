@@ -89,13 +89,13 @@ public:
     //!<
     virtual void setMainWindow(QMainWindow *mw) override;
 
-    bool loadJSONs() override;
-    bool saveGraphPluginGeometry() override;
+    bool loadJSONs(QStringList subdirsNames = {}) override;
+    bool saveGraphPluginGeometry(const QString &suffix = "") override;
     QString aboutInfo() override;
     void setMode(GraphPluginMode mode = GRAPH_DATA_SYNCH);
 
-    virtual void setPacketSize(int size) override;
-    virtual int packetSize() const override;
+    virtual void setPacketSize(int size, const QString tableName = "") override;
+    virtual int packetSize(const QString tableName = "") const override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
@@ -103,7 +103,7 @@ public slots:
 
 private:
     // Values types, measurement units
-    bool loadValuesJSON(const QString &pathToJSON);
+    bool loadValuesJSON(const QString &pathToJSON, const QString &tableName);
     bool loadConfig(const QString &pathToJSON);
     // Common SI measuring units
     bool loadSI(const QString &pathToJSON);
@@ -115,7 +115,7 @@ private:
 
     // bool saveGraphJSON(const QString &pathToJSON);
 
-    bool restoreGraphPluginGeometry();
+    bool restoreGraphPluginGeometry(const QString &suffix = "");
     QStringList getValuesNames() const;
     QStringList getDescriptionsTr() const;
 
@@ -125,22 +125,21 @@ private:
     // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
     // Graphs
     QMap<QString, QDockWidget*> m_graphsDocks;
-    // QList<GraphMainWindow*> m_graphsMainWins;
     QMap<QString, GraphMainWindow*> m_graphsMainWins;
     // ToolBar
     QToolBar *m_toolbar = nullptr;
-    // Table
-    QDockWidget *m_tableDock = nullptr;
-    GraphPluginTableModel *m_tableModel = nullptr;
-    // QTableView *m_tableView;
-    GraphTableView *m_tableView = nullptr;
+    // Table name -> Table Dock
+    QMap<QString, QDockWidget*> m_tableDockMap;
+    // Table name -> Table Model
+    QMap<QString, GraphPluginTableModel*> m_tableModelMap;
+    // Table name -> Table View
+    QMap<QString, GraphTableView*> m_tableViewMap;
 
     QDockWidget *m_boardDock = nullptr;
     DigitalDisplayBoard *m_digitalBoard = nullptr;
 
     QDockWidget *m_vectorIndictorsDock = nullptr;
     VectorIndicatorsBoard *m_vectorIndicatorsBoard = nullptr;
-    // QList<GraphMainWindow*> m_graphMainWins;
 
     // Config
     GraphPluginConfig *m_config = nullptr;
@@ -149,7 +148,7 @@ private:
     //!< Timestamp -> value, one key - multiple values
     // Data config
     int m_ringBufferSize;
-    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMap<QString, QMultiMap<QString, MeasuredValueDescription>> m_measValDescMap;
     //!< Unique Names of values
     QList<QString> m_valueNames;
     //!< Values descriptions
