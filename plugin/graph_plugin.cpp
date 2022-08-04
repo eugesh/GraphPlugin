@@ -159,8 +159,13 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
     if (m_mainWindow->isMaximized()) {
         // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry()); // Valid but not tested. Buildable with Qt5 and Qt6.
         m_mainWindow->setGeometry(QApplication::desktop()->availableGeometry(0));
+    } else {
+        m_mainWindow->showMaximized();
     }
 #endif
+    // m_mainWindow->showNormal();
+    m_mainWindow->showMaximized();
+    // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry());
 
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
