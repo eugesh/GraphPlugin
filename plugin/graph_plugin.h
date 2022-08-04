@@ -103,13 +103,13 @@ public slots:
 
 private:
     // Values types, measurement units
-    bool loadValuesJSON(const QString &pathToJSON, const QString &tableName);
+    bool loadValuesJSON(const QString &pathToJSON, const QString &tableName = "");
     bool loadConfig(const QString &pathToJSON);
     // Common SI measuring units
     bool loadSI(const QString &pathToJSON);
     // Read each JSON for graph plot window
     bool loadGraphJSON(const QString &pathToJSON);
-    bool loadTableJSON(const QString &pathToJSON);
+    bool loadTableJSON(const QString &pathToJSON, const QString &tableName = "");
     bool loadSensorsMonitorJSON(const QString &pathToJSON);
     bool loadVectorIndicatorsJSON(const QString &pathToJSON);
 
@@ -148,7 +148,10 @@ private:
     //!< Timestamp -> value, one key - multiple values
     // Data config
     int m_ringBufferSize;
-    QMap<QString, QMultiMap<QString, MeasuredValueDescription>> m_measValDescMap;
+    // Meas Value Name <-> Description
+    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    // Table name --> Meas Values Names
+    QMultiMap<QString, QString> m_tableMeasValNames;
     //!< Unique Names of values
     QList<QString> m_valueNames;
     //!< Values descriptions
