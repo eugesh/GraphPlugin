@@ -194,12 +194,13 @@ bool GraphPlugin::saveGraphPluginGeometry(const QString &suffix)
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON, const QString &tableName)
 {
     auto map = loadConfigJSON(pathToJSON);
-    m_measValDescMap.unite(map);
+    // m_measValDescMap.unite(map);
+    m_measValDescMap.insert(tableName, map);
 
     for (auto key : map.keys())
         m_tableMeasValNames.insert(tableName, key);
 
-    return static_cast<bool>(m_measValDescMap.count());
+    return static_cast<bool>(map.count());
 }
 
 bool GraphPlugin::loadConfig(const QString &pathToJSON)
@@ -212,16 +213,16 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
     return true;
 }
 
-QStringList GraphPlugin::getValuesNames() const
+QStringList GraphPlugin::getValuesNames(const QString &tableName) const
 {
-    return m_measValDescMap.uniqueKeys();
+    return m_measValDescMap.value(tableName).uniqueKeys();
 }
 
-QStringList GraphPlugin::getDescriptionsTr() const
+QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
 {
     QStringList descs;
 
-    for (auto valDesc : m_measValDescMap.values())
+    for (auto valDesc : m_measValDescMap.value(tableName).values())
         descs << valDesc.desc_ru;
 
     return descs;
@@ -229,12 +230,12 @@ QStringList GraphPlugin::getDescriptionsTr() const
 
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableName)
 {
-    GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(), getValuesNames(), m_synchMode, this);
-    tableModel->setPacketSize(m_measValDescMap.size());
+    GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(tableName), getValuesNames(tableName), m_synchMode, this);
+    tableModel->setPacketSize(m_measValDescMap.value(tableName).size());
     GraphTableView *tableView = new GraphTableView(m_mainWindow);
     tableView->setModel(tableModel);
     tableView->setConfig(m_config);
-    tableView->setMeasValues(m_measValDescMap);
+    tableView->setMeasValues(m_measValDescMap.value(tableName));
     QDockWidget *tableDock = new QDockWidget(m_mainWindow);
     tableDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     tableDock->setWidget(tableView);
@@ -271,7 +272,10 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
 {
     m_digitalBoard = new DigitalDisplayBoard();
     m_digitalBoard->setConfig(m_config);
-    m_digitalBoard->setValuesDescriptions(m_measValDescMap);
+    QMultiMap<QString, MeasuredValueDescription> allDescMap;
+    for (auto map : m_measValDescMap)
+        allDescMap.unite(map);
+    m_digitalBoard->setValuesDescriptions(allDescMap);
     bool is_ok = m_digitalBoard->initFromJSON("");
 
     m_boardDock = new QDockWidget(m_mainWindow);
@@ -292,7 +296,10 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_vectorIndicatorsBoard = new VectorIndicatorsBoard();
 
     m_vectorIndicatorsBoard->setConfig(m_config);
-    m_vectorIndicatorsBoard->setValuesDescriptions(m_measValDescMap);
+    QMultiMap<QString, MeasuredValueDescription> allDescMap;
+    for (auto map : m_measValDescMap)
+        allDescMap.unite(map);
+    m_vectorIndicatorsBoard->setValuesDescriptions(allDescMap);
     bool is_ok = m_vectorIndicatorsBoard->initFromJSON(pathToJSON);
 
     if (!is_ok) {
@@ -328,7 +335,10 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
     graphWindow->setConfig(m_config);
-    graphWindow->setValuesDescriptions(m_measValDescMap);
+    QMultiMap<QString, MeasuredValueDescription> allDescMap;
+    for (auto map : m_measValDescMap)
+        allDescMap.unite(map);
+    graphWindow->setValuesDescriptions(allDescMap);
 
     connect(graphWindow, &GraphMainWindow::deleteMe, [=, this]() {
         m_graphsMainWins.remove(graphWindow->nameTr());
@@ -394,7 +404,10 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
 
         GraphMainWindow *graphWindow = new GraphMainWindow(customPlotName, prop, m_mainWindow);
         graphWindow->setConfig(m_config);
-        graphWindow->setValuesDescriptions(m_measValDescMap);
+        QMultiMap<QString, MeasuredValueDescription> allDescMap;
+        for (auto map : m_measValDescMap)
+            allDescMap.unite(map);
+        graphWindow->setValuesDescriptions(allDescMap);
 
         dock_widget->setWidget(graphWindow);
 

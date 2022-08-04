@@ -116,8 +116,8 @@ private:
     // bool saveGraphJSON(const QString &pathToJSON);
 
     bool restoreGraphPluginGeometry(const QString &suffix = "");
-    QStringList getValuesNames() const;
-    QStringList getDescriptionsTr() const;
+    QStringList getValuesNames(const QString &tableName = "") const;
+    QStringList getDescriptionsTr(const QString &tableName = "") const;
 
 private:
     // Pointer to superior MainWindow
@@ -149,7 +149,7 @@ private:
     // Data config
     int m_ringBufferSize;
     // Meas Value Name <-> Description
-    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMap<QString, QMultiMap<QString, MeasuredValueDescription>> m_measValDescMap;
     // Table name --> Meas Values Names
     QMultiMap<QString, QString> m_tableMeasValNames;
     //!< Unique Names of values
