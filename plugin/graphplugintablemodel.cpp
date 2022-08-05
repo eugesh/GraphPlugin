@@ -83,6 +83,24 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
     }
     case ClipboardTextRole:
         return {}; // ToDo
+    case Qt::ToolTipRole:
+        if (col == 0) { // Timestamp column
+            return QDateTime::fromMSecsSinceEpoch(m_timeStamps[row]);
+        }
+        for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
+            if (val.name == name)
+                if (val.is_valid) {
+                    if (val.value.type() == QVariant::List) {
+                        auto valuesList = val.value.toList();
+                        QString output;
+                        for (auto element : valuesList) {
+                            output += QString("%1\n").arg(element.toDouble());
+                        }
+                        return output;
+                    }
+                } else {
+                    return "-";
+                }
     default:
         return {};
     }
