@@ -72,10 +72,14 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
         }
         for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
             if (val.name == name)
-                if (val.is_valid)
-                    return val.value; // ToDo * by SI conversion coefficient;
-                else
+                if (val.is_valid) {
+                    if (val.value.type() == QVariant::List)
+                        return val.value.toList().first();
+                    else
+                        return val.value; // ToDo * by SI conversion coefficient;
+                } else {
                     return "-";
+                }
     }
     case ClipboardTextRole:
         return {}; // ToDo
