@@ -407,23 +407,32 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
 {
     auto prop = m_properties.value(name);
 
-    ui->customPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
-    ui->customPlot->axisRect()->setupFullAxesBox(true);
-    ui->customPlot->xAxis->setLabel(prop.x_title);
-    ui->customPlot->yAxis->setLabel(prop.y_title);
-    ui->customPlot->yAxis->setRangeReversed(true);
+    if (! m_valueNameYX.isEmpty()) {
+        addAdditionalWaterfallGraph(name);
+        return;
+    } else {
+        addWaterfallGraph(ui->customPlot, prop);
+    }
+}
 
-    QCPWaterfall *colorMap = new QCPWaterfall(ui->customPlot->xAxis, ui->customPlot->yAxis);
+void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop)
+{
+    cplot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
+    cplot->axisRect()->setupFullAxesBox(true);
+    cplot->xAxis->setLabel(prop.x_title);
+    cplot->yAxis->setLabel(prop.y_title);
+    cplot->yAxis->setRangeReversed(true);
+
+    QCPWaterfall *colorMap = new QCPWaterfall(cplot->xAxis, cplot->yAxis);
     int nx = 256;
     int ny = 16;
     colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
-    // colorMap->data()->setRange(QCPRange(-4, 4), QCPRange(0, 4)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
 
     if (prop.x_phisical_quantity.contains("time", Qt::CaseInsensitive)) {
         m_ticker = QSharedPointer<QCPAxisTickerDateTime>::create();
         m_ticker->setDateTimeFormat(QLatin1String("hh:mm:ss"));
-        ui->customPlot->xAxis->setTicker(m_ticker);
-        ui->customPlot->xAxis->setTickLabels(true);
+        cplot->xAxis->setTicker(m_ticker);
+        cplot->xAxis->setTickLabels(true);
         m_ticker->setTickStepStrategy(QCPAxisTicker::tssMeetTickCount);
     }
 
@@ -439,8 +448,9 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     }*/
 
     // add a color scale:
-    QCPWaterfallScale *colorScale = new QCPWaterfallScale(ui->customPlot);
-    ui->customPlot->plotLayout()->addElement(1, 1, colorScale); // add it to the right of the main axis rect
+    QCPWaterfallScale *colorScale = new QCPWaterfallScale(cplot);
+    int row = cplot->plotLayout()->rowCount() - 1;
+    cplot->plotLayout()->addElement(row, 1, colorScale); // add it to the right of the main axis rect
     colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
     colorMap->setColorScale(colorScale); // associate the color map with the color scale
     colorScale->axis()->setLabel(prop.z_title);
@@ -454,16 +464,31 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     colorMap->rescaleDataRange();
 
     // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
-    QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->customPlot);
-    ui->customPlot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+    QCPMarginGroup *marginGroup = new QCPMarginGroup(cplot);
+    cplot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
     colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+    if (m_valueNameYX.isEmpty()) {
+        QCPMarginGroup *marginGroupCP = new QCPMarginGroup(cplot);
+        QCPMarginGroup *marginGroupCS = new QCPMarginGroup(cplot);
+        cplot->axisRect()->setMarginGroup(QCP::msLeft|QCP::msRight, marginGroupCP);
+        colorScale->setMarginGroup(QCP::msLeft|QCP::msRight, marginGroupCS);
+    } else {
+        QCPMarginGroup *marginGroupCP_right = ui->customPlot->axisRect()->marginGroup(QCP::msRight);
+        QCPMarginGroup *marginGroupCP_left = ui->customPlot->axisRect()->marginGroup(QCP::msLeft);
+        QCPMarginGroup *marginGroupCS_right = m_valueColorMap.last()->colorScale()->marginGroup(QCP::msRight);
+        QCPMarginGroup *marginGroupCS_left = m_valueColorMap.last()->colorScale()->marginGroup(QCP::msLeft);
+        cplot->axisRect()->setMarginGroup(QCP::msRight, marginGroupCP_right);
+        cplot->axisRect()->setMarginGroup(QCP::msLeft, marginGroupCP_left);
+        colorScale->setMarginGroup(QCP::msLeft, marginGroupCS_left);
+        colorScale->setMarginGroup(QCP::msRight, marginGroupCS_right);
+    }
 
     // rescale the key (x) and value (y) axes so the whole color map is visible:
-    ui->customPlot->rescaleAxes();
-    ui->customPlot->replot();
+    cplot->rescaleAxes();
+    cplot->replot();
 
     GraphID gid;
-    gid.graphName = name;
+    gid.graphName = prop.name;
     gid.chNumber = 1;
     gid.xName = prop.x_name;
     gid.yName = prop.y_name;
@@ -471,6 +496,16 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
 
     m_valueColorMap.insert(gid, colorMap);
     m_valueNameYX.insert(prop.y_name, prop.z_name);
+}
+
+void GraphMainWindow::addAdditionalWaterfallGraph(const QString &name)
+{
+    auto prop = m_properties.value(name);
+
+    QCustomPlot *customPlot2 = new QCustomPlot(ui->centralwidget);
+    ui->gridLayout->addWidget(customPlot2, 1, 0, 1, 1);
+
+    addWaterfallGraph(customPlot2, prop);
 }
 
 void GraphMainWindow::addGraph(const QString &name)
@@ -595,6 +630,7 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
 
     if (m_properties.value(name).graphType == GraphColorMap)
         colorMap->addData(timestamp, depths, magnitudes);
+    static_cast<QCustomPlot*>(colorMap->parent())->replot();
 }
 
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
