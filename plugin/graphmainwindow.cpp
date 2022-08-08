@@ -372,7 +372,7 @@ void GraphMainWindow::addXYGraph(const QString &name)
     }
 }
 
-void GraphMainWindow::addParametricGraph(const QString &name, bool isIntegral)
+void GraphMainWindow::addParametricGraph(const QString &name)
 {
     auto prop = m_properties.value(name);
 
@@ -396,7 +396,7 @@ void GraphMainWindow::addParametricGraph(const QString &name, bool isIntegral)
     //ui->customPlot->graph()->setPen(graphPen);
     ui->customPlot->replot();
     // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
-    m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
+    m_valueNameYX.insert(prop.y_name, prop.x_name);
 
     m_valueCurveMap.insert(gid, newParametricCurve);
     newParametricCurve->setScatterStyle(
@@ -405,7 +405,6 @@ void GraphMainWindow::addParametricGraph(const QString &name, bool isIntegral)
 
 void GraphMainWindow::addWaterfallGraph(const QString &name)
 {
-    // setGeometry(400, 250, 542, 390);
     auto prop = m_properties.value(name);
 
     ui->customPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
@@ -429,7 +428,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     }
 
     // now we assign some data, by accessing the QCPColorMapData instance of the color map:
-    double x, y, z;
+    /*double x, y, z;
     for (int xIndex = 0; xIndex < nx; ++xIndex) {
         for (int yIndex = 0; yIndex < ny; ++yIndex) {
             // colorMap->data()->cellToCoord(xIndex, yIndex, &x, &y);
@@ -437,7 +436,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
             // z = 2 * x * (qCos(r + 2) / r - qSin(r + 2) / r); // the B field strength of dipole radiation (modulo physical constants)
             colorMap->data()->setCell(xIndex, yIndex, z);
         }
-    }
+    }*/
 
     // add a color scale:
     QCPWaterfallScale *colorScale = new QCPWaterfallScale(ui->customPlot);
@@ -471,7 +470,7 @@ void GraphMainWindow::addWaterfallGraph(const QString &name)
     gid.zName = prop.z_name;
 
     m_valueColorMap.insert(gid, colorMap);
-    m_valueNameYX.insertMulti(prop.y_name, prop.z_name);
+    m_valueNameYX.insert(prop.y_name, prop.z_name);
 }
 
 void GraphMainWindow::addGraph(const QString &name)
