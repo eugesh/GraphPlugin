@@ -94,16 +94,12 @@ private:
     Ui::GraphMainWindow *ui;
     QSharedPointer<QCPAxisTickerDateTime> m_ticker;
     QString m_pathToCSV;
-    //!< Value name, pointer to Graph
-    // QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
+    //!< Value descriptor, pointer to Graph
     QMap<GraphID, QCPGraph*> m_valueGraphMap;
     // Parametric curves (x, y, t)
     QMap<GraphID, QCPCurve*> m_valueCurveMap;
-    // QMap<GraphID, QCPColorMap*> m_valueColorMap;
     QMap<GraphID, QCPWaterfall*> m_valueColorMap;
-    // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
-    //QMap<QString, QString> m_valueNameXY;
     QMultiMap<QString, QString> m_valueNameYX;
     // Graph name -> properties
     QMultiMap<QString, GraphProperties> m_properties;

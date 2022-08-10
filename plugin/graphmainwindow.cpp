@@ -436,17 +436,6 @@ void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphPropertie
         m_ticker->setTickStepStrategy(QCPAxisTicker::tssMeetTickCount);
     }
 
-    // now we assign some data, by accessing the QCPColorMapData instance of the color map:
-    /*double x, y, z;
-    for (int xIndex = 0; xIndex < nx; ++xIndex) {
-        for (int yIndex = 0; yIndex < ny; ++yIndex) {
-            // colorMap->data()->cellToCoord(xIndex, yIndex, &x, &y);
-            // double r = 3 * qSqrt(x * x + y * y) + 1e-2;
-            // z = 2 * x * (qCos(r + 2) / r - qSin(r + 2) / r); // the B field strength of dipole radiation (modulo physical constants)
-            colorMap->data()->setCell(xIndex, yIndex, z);
-        }
-    }*/
-
     // add a color scale:
     QCPWaterfallScale *colorScale = new QCPWaterfallScale(cplot);
     int row = cplot->plotLayout()->rowCount() - 1;
@@ -467,21 +456,6 @@ void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphPropertie
     QCPMarginGroup *marginGroup = new QCPMarginGroup(cplot);
     cplot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
     colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-    if (m_valueNameYX.isEmpty()) {
-        QCPMarginGroup *marginGroupCP = new QCPMarginGroup(cplot);
-        QCPMarginGroup *marginGroupCS = new QCPMarginGroup(cplot);
-        cplot->axisRect()->setMarginGroup(QCP::msLeft|QCP::msRight, marginGroupCP);
-        colorScale->setMarginGroup(QCP::msLeft|QCP::msRight, marginGroupCS);
-    } else {
-        QCPMarginGroup *marginGroupCP_right = ui->customPlot->axisRect()->marginGroup(QCP::msRight);
-        QCPMarginGroup *marginGroupCP_left = ui->customPlot->axisRect()->marginGroup(QCP::msLeft);
-        QCPMarginGroup *marginGroupCS_right = m_valueColorMap.last()->colorScale()->marginGroup(QCP::msRight);
-        QCPMarginGroup *marginGroupCS_left = m_valueColorMap.last()->colorScale()->marginGroup(QCP::msLeft);
-        cplot->axisRect()->setMarginGroup(QCP::msRight, marginGroupCP_right);
-        cplot->axisRect()->setMarginGroup(QCP::msLeft, marginGroupCP_left);
-        colorScale->setMarginGroup(QCP::msLeft, marginGroupCS_left);
-        colorScale->setMarginGroup(QCP::msRight, marginGroupCS_right);
-    }
 
     // rescale the key (x) and value (y) axes so the whole color map is visible:
     cplot->rescaleAxes();
@@ -628,8 +602,15 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
     for (auto val : y)
         magnitudes << val.toDouble();
 
+    // Refresh size of Color Map if changed
+    if (Q_UNLIKELY(magnitudes.count() != colorMap->data()->valueSize()))
+        colorMap->data()->setSize(colorMap->data()->keySize(), magnitudes.count());
+
+    // Add data
     if (m_properties.value(name).graphType == GraphColorMap)
         colorMap->addData(timestamp, depths, magnitudes);
+
+    // Replot
     static_cast<QCustomPlot*>(colorMap->parent())->replot();
 }
 
