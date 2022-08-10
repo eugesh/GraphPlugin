@@ -612,6 +612,31 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
 
     // Replot
     static_cast<QCustomPlot*>(colorMap->parent())->replot();
+
+    // Align if there are 2 Color Maps
+    if (m_valueColorMap.count() > 1)
+        alignColorMaps();
+}
+
+void GraphMainWindow::alignColorMaps()
+{
+    auto firstMap = m_valueColorMap.first();
+    auto secondMap = m_valueColorMap.last();
+
+    auto firstW = firstMap->colorScale()->axis()->margin();
+    auto secondW = secondMap->colorScale()->axis()->margin();
+
+    if (firstW > secondW) {
+        auto dx = firstW - secondW;
+        firstMap->colorScale()->setMargins(QMargins(0, 0, 0, 0));
+        secondMap->colorScale()->setMargins(QMargins(0, 0, dx, 0));
+    }
+
+    if (firstW < secondW) {
+        auto dx = secondW - firstW;
+        secondMap->colorScale()->setMargins(QMargins(0, 0, 0, 0));
+        firstMap->colorScale()->setMargins(QMargins(0, 0, dx, 0));
+    }
 }
 
 void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
