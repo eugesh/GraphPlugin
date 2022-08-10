@@ -107,6 +107,13 @@ bool GraphPlugin::loadJSONs(QStringList subdirsNames)
 
                 // Read JSON for Table and it's model
                 loadTableJSON(QString("%1/%2/%3/%4").arg(allConfigsFolder).arg(dirName).arg(pluginConfigsFolder).arg("plugin_config.json"), dirName.toUpper());
+
+                // Read JSON for Vector Indicators Board description
+                auto indPath = QString("%1/%2/%3/%4").arg(allConfigsFolder).arg(dirName).arg(pluginConfigsFolder).arg(arrayIndicatorsJson);
+                loadVectorIndicatorsJSON(indPath);
+
+                // Read JSON for Score Board description
+                loadSensorsMonitorJSON("");
             }
         }
         restoreGraphPluginGeometry(subdirsNames.join("_"));
