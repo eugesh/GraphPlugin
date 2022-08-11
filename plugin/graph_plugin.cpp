@@ -171,11 +171,13 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
     }
 #endif
     // m_mainWindow->showNormal();
-    m_mainWindow->showMaximized();
     // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry());
 
     auto state = settings.value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
+
+    if (m_mainWindow->isFullScreen())
+        m_mainWindow->showMaximized();
 
     settings.endGroup();
 
