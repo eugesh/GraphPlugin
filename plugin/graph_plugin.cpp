@@ -119,7 +119,7 @@ bool GraphPlugin::loadJSONs(QStringList subdirsNames)
                 loadVectorIndicatorsJSON(indPath);
 
                 // Read JSON for Score Board description
-                loadSensorsMonitorJSON("");
+                loadSensorsMonitorJSON("", dirName.toUpper());
             }
         }
         restoreGraphPluginGeometry(subdirsNames.join("_"));
@@ -283,13 +283,17 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     return true;
 }
 
-bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON)
+bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QString &tableName)
 {
     m_digitalBoard = new DigitalDisplayBoard();
     m_digitalBoard->setConfig(m_config);
     QMultiMap<QString, MeasuredValueDescription> allDescMap;
-    for (auto map : m_measValDescMap)
-        allDescMap.unite(map);
+    if (tableName.isEmpty()) {
+        for (auto map : m_measValDescMap)
+            allDescMap.unite(map);
+    } else {
+        allDescMap = m_measValDescMap[tableName];
+    }
     m_digitalBoard->setValuesDescriptions(allDescMap);
     bool is_ok = m_digitalBoard->initFromJSON("");
 

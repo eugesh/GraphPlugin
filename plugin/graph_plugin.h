@@ -110,7 +110,7 @@ private:
     // Read each JSON for graph plot window
     bool loadGraphJSON(const QString &pathToJSON);
     bool loadTableJSON(const QString &pathToJSON, const QString &tableName = "");
-    bool loadSensorsMonitorJSON(const QString &pathToJSON);
+    bool loadSensorsMonitorJSON(const QString &pathToJSON, const QString &tableName = "");
     bool loadVectorIndicatorsJSON(const QString &pathToJSON);
 
     // bool saveGraphJSON(const QString &pathToJSON);
