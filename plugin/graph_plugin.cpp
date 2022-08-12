@@ -87,7 +87,13 @@ bool GraphPlugin::loadJSONs(QStringList subdirsNames)
     m_config = new GraphPluginConfig(siPath, prefPath);
 
     if (!subdirsNames.isEmpty()) {
-        QDir allConfigs(QCoreApplication::applicationDirPath() + "/" + allConfigsFolder);
+        auto appPath = QCoreApplication::applicationDirPath();
+        QDir allConfigs(appPath);
+#ifdef Q_OS_WIN
+        if (appPath.endsWith("debug") || appPath.endsWith("release"))
+            allConfigs.cd("..");
+#endif
+        allConfigs.cd(allConfigsFolder);
         const QStringList entries = allConfigs.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         for (const QString &dirName : entries) {
             qDebug() << dirName;
