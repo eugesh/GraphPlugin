@@ -40,7 +40,7 @@ void ChannelConfigurationDialog::onComboBoxPhyscsChanged(const QString &physValN
     emit edited();
 
     for (auto unitName : m_config->measurementUnits(physValName))
-        ui->comboBox_units->addItem(unitName["name_ru"].toString(), unitName["name"].toString());
+        ui->comboBox_units->addItem(unitName.value("name_ru").toString(), unitName.value("name").toString());
 }
 
 QString ChannelConfigurationDialog::measurementValueName() const
