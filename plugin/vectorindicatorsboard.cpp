@@ -1,7 +1,7 @@
 #include "common.h"
 #include "graphpluginconfig.h"
 #include "vectorindicatorsboard.h"
-#include "vectorindicatorwidget.h".h"
+#include "vectorindicatorwidget.h"
 #include "ui_vectorindicatorsboard.h"
 
 #include <QDebug>
@@ -13,6 +13,10 @@
 #include <QJsonObject>
 #include <QSettings>
 #include <cmath>
+
+#ifndef M_PI
+#define M_PI		3.14159265358979323846
+#endif
 
 VectorIndicatorsBoard::VectorIndicatorsBoard(QWidget *parent) :
     QMainWindow(parent),
