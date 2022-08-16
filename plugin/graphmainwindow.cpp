@@ -32,6 +32,10 @@ void GraphMainWindow::commonInit()
 
     m_JSONPath = "./configs/graphs";
 
+    ui->customPlot->setContentsMargins(0, 0, 0, 0);
+    //ui->customPlot->layout()->setContentsMargins(0, 0, 0, 0);
+    setContentsMargins(0, 0, 0, 0);
+
     connect(ui->actionSaveJSON, &QAction::triggered, this, &GraphMainWindow::saveJSONdialog);
     connect(ui->actionSaveCSV, &QAction::triggered, this, &GraphMainWindow::saveCSVdialog);
     connect(ui->actionSaveImage, &QAction::triggered, this, &GraphMainWindow::saveImageDialog);
