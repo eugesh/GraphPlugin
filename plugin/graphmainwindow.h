@@ -65,6 +65,7 @@ public slots:
     void saveJSONdialog();
     void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
+    void add2dData(const QList<MeasuredValue> &val);
     void addGraph(const GraphProperties &prop);
     void onRemoveJSON();
 
@@ -89,6 +90,7 @@ private:
     void updateGraphs(const GraphID& id, double x, double y);
     void updateCurves(const GraphID& id, uint64_t ts, double x, double y);
     void updateColorMaps(const GraphID& id, uint64_t ts, QVariantList x, QVariantList y);
+    void updateColorMaps(const GraphID& gid, uint64_t timestamp, const QMap<int, double> &x, const QMap<int, double> &y);
     void alignColorMaps();
 
 private:

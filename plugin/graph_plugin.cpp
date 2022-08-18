@@ -268,6 +268,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
             connect(m_tableModelMap.value(key), &GraphPluginTableModel::packetFormed, m_tableViewMap.value(key), &QAbstractItemView::scrollToBottom);
         }*/
         connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
+        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::add2dData);
         connect(tableModel, &GraphPluginTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
     }
 

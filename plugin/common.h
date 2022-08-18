@@ -81,6 +81,7 @@ struct GraphProperties {
     QColor color;
     GraphType graphType;
     QCPColorGradient::GradientPreset colorScale;
+    QString indexName;
     // bool is_parametric = false;
     // bool is_integral = false;
 };

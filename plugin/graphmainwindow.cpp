@@ -139,6 +139,7 @@ bool GraphMainWindow::readJSON(const QString &path)
         properties.x_unit = plotObject["x_unit"].toString();
         properties.y_unit = plotObject["y_unit"].toString();
         properties.z_unit = plotObject["z_unit"].toString();
+        properties.indexName = plotObject["index_name"].toString();
         properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
         properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
         properties.z_phisical_quantity = plotObject["z_phisical_quantity"].toString();
@@ -206,10 +207,14 @@ bool GraphMainWindow::saveJSON(const QString &path) const
         graphObject["name"] = prop.name;
         graphObject["x_name"] = prop.x_name;
         graphObject["y_name"] = prop.y_name;
+        graphObject["z_name"] = prop.z_name;
         graphObject["x_title"] = prop.x_title;
         graphObject["y_title"] = prop.y_title;
+        graphObject["z_title"] = prop.z_title;
         graphObject["x_unit"] = prop.x_unit;
         graphObject["y_unit"] = prop.y_unit;
+        graphObject["z_unit"] = prop.z_unit;
+        graphObject["index_name"] = prop.indexName;
         graphObject["x_phisical_quantity"] = prop.x_phisical_quantity;
         graphObject["y_phisical_quantity"] = prop.y_phisical_quantity;
         graphObject["x_dir"] = prop.x_dir == LEFT ? "left" : "right";
@@ -622,6 +627,46 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
         alignColorMaps();
 }
 
+void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, const QMap<int, double> &x, const QMap<int, double> &y)
+{
+    QCPWaterfall *colorMap = nullptr;
+
+    colorMap = m_valueColorMap[gid];
+
+    QString name;
+    if (gid.graphName.isEmpty()) {
+        name = m_valueColorMap.find(gid).key().graphName;
+    }
+
+    if (!colorMap)
+        return;
+
+    // Depth
+    QVector<double> depths(colorMap->data()->valueSize(), NAN);
+    for (auto xKey : x.keys())
+        depths[xKey] = x.value(xKey);
+
+    // Magnitudes or Angles
+    QVector<double> magnitudes(colorMap->data()->valueSize(), NAN);
+    for (auto yKey : y.keys())
+        magnitudes[yKey] = y.value(yKey);
+
+    // Refresh size of Color Map if changed
+    if (Q_UNLIKELY(magnitudes.count() != colorMap->data()->valueSize()))
+        colorMap->data()->setSize(colorMap->data()->keySize(), qMax(magnitudes.count(), colorMap->data()->valueSize()));
+
+    // Add data
+    if (m_properties.value(name).graphType == GraphColorMap)
+        colorMap->addData(timestamp, depths.toList(), magnitudes.toList());
+
+    // Replot
+    static_cast<QCustomPlot*>(colorMap->parent())->replot();
+
+    // Align if there are 2 Color Maps
+    if (m_valueColorMap.count() > 1)
+        alignColorMaps();
+}
+
 void GraphMainWindow::alignColorMaps()
 {
     auto firstMap = m_valueColorMap.first();
@@ -673,16 +718,66 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                         if (val2.value.type() == QVariant::List)
                             value2 = val2.value.toList().first().toDouble();
                         auto value1 = val1.value.toDouble();
-                        if (val1.value.type() == QVariant::List) {
+                        if (val1.value.type() == QVariant::List)
                             value1 = val1.value.toList().first().toDouble();
+                        updateCurves(gid, val2.timestamp, value2, value1);
+                    }
+                }
+            }
+        }
+    }
+
+    // Update graphs
+    ui->customPlot->replot();
+}
+
+void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
+{
+    if (m_properties.first().graphType != GraphColorMap)
+        // For Color Maps only
+        return;
+
+    for (MeasuredValue val1 : packet) {
+        if (!val1.is_valid)
+            continue;
+        for (QString val2_name : m_valueNameYX.values(val1.name)) {
+            // If X is time
+            if (val2_name.contains("time")) {
+                GraphID gid;
+                gid.xName = tr("time");
+                gid.yName = val1.name;
+                gid.chNumber = val1.channel;
+                ui->customPlot->xAxis->setTickLabels(true);
+            } else {
+                for (MeasuredValue val2 : packet) {
+                    if (!val2.is_valid)
+                        continue;
+                    if (val2_name == val2.name) {
+                        if (val1.value.type() == QVariant::List) {
                             GraphID gid_;
                             gid_.xName = "time";
                             gid_.yName = val1.name;
                             gid_.zName = val2.name;
                             gid_.chNumber = 1;
-                            updateColorMaps(gid_, val2.timestamp, val1.value.toList(), val2.value.toList());
+                            QString name;
+                            if (gid_.graphName.isEmpty()) {
+                                name = m_valueColorMap.find(gid_).key().graphName;
+                            }
+                            auto indexName = m_properties.value(name).indexName;
+                            QMap<int, double> yMap, zMap;
+                            for (MeasuredValue val_index : packet) {
+                                if (val_index.name.toUpper() ==  indexName.toUpper()) {
+                                    for (int i = 0; i < val_index.value.toList().size(); ++i) {
+                                        int index = val_index.value.toList()[i].toInt() - 1;
+                                        double y = val1.value.toList()[i].toDouble();
+                                        double z = val2.value.toList()[i].toDouble();
+                                        yMap.insert(index, y);
+                                        zMap.insert(index, z);
+                                    }
+                                }
+                            }
+                            updateColorMaps(gid_, val2.timestamp, yMap, zMap);
                         }
-                        updateCurves(gid, val2.timestamp, value2, value1);
                     }
                 }
             }
