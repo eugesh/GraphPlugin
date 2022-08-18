@@ -50,7 +50,7 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
 
     // Y
     if (yVec.size() != data()->valueSize())
-        data()->setValueSize(yVec.size());
+        data()->setValueSize(qMax(yVec.size(), data()->valueSize()));
 
     if (m_timeVector.size() < 2) {
         double maxY = qMax(yVec.first(), yVec.last());

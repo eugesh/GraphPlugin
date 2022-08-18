@@ -608,7 +608,7 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
 
     // Refresh size of Color Map if changed
     if (Q_UNLIKELY(magnitudes.count() != colorMap->data()->valueSize()))
-        colorMap->data()->setSize(colorMap->data()->keySize(), magnitudes.count());
+        colorMap->data()->setSize(colorMap->data()->keySize(), qMax(magnitudes.count(), colorMap->data()->valueSize()));
 
     // Add data
     if (m_properties.value(name).graphType == GraphColorMap)
