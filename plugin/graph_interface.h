@@ -54,14 +54,17 @@
 #include <QObject>
 #include <QtPlugin>
 #include <QString>
+#include <QVariant>
 
 struct MeasuredValue {
     uint64_t timestamp; //!< [мс], временная метка, возможно одна для разных параметров (одна на пакет)
     QString name; //!< Уникальное имя измеряемого параметра (velocity, time, temperature, pressure)
     int SI_to_current_mult = 1; //!< Коэффициент преобразования в единицу СИ, по умолчанию 1. [current / SI]
     int SI_to_current_shift = 0; //!< Сдвиг при преобразовании в единицу СИ, по умолчанию 0. [current - SI]
-    double value; //!< Измеренное значение
+    // double value; //!< Измеренное значение
+    QVariant value; //!< Измеренное значение или вектор значений (QVariantList)
     int channel; //!< Номер канала устройства
+    bool is_valid = true;
 };
 
 class QDockWidget;
@@ -82,12 +85,12 @@ public:
     virtual QList<QDockWidget*> dockWindows() const = 0;
     virtual void setMainWindow(QMainWindow*) = 0;
     // Call it after setMainWindow
-    virtual bool loadJSONs() = 0;
-    virtual bool saveGraphPluginGeometry() = 0;
+    virtual bool loadJSONs(QStringList subdirsNames = {}) = 0;
+    virtual bool saveGraphPluginGeometry(const QString &suffix = "") = 0;
     virtual QString aboutInfo() = 0;
     // Change size of packet at runtime
-    virtual void setPacketSize(int size) = 0;
-    virtual int packetSize() const = 0;
+    virtual void setPacketSize(int size, const QString tableName = "") = 0;
+    virtual int packetSize(const QString tableName = "") const = 0;
 
 //signals:
     //void newDockWindow(QDockWidget*);

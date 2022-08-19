@@ -64,6 +64,7 @@ class GraphMainWindow;
 class GraphPluginConfig;
 class GraphPluginTableModel;
 class GraphTableView;
+class VectorIndicatorsBoard;
 struct GraphProperties;
 struct MeasuredValueDescription;
 class QTableView;
@@ -88,33 +89,35 @@ public:
     //!<
     virtual void setMainWindow(QMainWindow *mw) override;
 
-    bool loadJSONs() override;
-    bool saveGraphPluginGeometry() override;
+    bool loadJSONs(QStringList subdirsNames = {}) override;
+    bool saveGraphPluginGeometry(const QString &suffix = "") override;
     QString aboutInfo() override;
     void setMode(GraphPluginMode mode = GRAPH_DATA_SYNCH);
 
-    virtual void setPacketSize(int size) override;
-    virtual int packetSize() const override;
+    virtual void setPacketSize(int size, const QString tableName = "") override;
+    virtual int packetSize(const QString tableName = "") const override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
+    void onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop);
 
 private:
     // Values types, measurement units
-    bool loadValuesJSON(const QString &pathToJSON);
+    bool loadValuesJSON(const QString &pathToJSON, const QString &tableName = "");
     bool loadConfig(const QString &pathToJSON);
     // Common SI measuring units
     bool loadSI(const QString &pathToJSON);
     // Read each JSON for graph plot window
     bool loadGraphJSON(const QString &pathToJSON);
-    bool loadTableJSON(const QString &pathToJSON);
-    bool loadSensorsMonitorJSON(const QString &pathToJSON);
+    bool loadTableJSON(const QString &pathToJSON, const QString &tableName = "");
+    bool loadSensorsMonitorJSON(const QString &pathToJSON, const QString &tableName = "");
+    bool loadVectorIndicatorsJSON(const QString &pathToJSON);
 
     // bool saveGraphJSON(const QString &pathToJSON);
 
-    bool restoreGraphPluginGeometry();
-    QStringList getValuesNames() const;
-    QStringList getDescriptionsTr() const;
+    bool restoreGraphPluginGeometry(const QString &suffix = "");
+    QStringList getValuesNames(const QString &tableName = "") const;
+    QStringList getDescriptionsTr(const QString &tableName = "") const;
 
 private:
     // Pointer to superior MainWindow
@@ -122,42 +125,39 @@ private:
     // Pointers to DockWindows and Toolbar have to be added to superior MainWindow
     // Graphs
     QMap<QString, QDockWidget*> m_graphsDocks;
-    // QList<GraphMainWindow*> m_graphsMainWins;
     QMap<QString, GraphMainWindow*> m_graphsMainWins;
     // ToolBar
     QToolBar *m_toolbar = nullptr;
-    // Table
-    QDockWidget *m_tableDock = nullptr;
-    GraphPluginTableModel *m_tableModel = nullptr;
-    // QTableView *m_tableView;
-    GraphTableView *m_tableView = nullptr;
+    // Table name -> Table Dock
+    QMap<QString, QDockWidget*> m_tableDockMap;
+    // Table name -> Table Model
+    QMap<QString, GraphPluginTableModel*> m_tableModelMap;
+    // Table name -> Table View
+    QMap<QString, GraphTableView*> m_tableViewMap;
 
     QDockWidget *m_boardDock = nullptr;
     DigitalDisplayBoard *m_digitalBoard = nullptr;
-    // QList<GraphMainWindow*> m_graphMainWins;
+
+    QDockWidget *m_vectorIndictorsDock = nullptr;
+    VectorIndicatorsBoard *m_vectorIndicatorsBoard = nullptr;
 
     // Config
     GraphPluginConfig *m_config = nullptr;
 
     // Data Dispatcher
-    //!< Timestamp -> value, one key - multple values
+    //!< Timestamp -> value, one key - multiple values
     // Data config
     int m_ringBufferSize;
-    QMap<QString, MeasuredValueDescription> m_measValDescMap;
+    // Meas Value Name <-> Description
+    QMap<QString, QMultiMap<QString, MeasuredValueDescription>> m_measValDescMap;
+    // Table name --> Meas Values Names
+    QMultiMap<QString, QString> m_tableMeasValNames;
     //!< Unique Names of values
     QList<QString> m_valueNames;
     //!< Values descriptions
     QList<QString> m_valueDescs;
 
-    // Received Data
-    // QMap<int64_t, QString> m_dataMap;
-    QList<int64_t> m_timeStamps;
     GraphPluginMode m_synchMode = GRAPH_DATA_SYNCH;
 };
-
-
-//signals:
-//  void newDockWindow(QDockWidget*);
-// virtual QObject* getObject() override { return this; }
 
 #endif

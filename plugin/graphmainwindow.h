@@ -11,24 +11,6 @@ namespace Ui {
 class GraphMainWindow;
 }
 
-enum GraphDir {
-    LEFT,
-    UP,
-    RIGHT,
-    DOWN
-};
-
-enum GraphUpdateMode {
-    SHOW_ALL,
-    SHOW_LAST_N,
-    DONT_UPDATE
-};
-
-enum GraphScaleType {
-    LIN,
-    LOG
-};
-
 // Unique ID of measured value
 struct valID {
     // Number of channel
@@ -45,30 +27,11 @@ struct GraphID {
     // Names of axes
     QString xName;
     QString yName;
-};
-
-struct GraphProperties {
-    QString name;
-    QString x_name;
-    QString y_name;
-    QString x_title;
-    QString y_title;
-    QString x_unit;
-    QString y_unit;
-    QString x_phisical_quantity;
-    QString y_phisical_quantity;
-    GraphDir x_dir;
-    GraphDir y_dir;
-    unsigned int total_N;
-    unsigned int last_N_limit;
-    GraphUpdateMode update_mode;
-    GraphScaleType x_scale;
-    GraphScaleType y_scale;
-    QVector<int> channels; // e.g. 1, 2, 3, 4
-    QColor color;
+    QString zName;
 };
 
 class GraphPluginConfig;
+class QCPWaterfall;
 
 inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
@@ -76,8 +39,10 @@ inline bool operator<(const GraphID &g1, const GraphID &g2)
         return g1.chNumber < g2.chNumber;
     else if (g1.yName != g2.yName)
         return g1.yName < g2.yName;
-    else
+    else if (g1.xName != g2.xName)
         return g1.xName < g2.xName;
+    else
+        return g1.zName < g2.zName;
 }
 
 class GraphMainWindow : public QMainWindow
@@ -92,7 +57,7 @@ public:
     bool loadCSV();
     QString nameTr() const;
     void setConfig(GraphPluginConfig *config);
-    bool setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd);
+    bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
 
 public slots:
     void loadCSVdialog();
@@ -100,6 +65,7 @@ public slots:
     void saveJSONdialog();
     void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
+    void add2dData(const QList<MeasuredValue> &val);
     void addGraph(const GraphProperties &prop);
     void onRemoveJSON();
 
@@ -114,22 +80,32 @@ private:
     bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);
+    void addXYGraph(const QString &name);
+    void addParametricGraph(const QString &name);
+    void addWaterfallGraph(const QString &name);
+    void addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop);
+    void addAdditionalWaterfallGraph(const QString &name);
     void saveCSV(const QString &name) const;
     void saveImage(const QString &name) const;
+    void updateGraphs(const GraphID& id, double x, double y);
+    void updateCurves(const GraphID& id, uint64_t ts, double x, double y);
+    void updateColorMaps(const GraphID& id, uint64_t ts, QVariantList x, QVariantList y);
+    void updateColorMaps(const GraphID& gid, uint64_t timestamp, const QMap<int, double> &x, const QMap<int, double> &y);
+    void alignColorMaps();
 
 private:
     Ui::GraphMainWindow *ui;
     QSharedPointer<QCPAxisTickerDateTime> m_ticker;
     QString m_pathToCSV;
-    //!< Value name, pointer to Graph
-    // QMap<QPair<QString, QString>, QCPGraph*> m_valueGraphMap;
+    //!< Value descriptor, pointer to Graph
     QMap<GraphID, QCPGraph*> m_valueGraphMap;
-    // QMap<QString, QPair<QString, QString> > m_graphXYnamesMap;
+    // Parametric curves (x, y, t)
+    QMap<GraphID, QCPCurve*> m_valueCurveMap;
+    QMap<GraphID, QCPWaterfall*> m_valueColorMap;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
-    //QMap<QString, QString> m_valueNameXY;
-    QMap<QString, QString> m_valueNameYX;
+    QMultiMap<QString, QString> m_valueNameYX;
     // Graph name -> properties
-    QMap<QString, GraphProperties> m_properties;
+    QMultiMap<QString, GraphProperties> m_properties;
     QString m_JSONPath;
     QString m_CSVPath;
     QString m_ImagePath;
@@ -137,7 +113,7 @@ private:
     bool m_isLoadFromJson = false;
     bool m_hasUpdate = false;
     GraphPluginConfig *m_config;
-    QMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
 };
 
 #endif // GRAPHMAINWINDOW_H

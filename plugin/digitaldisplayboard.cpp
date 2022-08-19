@@ -93,7 +93,7 @@ void DigitalDisplayBoard::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
-bool DigitalDisplayBoard::setValuesDescriptions(const QMap<QString, MeasuredValueDescription> &mvd)
+bool DigitalDisplayBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
 
@@ -105,7 +105,7 @@ bool DigitalDisplayBoard::setValuesDescriptions(const QMap<QString, MeasuredValu
 bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
 {
     for (auto name : m_activeSensorsNames) {
-        auto desc = m_measValDescMap[name];
+        auto desc = m_measValDescMap.value(name);
 
         auto title = desc.desc_ru;
         //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
@@ -135,14 +135,22 @@ bool DigitalDisplayBoard::readJSON()
 void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto val : vals) {
-        /*if (val.name.isEmpty()) {
-            qWarning() << "Warning: empty MeasuredValue name!";
+        if (val.value.type() == QVariant::List) {
+            if (val.value.toList().size() == 1 && val.is_valid) {
+                auto t = val.value.toList().first().toDouble();
+                m_items[val.name]->setCurrentValue(t);
+                m_items[val.name]->setEnabled(true);
+            } else {
+                continue;
+                m_items[val.name]->setEnabled(false);
+            }
+        } else if (!m_items.contains(val.name) || val.value.type() == QVariant::Map) {
             continue;
+        } else if (val.is_valid) {
+            m_items[val.name]->setCurrentValue(val.value.toDouble());
+            m_items[val.name]->setEnabled(true);
         } else {
-            m_items[val.name]->setCurrentValue(val.value);
-        }*/
-
-        if (m_items.contains(val.name))
-            m_items[val.name]->setCurrentValue(val.value);
+            m_items[val.name]->setEnabled(false);
+        }
     }
 }

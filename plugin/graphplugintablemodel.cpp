@@ -16,18 +16,26 @@ GraphPluginTableModel::GraphPluginTableModel(const QStringList &titles, const QS
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
 {
-    //m_dataMap[val.timestamp] = val;
     m_dataMap.insertMulti(val.timestamp, val);
 
+    while (rowCount() > m_ringBufferSize) {
+        beginRemoveRows({}, 0, rowCount() - m_ringBufferSize - 1);
+        auto firstT = m_timeStamps.dequeue();
+        while (m_dataMap.contains(firstT))
+            m_dataMap.remove(firstT);
+        endRemoveRows();
+    }
+
     if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
-        emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         addRow(m_dataMap.values(val.timestamp));
+        emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         return;
     }
 
     // Unique timestamps
-    if (!m_timeStamps.contains(val.timestamp))
-        m_timeStamps.append(val.timestamp);
+    // if (!m_timeStamps.contains(val.timestamp)) // Correct but this is O(N)
+    if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
+        m_timeStamps.enqueue(val.timestamp);
 }
 
 void GraphPluginTableModel::addRow(const QList<MeasuredValue> &packet)
@@ -64,10 +72,35 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
         }
         for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
             if (val.name == name)
-                return val.value; // ToDo * by SI convertion coefficient;
+                if (val.is_valid) {
+                    if (val.value.type() == QVariant::List)
+                        return val.value.toList().first();
+                    else
+                        return val.value; // ToDo * by SI conversion coefficient;
+                } else {
+                    return "-";
+                }
     }
     case ClipboardTextRole:
         return {}; // ToDo
+    case Qt::ToolTipRole:
+        if (col == 0) { // Timestamp column
+            return QDateTime::fromMSecsSinceEpoch(m_timeStamps[row]);
+        }
+        for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
+            if (val.name == name)
+                if (val.is_valid) {
+                    if (val.value.type() == QVariant::List) {
+                        auto valuesList = val.value.toList();
+                        QString output;
+                        for (auto element : valuesList) {
+                            output += QString("%1\n").arg(element.toDouble());
+                        }
+                        return output;
+                    }
+                } else {
+                    return "-";
+                }
     default:
         return {};
     }

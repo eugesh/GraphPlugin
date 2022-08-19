@@ -94,7 +94,120 @@ QColor nameToColorConverter(const QString &name)
     }
 }
 
- QMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
+GraphType nameToGraphTypeConverter(const QString &name)
+{
+    if (name.contains("scatter", Qt::CaseInsensitive))
+        return GraphType::GraphScatter;
+    else if (name.contains("polar", Qt::CaseInsensitive))
+        return GraphType::GraphParametric;
+    else if (name.contains("param", Qt::CaseInsensitive))
+        return GraphType::GraphParametric;
+    else if (name.contains("integr", Qt::CaseInsensitive))
+        return GraphType::GraphIntegral;
+    else if(name.contains("map", Qt::CaseInsensitive))
+        return GraphType::GraphColorMap;
+
+    // Default
+    return GraphType::GraphScatter;
+}
+
+QString graphTypeToNameConverter(const GraphType &type)
+{
+    switch (type) {
+    case GraphScatter:
+        return QString("scatter");
+    case GraphPolar:
+        return QString("polar");
+    case GraphParametric:
+        return QString("parametric");
+    case GraphIntegral:
+        return QString("integral");
+    case GraphColorMap:
+        return QString("colorMap");
+    default:
+        return QString("scatter");
+    }
+}
+
+QCPColorGradient::GradientPreset nameToColorScaleTypeConverter(const QString &name)
+{
+    /*
+     * enum GradientPreset { gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
+                        ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
+                        ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)
+                        ,gpNight     ///< Continuous lightness from black over weak blueish colors to white (suited for non-biased data representation)
+                        ,gpCandy     ///< Blue over pink to white
+                        ,gpGeography ///< Colors suitable to represent different elevations on geographical maps
+                        ,gpIon       ///< Half hue spectrum from black over purple to blue and finally green (creates banding illusion but allows more precise magnitude estimates)
+                        ,gpThermal   ///< Colors suitable for thermal imaging, ranging from dark blue over purple to orange, yellow and white
+                        ,gpPolar     ///< Colors suitable to emphasize polarity around the center, with blue for negative, black in the middle and red for positive values
+                        ,gpSpectrum  ///< An approximation of the visible light spectrum (creates banding illusion but allows more precise magnitude estimates)
+                        ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
+                        ,gpHues
+     */
+    if (name.contains("grayscale", Qt::CaseInsensitive))
+        return QCPColorGradient::gpGrayscale;
+    else if (name.contains("hot", Qt::CaseInsensitive))
+        return QCPColorGradient::gpHot;
+    else if (name.contains("cold", Qt::CaseInsensitive))
+        return QCPColorGradient::gpCold;
+    else if(name.contains("night", Qt::CaseInsensitive))
+        return QCPColorGradient::gpNight;
+    else if(name.contains("candy", Qt::CaseInsensitive))
+        return QCPColorGradient::gpCandy;
+    else if (name.contains("geo", Qt::CaseInsensitive))
+        return QCPColorGradient::gpGeography;
+    else if (name.contains("ion", Qt::CaseInsensitive))
+        return QCPColorGradient::gpIon;
+    else if(name.contains("thermal", Qt::CaseInsensitive))
+        return QCPColorGradient::gpThermal;
+    else if(name.contains("polar", Qt::CaseInsensitive))
+        return QCPColorGradient::gpPolar;
+    else if (name.contains("spectr", Qt::CaseInsensitive))
+        return QCPColorGradient::gpSpectrum;
+    else if(name.contains("jet", Qt::CaseInsensitive))
+        return QCPColorGradient::gpJet;
+    else if(name.contains("hue", Qt::CaseInsensitive))
+        return QCPColorGradient::gpHues;
+
+    // Default
+    return QCPColorGradient::gpJet;
+}
+
+QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &type)
+{
+    switch (type) {
+    case QCPColorGradient::gpGrayscale:
+        return QString("grayscale");
+    case QCPColorGradient::gpHot:
+        return QString("hot");
+    case QCPColorGradient::gpCold:
+        return QString("cold");
+    case QCPColorGradient::gpNight:
+        return QString("night");
+    case QCPColorGradient::gpCandy:
+        return QString("candy");
+    case QCPColorGradient::gpGeography:
+        return QString("geography");
+    case QCPColorGradient::gpIon:
+        return QString("ion");
+    case QCPColorGradient::gpThermal:
+        return QString("thermal");
+    case QCPColorGradient::gpPolar:
+        return QString("polar");
+    case QCPColorGradient::gpSpectrum:
+        return QString("spectrum");
+    case QCPColorGradient::gpJet:
+        return QString("jet");
+    case QCPColorGradient::gpHues:
+        return QString("hues");
+
+    default:
+        return QString("jet");
+    }
+}
+
+ QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
  {
      QFile loadFile(pathToJSON);
 
@@ -105,7 +218,7 @@ QColor nameToColorConverter(const QString &name)
 
      QByteArray loadData = loadFile.readAll();
 
-     QMap<QString, MeasuredValueDescription> measValDescMap;
+     QMultiMap<QString, MeasuredValueDescription> measValDescMap;
 
      QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
 
