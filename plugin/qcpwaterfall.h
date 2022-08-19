@@ -32,6 +32,7 @@ class QCPWaterfallScale : public QCPColorScale
     Q_OBJECT
 public:
     explicit QCPWaterfallScale(QCustomPlot *parentPlot);
+    void setGradient(const QCPColorGradient::GradientPreset &preset);
 };
 
 #endif // QCPWATERFALL_H
