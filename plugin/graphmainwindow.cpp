@@ -452,9 +452,17 @@ void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphPropertie
     colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
     colorMap->setColorScale(colorScale); // associate the color map with the color scale
     colorScale->axis()->setLabel(prop.z_title);
+    colorScale->setGradient(prop.colorScale);
+
+    for (int xIndex = 0; xIndex < nx; ++xIndex) {
+        for (int yIndex = 0; yIndex < ny; ++yIndex) {
+            // Set background as invalid values
+            colorMap->data()->setCell(xIndex, yIndex, NAN);
+        }
+    }
 
     // set the color gradient of the color map to one of the presets:
-    colorMap->setGradient(prop.colorScale);//QCPColorGradient::gpPolar);
+    // colorMap->setGradient(prop.colorScale);//QCPColorGradient::gpPolar);
     // we could have also created a QCPColorGradient instance and added own colors to
     // the gradient, see the documentation of QCPColorGradient for what's possible.
 

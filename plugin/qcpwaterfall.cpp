@@ -99,6 +99,7 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
 
     rescaleAxes();
 }
+
 /*
      gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
     ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
@@ -132,6 +133,10 @@ QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
             auto action = actVector.back();
             connect(action, &QAction::triggered, [&, action]() {
                 // QAction *act = static_cast<QAction*>(sender());
+                /*QCPColorGradient gradient(static_cast<QCPColorGradient::GradientPreset>(action->data().toInt()));
+                gradient.setNanHandling(QCPColorGradient::nhNanColor);
+                gradient.setNanColor(Qt::white);
+                setGradient(gradient);*/
                 setGradient(static_cast<QCPColorGradient::GradientPreset>(action->data().toInt()));
                 this->parentPlot()->update();
             });
@@ -140,4 +145,35 @@ QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
         contextMenu.exec(this->parentPlot()->mapToGlobal(pos));
     });
 
+}
+
+void QCPWaterfallScale::setGradient(const QCPColorGradient::GradientPreset &preset)
+{
+    QCPColorGradient gradient(preset);
+    gradient.setNanHandling(QCPColorGradient::nhNanColor);
+    QColor color;
+    switch (preset) {
+    case QCPColorGradient::gpGrayscale:
+    color = Qt::red;
+        break;
+    case QCPColorGradient::gpHot:
+    case QCPColorGradient::gpCold:
+    case QCPColorGradient::gpNight:
+    case QCPColorGradient::gpCandy:
+    case QCPColorGradient::gpThermal:   ///< Colors suitable for thermal imaging, ranging from dark blue over purple to orange, yellow and white
+    color = Qt::black;
+    break;
+
+    case QCPColorGradient::gpGeography: ///< Colors suitable to represent different elevations on geographical maps
+    case QCPColorGradient::gpIon:       ///< Half hue spectrum from black over purple to blue and finally green (creates banding illusion but allows more precise magnitude estimates)
+    case QCPColorGradient::gpPolar:     ///< Colors suitable to emphasize polarity around the center, with blue for negative, black in the middle and red for positive values
+    case QCPColorGradient::gpSpectrum:  ///< An approximation of the visible light spectrum (creates banding illusion but allows more precise magnitude estimates)
+    case QCPColorGradient::gpJet:       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
+    case QCPColorGradient::gpHues:
+    color = Qt::white;
+    break;
+    }
+
+    gradient.setNanColor(color);
+    QCPColorScale::setGradient(gradient);
 }
