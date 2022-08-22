@@ -28,6 +28,7 @@ public:
     QString getCustomPlotName() const;
     GraphProperties getProp() const;
     void setProp(const GraphProperties &prop);
+    void setTitle(const QString& name);
 
     QVector<int> channels() const;
 

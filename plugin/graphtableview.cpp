@@ -145,6 +145,7 @@ void GraphTableView::placeOnPlot()
     auto prop = graphPropertiesFromSelectedColoumn(yPhysQuant);
 
     m_addPlotDialog->setProp(prop);
+    m_addPlotDialog->setTitle(tr("Добавить на график"));
 
     if (m_addPlotDialog->exec()) {
         //GraphProperties prop;
@@ -164,6 +165,7 @@ void GraphTableView::placeOnVectorIndicator()
     auto prop = graphPropertiesFromSelectedColoumn(yPhysQuant);
 
     m_addPlotDialog->setProp(prop);
+    m_addPlotDialog->setTitle(tr("Добавить на стрелочный индикатор"));
 
     if (m_addPlotDialog->exec()) {
         emit createNewVectorIndicator(m_addPlotDialog->getCustomPlotName(), m_addPlotDialog->getProp());

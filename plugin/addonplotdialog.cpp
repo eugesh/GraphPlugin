@@ -82,6 +82,11 @@ QString AddOnPlotDialog::getCustomPlotName() const
     return ui->customPltNameLineEdit->text();
 }
 
+void AddOnPlotDialog::setTitle(const QString& name)
+{
+    ui->mainLabel->setText(name);
+}
+
 void AddOnPlotDialog::setProp(const GraphProperties &prop)
 {
     ui->customPltNameLineEdit->setText(prop.name);
