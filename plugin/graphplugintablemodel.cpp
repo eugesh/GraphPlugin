@@ -47,7 +47,12 @@ void GraphPluginTableModel::addRow(const QList<MeasuredValue> &packet)
 
 void GraphPluginTableModel::clear()
 {
+    beginResetModel();
 
+    m_dataMap.clear();
+    m_timeStamps.clear();
+
+    endResetModel();
 }
 
 int GraphPluginTableModel::columnCount(const QModelIndex &parent) const

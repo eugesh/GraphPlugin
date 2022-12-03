@@ -64,6 +64,15 @@ GraphPlugin::~GraphPlugin()
         delete m_boardDock;
 }
 
+void GraphPlugin::clearAll()
+{
+    for (auto model : m_tableModelMap)
+        model->clear();
+
+    /*for (auto graphWin : m_graphsMainWins)
+        graphWin->clearAll();*/
+}
+
 void GraphPlugin::setPacketSize(int size, const QString tableName)
 {
     m_tableModelMap[tableName]->setPacketSize(size);

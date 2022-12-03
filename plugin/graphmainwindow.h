@@ -60,6 +60,7 @@ public:
     bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
 
 public slots:
+    void clearAll();
     void loadCSVdialog();
     void saveCSVdialog();
     void saveJSONdialog();

@@ -97,6 +97,7 @@ public:
     virtual void setPacketSize(int size, const QString tableName = "") override;
     virtual int packetSize(const QString tableName = "") const override;
     virtual QStringList getValuesNames(const QString &tableName = "") const override;
+    virtual void clearAll() override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);

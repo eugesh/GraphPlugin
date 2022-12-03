@@ -65,6 +65,11 @@ void GraphMainWindow::setConfig(GraphPluginConfig *config)
     m_config = config;
 }
 
+void GraphMainWindow::clearAll()
+{
+    ui->customPlot->plotLayout()->clear();
+}
+
 // ToDo: change on Add. Add necessary descriptions only.
 bool GraphMainWindow::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
