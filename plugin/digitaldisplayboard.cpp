@@ -134,23 +134,25 @@ bool DigitalDisplayBoard::readJSON()
 
 void DigitalDisplayBoard::addData(const QList<MeasuredValue> &vals)
 {
-    for (auto val : vals) {
+    for (const auto &val : vals) {
+        if (!m_items.contains(val.name))
+            continue;
         if (val.value.type() == QVariant::List) {
             if (val.value.toList().size() == 1 && val.is_valid) {
                 auto t = val.value.toList().first().toDouble();
-                m_items[val.name]->setCurrentValue(t);
-                m_items[val.name]->setEnabled(true);
+                m_items.value(val.name)->setCurrentValue(t);
+                m_items.value(val.name)->setEnabled(true);
             } else {
                 continue;
-                m_items[val.name]->setEnabled(false);
+                m_items.value(val.name)->setEnabled(false);
             }
-        } else if (!m_items.contains(val.name) || val.value.type() == QVariant::Map) {
+        } else if (/*!m_items.contains(val.name) ||*/ val.value.type() == QVariant::Map) {
             continue;
         } else if (val.is_valid) {
-            m_items[val.name]->setCurrentValue(val.value.toDouble());
-            m_items[val.name]->setEnabled(true);
+            m_items.value(val.name)->setCurrentValue(val.value.toDouble());
+            m_items.value(val.name)->setEnabled(true);
         } else {
-            m_items[val.name]->setEnabled(false);
+            m_items.value(val.name)->setEnabled(false);
         }
     }
 }
