@@ -18,22 +18,26 @@ GraphTableView::GraphTableView(QWidget *parent)
 
     setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(this, &QWidget::customContextMenuRequested,
-        [this] (const QPoint &pos) {
-        QMenu contextMenu(tr("Context menu"), this);
+    connect(this, &QTableView::customContextMenuRequested,
+        [&] (const QPoint &pos) {
+        if (!m_contextMenu) {
+            m_contextMenu = new QMenu(tr("Context menu"), this);
+            //contextMenu.setWindowModality(Qt::WindowModality::NonModal);
+            if (!m_action1) {
+                m_action1 = new QAction(tr("Копировать"), this);
+                connect(m_action1, &QAction::triggered, this, &GraphTableView::copyRow);
+            }
 
-        QAction action1(tr("Копировать"), this);
-        // QAction action2("Select all", this);
-        QAction action2(tr("Выделить все"), this);
+            if (!m_action2) {
+                m_action2 = new QAction(tr("Выделить все"), this);
+                connect(m_action2, &QAction::triggered, this, &QAbstractItemView::selectAll);
+            }
 
-        connect(&action1, &QAction::triggered, this, &GraphTableView::copyRow);
-        connect(&action2, &QAction::triggered, this, &QAbstractItemView::selectAll);
-
-        if (selectedIndexes().count())
-            contextMenu.addAction(&action1);
-        contextMenu.addAction(&action2);
-
-        contextMenu.exec(mapToGlobal(pos));
+            if (selectedIndexes().count())
+                m_contextMenu->addAction(m_action1);
+            m_contextMenu->addAction(m_action2);
+        }
+        m_contextMenu->popup(mapToGlobal(pos));
     });
 
     // QHeaderView *header = new QHeaderView(Qt::Orientation::Horizontal, this);
