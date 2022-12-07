@@ -104,6 +104,49 @@ QString GraphMainWindow::nameTr() const
         return {};
 }
 
+GraphProperties GraphMainWindow::parseJsonObject(const QJsonObject &plotObject)
+{
+    GraphProperties properties;
+    properties.name = plotObject["name"].toString();
+    properties.x_name = plotObject["x_name"].toString();
+    properties.y_name = plotObject["y_name"].toString();
+    properties.z_name = plotObject["z_name"].toString();
+    properties.x_title = plotObject["x_title"].toString();
+    properties.y_title = plotObject["y_title"].toString();
+    properties.z_title = plotObject["z_title"].toString();
+    properties.x_unit = plotObject["x_unit"].toString();
+    properties.y_unit = plotObject["y_unit"].toString();
+    properties.z_unit = plotObject["z_unit"].toString();
+    properties.indexName = plotObject["index_name"].toString();
+    properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
+    properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
+    properties.z_phisical_quantity = plotObject["z_phisical_quantity"].toString();
+    properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
+    properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
+    properties.total_N = static_cast<unsigned int >(plotObject["total_N"].toInt());
+    properties.last_N_limit = static_cast<unsigned int >(plotObject["last_N_limit"].toInt());
+    properties.update_mode = plotObject["update_mode"].toString().contains("ALL", Qt::CaseInsensitive) ||
+            plotObject["update_mode"].toString().contains("все", Qt::CaseInsensitive)? SHOW_ALL : SHOW_LAST_N;
+    properties.x_scale = plotObject["x_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
+            plotObject["x_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
+    properties.y_scale = plotObject["y_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
+                    plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
+    properties.z_scale = plotObject["z_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
+                    plotObject["z_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
+    properties.color = nameToColorConverter(plotObject["color"].toString());
+    properties.graphType = nameToGraphTypeConverter(plotObject["graph_type"].toString());
+    properties.colorScale = nameToColorScaleTypeConverter(plotObject["color_scale"].toString());
+            // static_cast<GraphType> (plotObject["graph_type"].toInt());
+    // properties.is_parametric = plotObject["is_parametric"].toBool();
+    // properties.is_integral = plotObject["is_integral"].toBool();
+    // "channels": [1],
+    QJsonArray arr = plotObject["channels"].toArray();
+    for (auto ch : arr)
+        properties.channels << ch.toInt();
+
+    return properties;
+}
+
 bool GraphMainWindow::readJSON(const QString &path)
 {
     m_JSONPath = path;
@@ -133,46 +176,21 @@ bool GraphMainWindow::readJSON(const QString &path)
 
     for (int i = 0; i < plotsArray.size(); ++i) {
         QJsonObject plotObject = plotsArray[i].toObject();
-        GraphProperties properties;
-        properties.name = plotObject["name"].toString();
-        properties.x_name = plotObject["x_name"].toString();
-        properties.y_name = plotObject["y_name"].toString();
-        properties.z_name = plotObject["z_name"].toString();
-        properties.x_title = plotObject["x_title"].toString();
-        properties.y_title = plotObject["y_title"].toString();
-        properties.z_title = plotObject["z_title"].toString();
-        properties.x_unit = plotObject["x_unit"].toString();
-        properties.y_unit = plotObject["y_unit"].toString();
-        properties.z_unit = plotObject["z_unit"].toString();
-        properties.indexName = plotObject["index_name"].toString();
-        properties.x_phisical_quantity = plotObject["x_phisical_quantity"].toString();
-        properties.y_phisical_quantity = plotObject["y_phisical_quantity"].toString();
-        properties.z_phisical_quantity = plotObject["z_phisical_quantity"].toString();
-        properties.x_dir = static_cast<GraphDir>(plotObject["x_dir"].toInt());
-        properties.y_dir = static_cast<GraphDir>(plotObject["y_dir"].toInt());
-        properties.total_N = static_cast<unsigned int >(plotObject["total_N"].toInt());
-        properties.last_N_limit = static_cast<unsigned int >(plotObject["last_N_limit"].toInt());
-        properties.update_mode = plotObject["update_mode"].toString().contains("ALL", Qt::CaseInsensitive) ||
-                plotObject["update_mode"].toString().contains("все", Qt::CaseInsensitive)? SHOW_ALL : SHOW_LAST_N;
-        properties.x_scale = plotObject["x_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
-                plotObject["x_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
-        properties.y_scale = plotObject["y_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
-                        plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
-        properties.z_scale = plotObject["z_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
-                        plotObject["z_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
-        properties.color = nameToColorConverter(plotObject["color"].toString());
-        properties.graphType = nameToGraphTypeConverter(plotObject["graph_type"].toString());
-        properties.colorScale = nameToColorScaleTypeConverter(plotObject["color_scale"].toString());
-                // static_cast<GraphType> (plotObject["graph_type"].toInt());
-        // properties.is_parametric = plotObject["is_parametric"].toBool();
-        // properties.is_integral = plotObject["is_integral"].toBool();
-        // "channels": [1],
-        QJsonArray arr = plotObject["channels"].toArray();
-        for (auto ch : arr)
-            properties.channels << ch.toInt();
+        auto properties = parseJsonObject(plotObject);
 
         m_properties.insert(properties.name, properties);
         addGraph(properties.name);
+
+        if (plotObject.contains("additional_plots")) {
+            // m_auxPlotsMap.insertMulti(properties.name, plotObject.value("additional_plots").toString());
+            QJsonArray auxPlotsArray = plotObject["additional_plots"].toArray();
+            for (int i = 0; i < auxPlotsArray.size(); ++i) {
+                QJsonObject auxPlotObject = auxPlotsArray[i].toObject();
+                auto auxPlotProperties = parseJsonObject(auxPlotObject);
+                m_properties.insert(auxPlotProperties.name, auxPlotProperties);
+                addGraph(auxPlotProperties.name);
+            }
+        }
     }
 
     m_isLoadFromJson = true;
@@ -526,6 +544,11 @@ void GraphMainWindow::addGraph(const QString &name)
         break;
     }
 
+    // Additional plots
+    if (m_auxPlotsMap.contains(name)) {
+        addXYGraph(name);
+    }
+
     /* if (prop.is_parametric) {
         addParametricGraph(name);
     } else {
@@ -748,7 +771,13 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 
 void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
 {
-    if (m_properties.first().graphType != GraphColorMap)
+    bool hasColormap = false;
+    for (auto prop : m_properties) {
+        if (prop.graphType == GraphColorMap)
+            hasColormap = true;
+    }
+
+    if (!hasColormap)
         // For Color Maps only
         return;
 

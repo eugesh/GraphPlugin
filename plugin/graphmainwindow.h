@@ -78,6 +78,7 @@ private:
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
     bool saveJSON(const QString &path) const;
+    GraphProperties parseJsonObject(const QJsonObject &plotObject);
     bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);
@@ -115,6 +116,7 @@ private:
     bool m_hasUpdate = false;
     GraphPluginConfig *m_config;
     QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMap<QString, QString> m_auxPlotsMap;
 };
 
 #endif // GRAPHMAINWINDOW_H
