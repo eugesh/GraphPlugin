@@ -715,7 +715,9 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
                 gid.yName = val1.name;
                 gid.chNumber = val1.channel;
                 ui->customPlot->xAxis->setTickLabels(true);
-                updateGraphs(gid, val1.timestamp, val1.value.toDouble());
+                double val = val1.value.type() == QVariant::List ?
+                    val1.value.toList().first().toDouble() : val1.value.toDouble();
+                updateGraphs(gid, val1.timestamp, val);
             } else {
                 for (MeasuredValue val2 : packet) {
                     if (!val2.is_valid)
