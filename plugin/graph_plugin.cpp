@@ -75,7 +75,8 @@ void GraphPlugin::clearAll()
 
 void GraphPlugin::setPacketSize(int size, const QString tableName)
 {
-    m_tableModelMap[tableName]->setPacketSize(size);
+    if (m_tableModelMap.value(tableName))
+        m_tableModelMap.value(tableName)->setPacketSize(size);
 }
 
 int GraphPlugin::packetSize(const QString tableName) const
@@ -322,6 +323,10 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
 
 bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
 {
+    QFileInfo info(pathToJSON);
+    if (!info.exists())
+        return false;
+
     m_vectorIndicatorsBoard = new VectorIndicatorsBoard();
 
     m_vectorIndicatorsBoard->setConfig(m_config);

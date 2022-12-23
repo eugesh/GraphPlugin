@@ -41,7 +41,7 @@ private:
     // Config
     GraphPluginConfig *m_config = nullptr;
     // Header's view column index, on which context menu activated
-    int m_currentColumn;
+    int m_currentColumn = 0;
     QMenu *m_contextMenu = nullptr;
     QAction *m_action1 = nullptr, *m_action2 = nullptr;
 };
