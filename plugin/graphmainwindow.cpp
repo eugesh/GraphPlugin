@@ -669,10 +669,12 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, co
 
     colorMap = m_valueColorMap[gid];
 
+    if (colorMap->data()->valueSize() < x.size())
+        colorMap->data()->setValueSize(x.size());
+
     QString name;
-    if (gid.graphName.isEmpty()) {
+    if (gid.graphName.isEmpty())
         name = m_valueColorMap.find(gid).key().graphName;
-    }
 
     if (!colorMap)
         return;
@@ -810,7 +812,7 @@ void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
                             auto indexName = m_properties.value(name).indexName;
                             QMap<int, double> yMap, zMap;
                             for (MeasuredValue val_index : packet) {
-                                if (val_index.name.toUpper() ==  indexName.toUpper()) {
+                                if (val_index.name.toUpper() == indexName.toUpper()) {
                                     for (int i = 0; i < val_index.value.toList().size(); ++i) {
                                         int index = val_index.value.toList()[i].toInt() - 1;
                                         double y = val1.value.toList()[i].toDouble();
