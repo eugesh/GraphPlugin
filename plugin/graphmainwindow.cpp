@@ -589,8 +589,10 @@ void GraphMainWindow::updateGraphs(const GraphID& gid, double x, double y)
     graph = m_valueGraphMap[gid];
 
     if (graph) {
+        auto name = graph->name();
         graph->addData(x, y);
-        graph->rescaleAxes();
+        if (m_properties.value(name).update_mode == SHOW_ALL)
+            graph->rescaleAxes();
     }
 }
 
