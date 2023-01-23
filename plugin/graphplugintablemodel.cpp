@@ -26,16 +26,17 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
         endRemoveRows();
     }
 
+    // Unique timestamps
+    // if (!m_timeStamps.contains(val.timestamp)) // Correct but this is O(N)
+    if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
+        m_timeStamps.enqueue(val.timestamp);
+
     if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
         addRow(m_dataMap.values(val.timestamp));
         emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         return;
     }
 
-    // Unique timestamps
-    // if (!m_timeStamps.contains(val.timestamp)) // Correct but this is O(N)
-    if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
-        m_timeStamps.enqueue(val.timestamp);
 }
 
 void GraphPluginTableModel::addRow(const QList<MeasuredValue> &packet)
