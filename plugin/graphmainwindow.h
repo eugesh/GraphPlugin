@@ -78,7 +78,7 @@ private:
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
     bool saveJSON(const QString &path) const;
-    GraphProperties parseJsonObject(const QJsonObject &plotObject);
+    static GraphProperties parseJsonObject(const QJsonObject &plotObject);
     bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);

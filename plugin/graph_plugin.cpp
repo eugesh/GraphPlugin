@@ -75,6 +75,9 @@ void GraphPlugin::clearAll()
 
 void GraphPlugin::setPacketSize(int size, const QString tableName)
 {
+    if (size <= 0)
+        return;
+
     if (m_tableModelMap.value(tableName))
         m_tableModelMap.value(tableName)->setPacketSize(size);
 }
@@ -243,6 +246,11 @@ QStringList GraphPlugin::getValuesNames(const QString &tableName) const
     return m_measValDescMap.value(tableName).uniqueKeys();
 }
 
+/**
+ * @brief GraphPlugin::getDescriptionsTr
+ * @param tableName
+ * @return список описаний на текущем языке
+ */
 QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
 {
     QStringList descs;

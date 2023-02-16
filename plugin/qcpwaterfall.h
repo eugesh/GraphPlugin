@@ -22,7 +22,7 @@ private:
     QQueue<uint64_t> m_timeVector;
     // Default value
     double m_defValue = 255;
-    // Indes of latest added row or column
+    // Index of latest added row or column
     int m_lastColumnIndex = 0;
     int m_lastRowIndex = 0;
 };
