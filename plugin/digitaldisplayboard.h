@@ -49,6 +49,7 @@ private:
     QMap<QString, DigitalBoardItem*> m_items;
     QMap<QString, QDockWidget*> m_itemsDocks;
     QList<QString> m_activeSensorsNames;
+    QString m_layoutIniFile = "layout/default.ini"; // Optional ini file to save subwindows state
 };
 
 #endif // DIGITALDISPLAYBOARD_H

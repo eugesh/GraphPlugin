@@ -38,19 +38,31 @@ void DigitalDisplayBoard::setConfig(GraphPluginConfig *config)
 
 bool DigitalDisplayBoard::restoreBoardGeometry()
 {
-    auto configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    // auto configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 
     //  Restore Geometry
-    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
-    auto allKeys = settings.allKeys();
-    auto keys = settings.childKeys();
-    auto groups = settings.childGroups();
+    QDir lay_dir(m_layoutIniFile);
+    QSettings *settings = nullptr;
+    auto pwd = QDir::currentPath();
 
-    settings.beginGroup("DigitalDisplayBoard");
+    if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
+        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+    } else {
+        settings = new QSettings(QApplication::organizationName(), QApplication::applicationName());
+    }
+    if (!settings)
+        return false;
 
-    auto geomData = settings.value("geometry").toByteArray();
+    //  Restore Geometry
+    auto allKeys = settings->allKeys();
+    auto keys = settings->childKeys();
+    auto groups = settings->childGroups();
+
+    settings->beginGroup("DigitalDisplayBoard");
+
+    auto geomData = settings->value("geometry").toByteArray();
     bool is_ok = QWidget::restoreGeometry(geomData);
-    auto state = settings.value("windowState").toByteArray();
+    auto state = settings->value("windowState").toByteArray();
     is_ok = is_ok && restoreState(state);
 
     /*for (auto item : m_itemsDocks.values()) {
@@ -60,7 +72,9 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
         settings.endGroup();
     }*/
 
-    settings.endGroup();
+    settings->endGroup();
+
+    delete settings;
 
     return is_ok;
 }
@@ -68,21 +82,33 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
 
 bool DigitalDisplayBoard::saveBoardGeometry()
 {
-    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
+    QDir lay_dir(m_layoutIniFile);
+    QSettings *settings = nullptr;
+    auto pwd = QDir::currentPath();
 
-    settings.beginGroup("DigitalDisplayBoard");
+    if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
+        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+    } else {
+        settings = new QSettings(pwd + "/" + QApplication::organizationName(), QApplication::applicationName());
+    }
+    if (!settings)
+        return false;
+
+    settings->beginGroup("DigitalDisplayBoard");
 
     auto geom = saveGeometry();
-    settings.setValue("geometry", geom);
+    settings->setValue("geometry", geom);
     auto state = saveState();
-    settings.setValue("windowState", state);
+    settings->setValue("windowState", state);
 
     /*for (auto item : m_itemsDocks.values()) {
         settings.beginGroup(tr("%1").arg(item->objectName()));
         settings.endGroup();
     }*/
 
-    settings.endGroup();
+    settings->endGroup();
+
+    delete settings;
 
     return true;
 }

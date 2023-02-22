@@ -8,6 +8,7 @@
 #include "vectorindicatorsboard.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QTableView>
@@ -171,14 +172,24 @@ bool GraphPlugin::loadJSONs(QStringList subdirsNames)
 bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
 {
     //  Restore Geometry
-    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
-    auto allKeys = settings.allKeys();
-    auto keys = settings.childKeys();
-    auto groups = settings.childGroups();
+    QDir lay_dir(m_layoutIniFile);
+    QSettings *settings = nullptr;
+    auto pwd = QDir::currentPath();
 
-    settings.beginGroup("MainWindow" + suffix);
+    if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
+        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+    } else {
+        settings = new QSettings(QApplication::organizationName(), QApplication::applicationName());
+    }
+    if (!settings)
+        return false;
+    /* auto allKeys = settings->allKeys();
+    auto keys = settings->childKeys();
+    auto groups = settings->childGroups();*/
 
-    auto geomData = settings.value("geometry").toByteArray();
+    settings->beginGroup("MainWindow" + suffix);
+
+    auto geomData = settings->value("geometry").toByteArray();
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -192,29 +203,43 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
     // m_mainWindow->showNormal();
     // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry());
 
-    auto state = settings.value("windowState").toByteArray();
+    auto state = settings->value("windowState").toByteArray();
     is_ok = is_ok && m_mainWindow->restoreState(state);
 
     if (m_mainWindow->isFullScreen())
         m_mainWindow->showMaximized();
 
-    settings.endGroup();
+    settings->endGroup();
+
+    delete settings;
 
     return is_ok;
 }
 
 bool GraphPlugin::saveGraphPluginGeometry(const QString &suffix)
 {
-    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
+    QDir lay_dir(m_layoutIniFile);
+    QSettings *settings = nullptr;
+    auto pwd = QDir::currentPath();
 
-    settings.beginGroup("MainWindow" + suffix);
+    if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
+        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+    } else {
+        settings = new QSettings(pwd + "/" + QApplication::organizationName(), QApplication::applicationName());
+    }
+    if (!settings)
+        return false;
+
+    settings->beginGroup("MainWindow" + suffix);
 
     auto geom = m_mainWindow->saveGeometry();
-    settings.setValue("geometry", geom);
+    settings->setValue("geometry", geom);
     auto state = m_mainWindow->saveState();
-    settings.setValue("windowState", state);
+    settings->setValue("windowState", state);
 
-    settings.endGroup();
+    settings->endGroup();
+
+    delete settings;
 
     return true;
 }
