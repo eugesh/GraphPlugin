@@ -298,7 +298,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     tableDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     tableDock->setWidget(tableView);
     tableDock->setObjectName("GraphTableViewDock");
-    tableDock->toggleViewAction()->setText(tr("Таблица"));
+    tableDock->toggleViewAction()->setText(tr("Таблица ") + tableName);
     m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, tableDock);
 
     m_tableModelMap.insert(tableName, tableModel);
@@ -345,7 +345,7 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
     m_boardDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_boardDock->setWidget(m_digitalBoard);
     m_boardDock->setObjectName("DigitalDisplayBoardDock");
-    m_boardDock->toggleViewAction()->setText(tr("Табло"));
+    m_boardDock->toggleViewAction()->setText(tr("Цифровые индикаторы ") + tableName);
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
     for (auto tableModel : m_tableModelMap.values())
