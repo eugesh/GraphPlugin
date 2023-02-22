@@ -192,6 +192,9 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
     auto geomData = settings->value("geometry").toByteArray();
     bool is_ok = m_mainWindow->restoreGeometry(geomData);
 
+    if (!is_ok)
+        qWarning() << "Error: failed to restore GraphPlugin geometry";
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (m_mainWindow->isMaximized()) {
         // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry()); // Valid but not tested. Buildable with Qt5 and Qt6.
@@ -204,7 +207,9 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
     // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry());
 
     auto state = settings->value("windowState").toByteArray();
-    is_ok = is_ok && m_mainWindow->restoreState(state);
+    bool is_ok2 = m_mainWindow->restoreState(state);
+    if (!is_ok2)
+        qWarning() << "Error: failed to restore GraphPlugin state";
 
     if (m_mainWindow->isFullScreen())
         m_mainWindow->showMaximized();

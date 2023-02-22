@@ -62,9 +62,12 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
 
     auto geomData = settings->value("geometry").toByteArray();
     bool is_ok = QWidget::restoreGeometry(geomData);
+    if (!is_ok)
+        qWarning() << "Error: failed to restore DigitalDisplayBoard geometry";
     auto state = settings->value("windowState").toByteArray();
-    is_ok = is_ok && restoreState(state);
-
+    bool is_ok2 = restoreState(state);
+    if (!is_ok2)
+        qWarning() << "Error: failed to restore DigitalDisplayBoard state";
     /*for (auto item : m_itemsDocks.values()) {
         settings.beginGroup(tr("%1").arg(item->objectName()));
 
