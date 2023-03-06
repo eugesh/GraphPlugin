@@ -420,7 +420,7 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     });
 
     dock_widget->setWidget(graphWindow);
-    dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName()).arg("Dock"));
+    dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName(), "Dock"));
 
     m_graphsDocks.insert(graphWindow->nameTr(), dock_widget);
     m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);

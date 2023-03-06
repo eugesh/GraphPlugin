@@ -59,7 +59,8 @@ void GraphPluginTableModel::clear()
 int GraphPluginTableModel::columnCount(const QModelIndex &parent) const
 {
     // return m_packetSize + 1; // + Timestamp
-    return m_coloumnNames.size();
+    // return m_coloumnNames.size();
+    return parent.isValid() ? 0 : m_coloumnNames.size();
 }
 
 QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
@@ -148,5 +149,6 @@ QVariant GraphPluginTableModel::headerData(int section, Qt::Orientation orientat
 
 int GraphPluginTableModel::rowCount(const QModelIndex &parent) const
 {
-    return m_timeStamps.size();
+    // return m_timeStamps.size();
+    return parent.isValid() ? 0 : m_timeStamps.size();
 }
