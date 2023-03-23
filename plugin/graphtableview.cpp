@@ -180,7 +180,7 @@ GraphProperties GraphTableView::graphPropertiesFromSelectedColoumn(const QString
 {
     GraphProperties prop;
 
-    prop.name = m_measValuesDesc.value(physicalQuantityName).desc_ru;
+    prop.name = m_measValuesDesc.value(physicalQuantityName).name; // m_measValuesDesc.value(physicalQuantityName).desc_ru;
     prop.x_dir = GraphDir::RIGHT;
     prop.y_dir = GraphDir::UP;
     prop.color = Qt::red;

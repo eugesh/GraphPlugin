@@ -293,7 +293,8 @@ QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
 
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableName)
 {
-    GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(tableName), getValuesNames(tableName), m_synchMode, this);
+    // GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(tableName), getValuesNames(tableName), m_synchMode, this);
+    GraphPluginTableModel *tableModel = new GraphPluginTableModel(getValuesNames(tableName), getValuesNames(tableName), m_synchMode, this);
     tableModel->setPacketSize(m_measValDescMap.value(tableName).size());
     GraphTableView *tableView = new GraphTableView(m_mainWindow);
     tableView->setModel(tableModel);
