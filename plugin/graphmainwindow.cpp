@@ -67,7 +67,46 @@ void GraphMainWindow::setConfig(GraphPluginConfig *config)
 
 void GraphMainWindow::clearAll()
 {
-    ui->customPlot->plotLayout()->clear();
+    // ui->customPlot->plotLayout()->clear();
+
+    for (auto map : m_valueColorMap) {
+        //map->data()->clear();
+        // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+        /*QCPMarginGroup *marginGroup = new QCPMarginGroup(cplot);
+        cplot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+        colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+
+        // rescale the key (x) and value (y) axes so the whole color map is visible:
+        cplot->rescaleAxes();*/
+        // map->data()->setSize(map->data()->keySize(), map->data()->valueSize());
+        // map->rescaleDataRange();
+        //delete map;
+        map->data()->fill(NAN);
+        map->rescaleKeyAxis();
+        map->rescaleDataRange();
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
+    }
+
+    // auto keys = m_valueColorMap.keys();
+
+    /*for (auto key : m_valueColorMap.keys()) {
+        if (m_valueColorMap.value(key) != nullptr) {
+            delete m_valueColorMap.value(key);
+            m_valueColorMap[key] = nullptr;
+            m_valueColorMap.remove(key);
+        }
+    }
+
+    m_valueColorMap.clear();*/
+
+    /*for (auto key : keys) {
+        removeWaterfallGraph(key.graphName);
+    }
+
+    for (auto key : keys) {
+        addGraph(key.graphName);
+    }*/
 }
 
 // ToDo: change on Add. Add necessary descriptions only.
@@ -433,6 +472,20 @@ void GraphMainWindow::addParametricGraph(const QString &name)
     m_valueCurveMap.insert(gid, newParametricCurve);
     newParametricCurve->setScatterStyle(
         QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(ui->customPlot->plottableCount() + 1)));
+}
+
+void GraphMainWindow::removeWaterfallGraph(const QString &name)
+{
+    GraphID graphId;
+    for (auto gid : m_valueColorMap.keys()) {
+        if (gid.graphName == name)
+            graphId = gid;
+    }
+
+
+    if (m_valueColorMap.value(graphId))
+        delete m_valueColorMap.value(graphId);
+    m_valueNameYX.remove(graphId.yName, graphId.zName);
 }
 
 void GraphMainWindow::addWaterfallGraph(const QString &name)

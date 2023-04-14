@@ -70,8 +70,8 @@ void GraphPlugin::clearAll()
     for (auto model : m_tableModelMap)
         model->clear();
 
-    /*for (auto graphWin : m_graphsMainWins)
-        graphWin->clearAll();*/
+    for (auto graphWin : m_graphsMainWins)
+        graphWin->clearAll();
 }
 
 void GraphPlugin::setPacketSize(int size, const QString tableName)

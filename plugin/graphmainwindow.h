@@ -87,6 +87,7 @@ private:
     void addWaterfallGraph(const QString &name);
     void addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop);
     void addAdditionalWaterfallGraph(const QString &name);
+    void removeWaterfallGraph(const QString &name);
     void saveCSV(const QString &name) const;
     void saveImage(const QString &name) const;
     void updateGraphs(const GraphID& id, double x, double y);

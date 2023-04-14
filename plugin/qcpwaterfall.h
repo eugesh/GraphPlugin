@@ -16,6 +16,7 @@ public:
 
     void setSize(const QSize &size, double defVal);
     void addData(uint64_t timestamp, const QList<double> &xVec, const QList<double> &yVec, Qt::Orientation orient = Qt::Vertical);
+    void clearAll();
 
 private:
     // Vector of timestamps

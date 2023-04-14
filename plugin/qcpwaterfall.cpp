@@ -100,6 +100,11 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
     rescaleAxes();
 }
 
+void QCPWaterfall::clearAll()
+{
+    data()->clear();
+}
+
 /*
      gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
     ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
