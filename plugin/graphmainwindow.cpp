@@ -85,9 +85,18 @@ void GraphMainWindow::clearAll()
         map->rescaleKeyAxis();
         map->rescaleDataRange();
         ui->customPlot->rescaleAxes();
-        ui->customPlot->replot();
     }
 
+    for (auto graph : m_valueGraphMap) {
+        if (graph) {
+            graph->clear();
+            graph->rescaleAxes();
+            // ui->customPlot->removeGraph(graph);
+        }
+    }
+
+    ui->customPlot->replot();
+    // ui->customPlot->updateLayerIndices();
     // auto keys = m_valueColorMap.keys();
 
     /*for (auto key : m_valueColorMap.keys()) {
