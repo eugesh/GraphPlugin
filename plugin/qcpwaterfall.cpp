@@ -100,6 +100,13 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
     rescaleAxes();
 }
 
+void QCPWaterfall::clearData()
+{
+    m_timeVector.clear();
+    m_lastColumnIndex = 0;
+    m_lastRowIndex = 0;
+}
+
 void QCPWaterfall::clearAll()
 {
     data()->clear();

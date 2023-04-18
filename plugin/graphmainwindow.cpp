@@ -82,40 +82,25 @@ void GraphMainWindow::clearAll()
         // map->rescaleDataRange();
         //delete map;
         map->data()->fill(NAN);
-        map->rescaleKeyAxis();
+        map->rescaleAxes();
         map->rescaleDataRange();
-        ui->customPlot->rescaleAxes();
+        map->clearData();
     }
 
     for (auto graph : m_valueGraphMap) {
         if (graph) {
             graph->clear();
             graph->rescaleAxes();
-            // ui->customPlot->removeGraph(graph);
         }
     }
 
+    ui->customPlot->clearFocus();
+    ui->customPlot->setUpdatesEnabled(true);
     ui->customPlot->replot();
-    // ui->customPlot->updateLayerIndices();
-    // auto keys = m_valueColorMap.keys();
-
-    /*for (auto key : m_valueColorMap.keys()) {
-        if (m_valueColorMap.value(key) != nullptr) {
-            delete m_valueColorMap.value(key);
-            m_valueColorMap[key] = nullptr;
-            m_valueColorMap.remove(key);
-        }
-    }
-
-    m_valueColorMap.clear();*/
-
-    /*for (auto key : keys) {
-        removeWaterfallGraph(key.graphName);
-    }
-
-    for (auto key : keys) {
-        addGraph(key.graphName);
-    }*/
+    ui->customPlot->update();
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->updateGeometry();
+    ui->customPlot->repaint();
 }
 
 // ToDo: change on Add. Add necessary descriptions only.
@@ -647,22 +632,22 @@ void GraphMainWindow::loadCSVdialog()
 void GraphMainWindow::updateGraphs(const GraphID& gid, double x, double y)
 {
     QCPGraph *graph = nullptr;
+    graph = m_valueGraphMap.value(gid);//[gid];
+    if (!graph)
+        return;
 
-    graph = m_valueGraphMap[gid];
-
-    if (graph) {
-        auto name = graph->name();
-        graph->addData(x, y);
-        if (m_properties.value(name).update_mode == SHOW_ALL)
-            graph->rescaleAxes();
-    }
+    auto name = graph->name();
+    graph->addData(x, y);
+    if (m_properties.value(name).update_mode == SHOW_ALL)
+        graph->rescaleAxes();
 }
 
 void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, double x, double y)
 {
     QCPCurve *curve = nullptr;
-
-    curve = m_valueCurveMap[gid];
+    curve = m_valueCurveMap.value(gid);
+    if (!curve)
+        return;
 
     QString name;
     if (gid.graphName.isEmpty()) {
@@ -690,16 +675,14 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
 void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QVariantList x, QVariantList y)
 {
     QCPWaterfall *colorMap = nullptr;
-
-    colorMap = m_valueColorMap[gid];
+    colorMap = m_valueColorMap.value(gid);
+    if (!colorMap)
+        return;
 
     QString name;
     if (gid.graphName.isEmpty()) {
         name = m_valueColorMap.find(gid).key().graphName;
     }
-
-    if (!colorMap)
-        return;
 
     // Depth
     QList<double> depths;
@@ -730,8 +713,9 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
 void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, const QMap<int, double> &x, const QMap<int, double> &y)
 {
     QCPWaterfall *colorMap = nullptr;
-
-    colorMap = m_valueColorMap[gid];
+    colorMap = m_valueColorMap.value(gid);
+    if (!colorMap)
+        return;
 
     if (colorMap->data()->valueSize() < x.size())
         colorMap->data()->setValueSize(x.size());
