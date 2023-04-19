@@ -94,6 +94,13 @@ void GraphMainWindow::clearAll()
         }
     }
 
+    for (auto curve : m_valueCurveMap) {
+        if (curve) {
+            curve->clear();
+            curve->rescaleAxes();
+        }
+    }
+
     ui->customPlot->clearFocus();
     ui->customPlot->setUpdatesEnabled(true);
     ui->customPlot->replot();
