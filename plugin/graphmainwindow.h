@@ -58,6 +58,7 @@ public:
     QString nameTr() const;
     void setConfig(GraphPluginConfig *config);
     bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
+    void setUpdateAble(bool isUpdateable);
 
 public slots:
     void clearAll();
@@ -95,6 +96,7 @@ private:
     void updateColorMaps(const GraphID& id, uint64_t ts, QVariantList x, QVariantList y);
     void updateColorMaps(const GraphID& gid, uint64_t timestamp, const QMap<int, double> &x, const QMap<int, double> &y);
     void alignColorMaps();
+    void updateAll();
 
 private:
     Ui::GraphMainWindow *ui;
@@ -105,6 +107,7 @@ private:
     // Parametric curves (x, y, t)
     QMap<GraphID, QCPCurve*> m_valueCurveMap;
     QMap<GraphID, QCPWaterfall*> m_valueColorMap;
+    QList<QCustomPlot*> m_customPlotList;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     QMultiMap<QString, QString> m_valueNameYX;
     // Graph name -> properties
@@ -114,10 +117,12 @@ private:
     QString m_ImagePath;
     QString m_plotName;
     bool m_isLoadFromJson = false;
+    // Is there any changes in JSON files
     bool m_hasUpdate = false;
     GraphPluginConfig *m_config;
     QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
     QMap<QString, QString> m_auxPlotsMap;
+    bool m_isUpdatable = true;
 };
 
 #endif // GRAPHMAINWINDOW_H

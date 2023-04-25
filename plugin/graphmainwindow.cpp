@@ -40,6 +40,8 @@ void GraphMainWindow::commonInit()
     connect(ui->actionSaveCSV, &QAction::triggered, this, &GraphMainWindow::saveCSVdialog);
     connect(ui->actionSaveImage, &QAction::triggered, this, &GraphMainWindow::saveImageDialog);
     connect(ui->actionRemoveJSON, &QAction::triggered, this, &GraphMainWindow::onRemoveJSON);
+
+    m_customPlotList.append(ui->customPlot);
 }
 
 GraphMainWindow::~GraphMainWindow()
@@ -100,14 +102,25 @@ void GraphMainWindow::clearAll()
             curve->rescaleAxes();
         }
     }
+    for (auto cp : m_customPlotList) {
+        cp->clearFocus();
+        cp->setUpdatesEnabled(true);
+        cp->replot();
+        cp->update();
+        cp->rescaleAxes();
+        cp->updateGeometry();
+        cp->repaint();
+    }
+}
 
-    ui->customPlot->clearFocus();
-    ui->customPlot->setUpdatesEnabled(true);
-    ui->customPlot->replot();
-    ui->customPlot->update();
-    ui->customPlot->rescaleAxes();
-    ui->customPlot->updateGeometry();
-    ui->customPlot->repaint();
+void GraphMainWindow::setUpdateAble(bool isUpdateable)
+{
+    m_isUpdatable = isUpdateable;
+
+    if (isUpdateable) {
+        // Force update
+        updateAll();
+    }
 }
 
 // ToDo: change on Add. Add necessary descriptions only.
@@ -573,6 +586,8 @@ void GraphMainWindow::addAdditionalWaterfallGraph(const QString &name)
     QCustomPlot *customPlot2 = new QCustomPlot(ui->centralwidget);
     ui->gridLayout->addWidget(customPlot2, 1, 0, 1, 1);
 
+    m_customPlotList.append(customPlot2);
+
     addWaterfallGraph(customPlot2, prop);
 }
 
@@ -639,13 +654,13 @@ void GraphMainWindow::loadCSVdialog()
 void GraphMainWindow::updateGraphs(const GraphID& gid, double x, double y)
 {
     QCPGraph *graph = nullptr;
-    graph = m_valueGraphMap.value(gid);//[gid];
+    graph = m_valueGraphMap.value(gid);
     if (!graph)
         return;
 
     auto name = graph->name();
     graph->addData(x, y);
-    if (m_properties.value(name).update_mode == SHOW_ALL)
+    if (m_properties.value(name).update_mode == SHOW_ALL && m_isUpdatable)
         graph->rescaleAxes();
 }
 
@@ -675,7 +690,8 @@ void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, doubl
         } else {
             curve->addData(timestamp, x, y);
         }
-        curve->rescaleAxes();
+        if (m_isUpdatable)
+            curve->rescaleAxes();
     }
 }
 
@@ -760,6 +776,24 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, co
         alignColorMaps();
 }
 
+void GraphMainWindow::updateAll()
+{
+    for (auto p : m_valueGraphMap) {
+        p->rescaleAxes();
+    }
+
+    for (auto p : m_valueCurveMap) {
+        p->rescaleAxes();
+    }
+
+    for (auto p : m_valueColorMap) {
+        p->rescaleAxes();
+    }
+
+    for (auto cp : m_customPlotList)
+        cp->replot();
+}
+
 void GraphMainWindow::alignColorMaps()
 {
     auto firstMap = m_valueColorMap.first();
@@ -823,7 +857,8 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
     }
 
     // Update graphs
-    ui->customPlot->replot();
+    if (m_isUpdatable)
+        ui->customPlot->replot();
 }
 
 void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
@@ -886,5 +921,6 @@ void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
     }
 
     // Update graphs
-    ui->customPlot->replot();
+    if (m_isUpdatable)
+        ui->customPlot->replot();
 }

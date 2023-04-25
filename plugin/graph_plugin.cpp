@@ -65,6 +65,12 @@ GraphPlugin::~GraphPlugin()
         delete m_boardDock;
 }
 
+void GraphPlugin::setUpdateable(bool isUpdateable)
+{
+    for (auto graphWin : m_graphsMainWins)
+        graphWin->setUpdateAble(isUpdateable);
+}
+
 void GraphPlugin::clearAll()
 {
     for (auto model : m_tableModelMap)
@@ -321,10 +327,8 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
         connect(tableModel, &GraphPluginTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
     }
 
-    // for (auto tableView : m_tableViewMap.values()) {
-        connect (tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
-        connect (tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
-    //}
+    connect (tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
+    connect (tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
 
     if (m_vectorIndicatorsBoard)
         connect(tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);

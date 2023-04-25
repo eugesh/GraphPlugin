@@ -93,6 +93,7 @@ public:
     virtual int packetSize(const QString tableName = "") const = 0;
     virtual QStringList getValuesNames(const QString &tableName = "") const = 0;
     virtual void clearAll() = 0;
+    virtual void setUpdateable(bool isUpdateable = true) = 0;
 
 //signals:
     //void newDockWindow(QDockWidget*);
