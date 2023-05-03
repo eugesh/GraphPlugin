@@ -42,15 +42,15 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
 
     //  Restore Geometry
     QDir lay_dir(m_layoutIniFile);
-    QSettings *settings = nullptr;
+    QScopedPointer<QSettings> settings;
     auto pwd = QDir::currentPath();
 
     if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
-        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+        settings.reset(new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat));
     } else {
-        settings = new QSettings(QApplication::organizationName(), QApplication::applicationName());
+        settings.reset(new QSettings(QApplication::organizationName(), QApplication::applicationName()));
     }
-    if (!settings)
+    if (settings.isNull())
         return false;
 
     //  Restore Geometry
@@ -77,8 +77,6 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
 
     settings->endGroup();
 
-    delete settings;
-
     return is_ok;
 }
 
@@ -86,15 +84,15 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
 bool DigitalDisplayBoard::saveBoardGeometry()
 {
     QDir lay_dir(m_layoutIniFile);
-    QSettings *settings = nullptr;
+    QScopedPointer<QSettings> settings;
     auto pwd = QDir::currentPath();
 
     if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
-        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+        settings.reset(new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat));
     } else {
-        settings = new QSettings(pwd + "/" + QApplication::organizationName(), QApplication::applicationName());
+        settings.reset(new QSettings(pwd + "/" + QApplication::organizationName(), QApplication::applicationName()));
     }
-    if (!settings)
+    if (settings.isNull())
         return false;
 
     settings->beginGroup("DigitalDisplayBoard");
@@ -110,8 +108,6 @@ bool DigitalDisplayBoard::saveBoardGeometry()
     }*/
 
     settings->endGroup();
-
-    delete settings;
 
     return true;
 }
@@ -139,8 +135,11 @@ bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
         auto title = desc.desc_ru;
         //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
 
-        auto *item = new DigitalBoardItem(title, desc.symbol_rus,
-                     m_config->getMultipliersWithPrefixes(desc.physQuant), m_config->getOffsets(name), this);
+        auto *item = new DigitalBoardItem(title,
+                                          desc.symbol_rus,
+                                          m_config->getMultipliersWithPrefixes(desc.physQuant),
+                                          m_config->getOffsets(name),
+                                          this);
         item->setWindowTitle(title);
         auto *dock = new QDockWidget(this);
         m_items.insert(name, item);
@@ -149,7 +148,7 @@ bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
         dock->setObjectName(tr("%1%2").arg(name).arg("Dock"));
         dock->toggleViewAction()->setText(desc.desc_ru);
         m_itemsDocks.insert(name, dock);
-        addDockWidget(Qt::DockWidgetArea::TopDockWidgetArea, dock);
+        addDockWidget(Qt::TopDockWidgetArea, dock);
     }
 
     return restoreBoardGeometry();

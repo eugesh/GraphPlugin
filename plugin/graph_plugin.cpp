@@ -179,19 +179,16 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
 {
     //  Restore Geometry
     QDir lay_dir(m_layoutIniFile);
-    QSettings *settings = nullptr;
+    QScopedPointer<QSettings> settings;
     auto pwd = QDir::currentPath();
 
     if (lay_dir.exists(pwd + "/" + m_layoutIniFile)) {
-        settings = new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat);
+        settings.reset(new QSettings(pwd + "/" + m_layoutIniFile, QSettings::IniFormat));
     } else {
-        settings = new QSettings(QApplication::organizationName(), QApplication::applicationName());
+        settings.reset(new QSettings(QApplication::organizationName(), QApplication::applicationName()));
     }
-    if (!settings)
+    if (settings.isNull())
         return false;
-    /* auto allKeys = settings->allKeys();
-    auto keys = settings->childKeys();
-    auto groups = settings->childGroups();*/
 
     settings->beginGroup("MainWindow" + suffix);
 
@@ -209,8 +206,6 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
         m_mainWindow->showMaximized();
     }
 #endif
-    // m_mainWindow->showNormal();
-    // m_mainWindow->setGeometry(qApp->screenAt(QPoint(0,0))->availableGeometry());
 
     auto state = settings->value("windowState").toByteArray();
     bool is_ok2 = m_mainWindow->restoreState(state);
@@ -221,8 +216,6 @@ bool GraphPlugin::restoreGraphPluginGeometry(const QString &suffix)
         m_mainWindow->showMaximized();
 
     settings->endGroup();
-
-    delete settings;
 
     return is_ok;
 }
