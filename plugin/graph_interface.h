@@ -79,7 +79,7 @@ public:
     // GraphInterface(QMainWindow *parent = nullptr) {}
 
     virtual ~GraphInterface() = default;
-    //virtual QObject* getObject() = 0;
+    // virtual QObject* getObject() = 0;
     virtual void addData(const MeasuredValue &value) = 0;
     virtual QToolBar* toolBar() const = 0;
     virtual QList<QDockWidget*> dockWindows() const = 0;

@@ -16,8 +16,10 @@ GraphPluginTableModel::GraphPluginTableModel(const QStringList &titles, const QS
 
 void GraphPluginTableModel::appendValue(const MeasuredValue &val)
 {
+    // Add value to data map
     m_dataMap.insertMulti(val.timestamp, val);
 
+    // Cleaning. Store lt m_ringBufferSize elements
     while (rowCount() > m_ringBufferSize) {
         beginRemoveRows({}, 0, rowCount() - m_ringBufferSize - 1);
         auto firstT = m_timeStamps.dequeue();
@@ -27,16 +29,15 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
     }
 
     // Unique timestamps
-    // if (!m_timeStamps.contains(val.timestamp)) // Correct but this is O(N)
     if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
         m_timeStamps.enqueue(val.timestamp);
 
+    // Check if packet is already formed
     if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
         addRow(m_dataMap.values(val.timestamp));
         emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
         return;
     }
-
 }
 
 void GraphPluginTableModel::addRow(const QList<MeasuredValue> &packet)
