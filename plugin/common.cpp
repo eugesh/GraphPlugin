@@ -207,6 +207,12 @@ QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &ty
     }
 }
 
+ /**
+  * @brief loadConfigJSON
+  *
+  * @param pathToJSON path to JSON file.
+  * @return
+  */
  QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
  {
      QFile loadFile(pathToJSON);

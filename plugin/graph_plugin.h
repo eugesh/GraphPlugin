@@ -158,9 +158,9 @@ private:
     QList<QString> m_valueNames;
     //!< Values descriptions
     QList<QString> m_valueDescs;
-
     GraphPluginMode m_synchMode = GRAPH_DATA_SYNCH;
-    QString m_layoutIniFile = "layout/default.ini"; // Optional ini file to save subwindows state
+    // Optional ini file to save subwindows states and geometry
+    QString m_layoutIniFile = "layout/default.ini";
 };
 
 #endif

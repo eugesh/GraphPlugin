@@ -3,6 +3,12 @@
 #include "qcpwaterfall.h"
 #include "ui_graphmainwindow.h"
 
+/**
+ * @brief GraphMainWindow::GraphMainWindow
+ * Window for graphs placement. Content and layout is stored in JSON file.
+ * @param path2JSON path to JSON file with
+ * @param parent parent widget.
+ */
 GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -12,7 +18,13 @@ GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     readJSON(path2JSON);
 }
 
-// Auxilliary constructor
+/**
+ * @brief GraphMainWindow::GraphMainWindow
+ * Auxilliary constructor.
+ * @param name Main title of graphs.
+ * @param properties properties of graphs.
+ * @param parent parent widget.
+ */
 GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -124,6 +136,12 @@ void GraphMainWindow::setUpdateAble(bool isUpdateable)
 }
 
 // ToDo: change on Add. Add necessary descriptions only.
+/**
+ * @brief GraphMainWindow::setValuesDescriptions
+ *
+ * @param mvd
+ * @return
+ */
 bool GraphMainWindow::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
@@ -149,6 +167,10 @@ void GraphMainWindow::createCustomPlot(const QString &name)
     ui->customPlot->plotLayout()->addElement(0, 0, title);
 }
 
+/**
+ * @brief GraphMainWindow::nameTr
+ * @return name of graphs plot area
+ */
 QString GraphMainWindow::nameTr() const
 {
     if (ui->customPlot)
@@ -640,6 +662,11 @@ void GraphMainWindow::addGraph(const GraphProperties &prop)
     return true;
 }*/
 
+/**
+ * @brief GraphMainWindow::loadCSV
+ * Load graphs data stored as CSV. Not implemented yet.
+ * @return true|false.
+ */
 bool GraphMainWindow::loadCSV()
 {
 

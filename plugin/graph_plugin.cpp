@@ -24,6 +24,11 @@ static const char* pluginConfigsFolder = "config";
 static const char* SIConfigsFolder = "configs/si";
 static const char* arrayIndicatorsJson = "indicatorsBoard.json";
 
+/**
+ * @brief GraphPlugin::GraphPlugin
+ * Implementation of \link GraphInterface \endlink.
+ * @param mw pointer to QMainWindow
+ */
 GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
   , m_mainWindow(mw)
 {
@@ -99,6 +104,12 @@ QString GraphPlugin::aboutInfo()
     return QString("%1.%2.%3").arg(GRAPH_PLUGIN_VERSION_MAJOR).arg(GRAPH_PLUGIN_VERSION_MINOR).arg(GRAPH_PLUGIN_VERSION_PATCH);
 }
 
+/**
+ * @brief GraphPlugin::loadJSONs
+ * Loads all configurations saved in JSON files.
+ * @param subdirsNames names of folders to llok for JSON files.
+ * @return true|false
+ */
 bool GraphPlugin::loadJSONs(QStringList subdirsNames)
 {
     // Load SI units and prefixes
@@ -248,6 +259,13 @@ bool GraphPlugin::saveGraphPluginGeometry(const QString &suffix)
     return true;
 }
 
+/**
+ * @brief GraphPlugin::loadValuesJSON
+ *
+ * @param pathToJSON
+ * @param tableName name of the history table.
+ * @return
+ */
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON, const QString &tableName)
 {
     auto map = loadConfigJSON(pathToJSON);

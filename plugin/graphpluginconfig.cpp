@@ -27,6 +27,12 @@ key:value(s) with example.
  */
 // typedef QMap<QString, QVariant> MeasUnit;
 
+/**
+ * @brief GraphPluginConfig::GraphPluginConfig
+ * Loads SI units and prefixes. Fundamental properties of measuring values.
+ * @param pathToUnits
+ * @param pathToPrefixes
+ */
 GraphPluginConfig::GraphPluginConfig(const QString &pathToUnits, const QString &pathToPrefixes)
 {
     readPrefixes(pathToPrefixes);
