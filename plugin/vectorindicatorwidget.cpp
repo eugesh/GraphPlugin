@@ -61,7 +61,7 @@ VectorIndicatorWidget::~VectorIndicatorWidget()
 void VectorIndicatorWidget::setAngle(double angle)
 {
     ui->dial->setValue(fitAngleIn360(angle - 180));
-    ui->lcdNumber->display(fitAngleIn360(angle));
+    ui->lcdNumberAlpha->display(fitAngleIn360(angle));
     if (m_autoDisableTimeout > 0)
         m_hideTimer->start(m_autoDisableTimeout);
 }
@@ -74,7 +74,7 @@ double VectorIndicatorWidget::getAngle() const
 void VectorIndicatorWidget::setMagnitude(double mag)
 {
     m_magnitude = mag;
-    ui->lcdNumber_2->display(mag);
+    ui->lcdNumberMag->display(mag);
     if (m_autoDisableTimeout > 0)
         m_hideTimer->start(m_autoDisableTimeout);
 }
