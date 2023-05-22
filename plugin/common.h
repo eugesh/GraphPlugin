@@ -18,6 +18,10 @@ enum : int {
     PhysQuantRole = Qt::UserRole + 3
 };
 
+/**
+ * @brief The MeasuredValueDescription struct
+ *
+ */
 struct MeasuredValueDescription {
     QString name;
     QString desc;
@@ -29,6 +33,10 @@ struct MeasuredValueDescription {
     QString symbol_rus;
 };
 
+/**
+ * @brief The GraphDir enum
+ * X and Y axis direction (e.g. RIGHT to X and UP for Y)
+ */
 enum GraphDir {
     LEFT,
     UP,
@@ -36,9 +44,13 @@ enum GraphDir {
     DOWN
 };
 
+/**
+ * @brief The GraphUpdateMode enum
+ * Graph update method
+ */
 enum GraphUpdateMode {
-    SHOW_ALL,
-    SHOW_LAST_N,
+    SHOW_ALL, /*! Show all points  */
+    SHOW_LAST_N, /*! Show latest N points */
     DONT_UPDATE
 };
 
@@ -48,18 +60,22 @@ enum GraphScaleType {
 };
 
 enum GraphType {
-    GraphScatter,
-    GraphPolar,
-    GraphParametric,
-    GraphIntegral,
-    GraphColorMap
+    GraphScatter, /*! X(Y) */
+    GraphPolar, /*! Ro(Phi) */
+    GraphParametric, /*! X(t), Y(t) */
+    GraphIntegral, /*! Yi+1 = Yi-1 + Yi */
+    GraphColorMap /*! X is t, Y and Z is colored */
 };
 
+/**
+ * @brief The GraphProperties struct
+ * Properties of
+ */
 struct GraphProperties {
     QString name;
     QString x_name;
     QString y_name;
-    QString z_name; // For color maps and waterfalls
+    QString z_name; //! For color maps and waterfalls.
     QString x_title;
     QString y_title;
     QString z_title;
@@ -69,11 +85,11 @@ struct GraphProperties {
     QString x_phisical_quantity;
     QString y_phisical_quantity;
     QString z_phisical_quantity;
-    GraphDir x_dir;
-    GraphDir y_dir;
-    unsigned int total_N;
-    unsigned int last_N_limit;
-    GraphUpdateMode update_mode;
+    GraphDir x_dir; //! Direction of X axis.
+    GraphDir y_dir; //! Direction of Y axis.
+    unsigned int total_N; //! Total number of stored points.
+    unsigned int last_N_limit; //! For SHOW_LAST_N update method
+    GraphUpdateMode update_mode; //! See \link GraphUpdateMode \endlink.
     GraphScaleType x_scale;
     GraphScaleType y_scale;
     GraphScaleType z_scale;

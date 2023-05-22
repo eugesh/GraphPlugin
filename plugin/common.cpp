@@ -7,13 +7,21 @@
 #include <QJsonObject>
 #include <QMap>
 
+/**
+ * @brief nameToColorConverter
+ * Color short name to Qt namespace colors types
+ * @param name supporeted names of colors: black, light gray, dark gray,
+ * dark blue, dark red, dark green, dark Magenta, dark yellow, dark cyan,
+ * blue, red, green, magenta, yellow, cyan
+ * @return
+ */
 QColor nameToColorConverter(const QString &name)
 {
     if (name.contains("black", Qt::CaseInsensitive))
         return Qt::black;
     else if (name.contains("white", Qt::CaseInsensitive))
         return Qt::white;
-    else if (name.contains("lght", Qt::CaseInsensitive) &&
+    else if (name.contains("light", Qt::CaseInsensitive) &&
              name.contains("gray", Qt::CaseInsensitive))
         return Qt::lightGray;
     else if (name.contains("dark", Qt::CaseInsensitive) &&
@@ -129,22 +137,22 @@ QString graphTypeToNameConverter(const GraphType &type)
     }
 }
 
+/**
+ * enum GradientPreset { gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
+                    ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
+                    ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)
+                    ,gpNight     ///< Continuous lightness from black over weak blueish colors to white (suited for non-biased data representation)
+                    ,gpCandy     ///< Blue over pink to white
+                    ,gpGeography ///< Colors suitable to represent different elevations on geographical maps
+                    ,gpIon       ///< Half hue spectrum from black over purple to blue and finally green (creates banding illusion but allows more precise magnitude estimates)
+                    ,gpThermal   ///< Colors suitable for thermal imaging, ranging from dark blue over purple to orange, yellow and white
+                    ,gpPolar     ///< Colors suitable to emphasize polarity around the center, with blue for negative, black in the middle and red for positive values
+                    ,gpSpectrum  ///< An approximation of the visible light spectrum (creates banding illusion but allows more precise magnitude estimates)
+                    ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
+                    ,gpHues
+ */
 QCPColorGradient::GradientPreset nameToColorScaleTypeConverter(const QString &name)
 {
-    /*
-     * enum GradientPreset { gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
-                        ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
-                        ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)
-                        ,gpNight     ///< Continuous lightness from black over weak blueish colors to white (suited for non-biased data representation)
-                        ,gpCandy     ///< Blue over pink to white
-                        ,gpGeography ///< Colors suitable to represent different elevations on geographical maps
-                        ,gpIon       ///< Half hue spectrum from black over purple to blue and finally green (creates banding illusion but allows more precise magnitude estimates)
-                        ,gpThermal   ///< Colors suitable for thermal imaging, ranging from dark blue over purple to orange, yellow and white
-                        ,gpPolar     ///< Colors suitable to emphasize polarity around the center, with blue for negative, black in the middle and red for positive values
-                        ,gpSpectrum  ///< An approximation of the visible light spectrum (creates banding illusion but allows more precise magnitude estimates)
-                        ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
-                        ,gpHues
-     */
     if (name.contains("grayscale", Qt::CaseInsensitive))
         return QCPColorGradient::gpGrayscale;
     else if (name.contains("hot", Qt::CaseInsensitive))

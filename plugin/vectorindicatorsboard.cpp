@@ -18,6 +18,11 @@
 #define M_PI		3.14159265358979323846
 #endif
 
+/**
+ * @brief VectorIndicatorsBoard::VectorIndicatorsBoard
+ * Implements Gauge Indicators board.
+ * @param parent
+ */
 VectorIndicatorsBoard::VectorIndicatorsBoard(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VectorIndicatorsBoard)
@@ -43,6 +48,11 @@ VectorIndicatorsBoard::~VectorIndicatorsBoard()
 }
 
 // Call at first!
+/**
+ * @brief VectorIndicatorsBoard::setValuesDescriptions
+ * @param mvd MultiMap: Measured Value Name -> MeasuredValueDescription structure
+ * @return true|false
+ */
 bool VectorIndicatorsBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
@@ -52,6 +62,11 @@ bool VectorIndicatorsBoard::setValuesDescriptions(const QMultiMap<QString, Measu
     return true;
 }
 
+/**
+ * @brief VectorIndicatorsBoard::setConfig
+ * Set pointer to \link GraphPluginConfig \endlink
+ * @param config
+ */
 void VectorIndicatorsBoard::setConfig(GraphPluginConfig *config)
 {
     m_config = config;

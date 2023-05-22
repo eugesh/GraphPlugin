@@ -12,6 +12,13 @@ double estimatePeriod(QVector<uint64_t> tsVec)
     return sum / (tsVec.size() - 1);
 }
 
+/**
+ * @brief QCPWaterfall::QCPWaterfall
+ * Extention of QCPColorMap for QCustomPlot. ToDo: move to QCustomPlot repository.
+ * Implements ring buffer to allow user \link addData \endlink "infinitely".
+ * @param keyAxis the same as in QCPColorMap.
+ * @param valueAxis the same as in QCPColorMap.
+ */
 QCPWaterfall::QCPWaterfall(QCPAxis *keyAxis, QCPAxis *valueAxis)
     : QCPColorMap(keyAxis, valueAxis)
 {
@@ -129,6 +136,12 @@ void QCPWaterfall::clearAll()
 
 const QStringList GradientNames = {"Grayscale", "Hot", "Cold", "Night", "Candy", "Geo", "Ion", "Thermal", "Polar", "Spectrum", "Jet", "Hues"};
 
+/**
+ * @brief QCPWaterfallScale::QCPWaterfallScale
+ * Extention of QCPColorScale for QCustomPlot. ToDo: move to QCustomPlot repository.
+ * Additional feature - Context Menu with list of QCPColorGradient::GradientPreset fields
+ * @param parentPlot the same as in QCPColorScale.
+ */
 QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
     : QCPColorScale(parentPlot)
 {
