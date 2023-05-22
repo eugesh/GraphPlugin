@@ -101,16 +101,16 @@ void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
                     continue;
                 if (yval.name == yVAlName) {
                     double mag, angle;
-                    if (m_properties.value(xval.name).graphType == GraphPolar) {
-                        mag = xval.value.toDouble();
-                        angle = yval.value.toDouble();
+                    if (m_properties.value(widgetName).graphType == GraphPolar) {
+                        angle = xval.value.toDouble();
+                        mag = yval.value.toDouble();
                     } else {
                         auto X = xval.value.toDouble();
                         auto Y = yval.value.toDouble();
                         angle = atan2(Y, X);
                         mag = sqrt(Y * Y + X * X);
                     }
-                    m_items[widgetName]->setAngle(angle * 180 / M_PI);
+                    m_items[widgetName]->setAngle(angle);// * 180 / M_PI);
                     m_items[widgetName]->setMagnitude(mag);
                     m_items[widgetName]->setEnabled(true);
                 }
@@ -164,14 +164,14 @@ bool VectorIndicatorsBoard::readJSON(const QString &path)
         QJsonObject indicatorObject = widgetsArray[i].toObject();
         GraphProperties properties;
         properties.name = indicatorObject["name"].toString();
-        properties.x_name = indicatorObject["x_name"].toString();
-        properties.y_name = indicatorObject["y_name"].toString();
-        properties.x_title = indicatorObject["x_title"].toString();
-        properties.y_title = indicatorObject["y_title"].toString();
-        properties.x_unit = indicatorObject["x_unit"].toString();
-        properties.y_unit = indicatorObject["y_unit"].toString();
-        properties.x_phisical_quantity = indicatorObject["x_phisical_quantity"].toString();
-        properties.y_phisical_quantity = indicatorObject["y_phisical_quantity"].toString();
+        properties.x_name = indicatorObject["phi_name"].toString();
+        properties.y_name = indicatorObject["mag_name"].toString();
+        properties.x_title = indicatorObject["phi_title"].toString();
+        properties.y_title = indicatorObject["mag_title"].toString();
+        properties.x_unit = indicatorObject["phi_unit"].toString();
+        properties.y_unit = indicatorObject["mag_unit"].toString();
+        properties.x_phisical_quantity = indicatorObject["phi_phisical_quantity"].toString();
+        properties.y_phisical_quantity = indicatorObject["mag_phisical_quantity"].toString();
         properties.graphType = nameToGraphTypeConverter(indicatorObject["graph_type"].toString());
         // "channels": [1],
         // QJsonArray arr = plotObject["channels"].toArray();
@@ -207,14 +207,14 @@ bool VectorIndicatorsBoard::saveJSON(const QString &path) const
 
     for (auto prop : m_properties) {
         indicatorObject["name"] = prop.name;
-        indicatorObject["x_name"] = prop.x_name;
-        indicatorObject["y_name"] = prop.y_name;
-        indicatorObject["x_title"] = prop.x_title;
-        indicatorObject["y_title"] = prop.y_title;
-        indicatorObject["x_unit"] = prop.x_unit;
-        indicatorObject["y_unit"] = prop.y_unit;
-        indicatorObject["x_phisical_quantity"] = prop.x_phisical_quantity;
-        indicatorObject["y_phisical_quantity"] = prop.y_phisical_quantity;
+        indicatorObject["phi_name"] = prop.x_name;
+        indicatorObject["mag_name"] = prop.y_name;
+        indicatorObject["phi_title"] = prop.x_title;
+        indicatorObject["mag_title"] = prop.y_title;
+        indicatorObject["phi_unit"] = prop.x_unit;
+        indicatorObject["mag_unit"] = prop.y_unit;
+        indicatorObject["phi_phisical_quantity"] = prop.x_phisical_quantity;
+        indicatorObject["mag_phisical_quantity"] = prop.y_phisical_quantity;
         //graphObject["color"] = ColorToNameConverter(prop.color);
 
         /*QJsonArray channelsArray;

@@ -357,7 +357,7 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
         for (auto map : m_measValDescMap)
             allDescMap.unite(map);
     } else {
-        allDescMap = m_measValDescMap[tableName];
+        allDescMap = m_measValDescMap.value(tableName);
     }
     m_digitalBoard->setValuesDescriptions(allDescMap);
     bool is_ok = m_digitalBoard->initFromJSON("");

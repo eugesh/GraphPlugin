@@ -99,7 +99,7 @@ GraphType nameToGraphTypeConverter(const QString &name)
     if (name.contains("scatter", Qt::CaseInsensitive))
         return GraphType::GraphScatter;
     else if (name.contains("polar", Qt::CaseInsensitive))
-        return GraphType::GraphParametric;
+        return GraphType::GraphPolar;
     else if (name.contains("param", Qt::CaseInsensitive))
         return GraphType::GraphParametric;
     else if (name.contains("integr", Qt::CaseInsensitive))
