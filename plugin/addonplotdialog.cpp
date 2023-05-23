@@ -4,22 +4,28 @@
 #include "graphpluginconfig.h"
 #include "ui_addonplotdialog.h"
 
+/**
+ * @brief AddOnPlotDialog::AddOnPlotDialog
+ * Dialog for adding new graph on plot area.
+ * @param parent parent class, optional.
+ * @param channelsNum number of chanels (todo).
+ */
 AddOnPlotDialog::AddOnPlotDialog(QWidget *parent, int channelsNum) :
     QDialog(parent),
     ui(new Ui::AddOnPlotDialog)
 {
     ui->setupUi(this);
 
-    connect(ui->xPhysQuantCbBox, &QComboBox::currentTextChanged, [&](const QString &text) {
+    connect(ui->xPhysQuantCbBox, &QComboBox::currentTextChanged, this, [&](const QString &text) {
         ui->xUnitComboBox->clear();
-        for (auto measUnit :  m_config->auxMeasUnits(text)) {
+        for (auto &measUnit :  m_config->measurementUnits(text)) {
             ui->xUnitComboBox->addItem(measUnit.value("name").toString());
         }
     });
 
-    connect(ui->yPhysQuantCbBox, &QComboBox::currentTextChanged, [&](const QString &text) {
+    connect(ui->yPhysQuantCbBox, &QComboBox::currentTextChanged, this, [&](const QString &text) {
         ui->yUnitComboBox->clear();
-        for (auto measUnit :  m_config->auxMeasUnits(text)) {
+        for (auto &measUnit :  m_config->measurementUnits(text)) {
             ui->yUnitComboBox->addItem(measUnit.value("name").toString());
         }
     });
@@ -41,22 +47,31 @@ AddOnPlotDialog::~AddOnPlotDialog()
     delete ui;
 }
 
+/**
+ * @brief AddOnPlotDialog::setConfig
+ * @param config pointer to \link GraphPluginConfig \endlink
+ */
 void AddOnPlotDialog::setConfig(GraphPluginConfig *config)
 {
     m_config = config;
 
     // Fill in Physical quantity Combo Boxes
-    for (auto physValName : config->physicalValuesNames()) {
+    for (auto &physValName : config->physicalValuesNames()) {
         ui->xPhysQuantCbBox->addItem(physValName);
         ui->yPhysQuantCbBox->addItem(physValName);
     }
 }
 
+/**
+ * @brief AddOnPlotDialog::setMeasValDesc
+ * @param mvd multimap Measuring Value Name <-> Measuring Value's Description
+ */
 void AddOnPlotDialog::setMeasValDesc(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValuesDesc = mvd;
 
-    for (auto val : mvd.values()) {
+    const auto vals = mvd.values();
+    for (auto &val : vals) {
         ui->xNameComboBox->addItem(val.name);
         ui->yNameComboBox->addItem(val.name);
     }
@@ -77,16 +92,28 @@ void AddOnPlotDialog::setGraphProperties(const GraphProperties &defaultProp)
 
 }
 
+/**
+ * @brief AddOnPlotDialog::getCustomPlotName
+ * @return name of plotting area.
+ */
 QString AddOnPlotDialog::getCustomPlotName() const
 {
     return ui->customPltNameLineEdit->text();
 }
 
+/**
+ * @brief AddOnPlotDialog::setTitle
+ * @param name title of dialog.
+ */
 void AddOnPlotDialog::setTitle(const QString& name)
 {
     ui->mainLabel->setText(name);
 }
 
+/**
+ * @brief AddOnPlotDialog::setProp
+ * @param prop \link GraphProperties \endlink
+ */
 void AddOnPlotDialog::setProp(const GraphProperties &prop)
 {
     ui->customPltNameLineEdit->setText(prop.name);
@@ -124,9 +151,6 @@ void AddOnPlotDialog::setProp(const GraphProperties &prop)
                 obj->setChecked(true);
                 obj->setEnabled(true);
             }
-
-            // ui->labelChannels->layout()->itemAt(ch)->setChecked(true);
-            // ui->labelChannels->layout()->itemAt(ch)->setEnabled(true);
         }
     }
 
@@ -178,11 +202,6 @@ QVector<int> AddOnPlotDialog::channels() const
             chls << ch;
         }
     }
-
-    /*if (ui->checkBoxCh1->isChecked()) chls << 1;
-    if (ui->checkBoxCh2->isChecked()) chls << 2;
-    if (ui->checkBoxCh3->isChecked()) chls << 3;
-    if (ui->checkBoxCh4->isChecked()) chls << 4;*/
 
     return chls;
 }

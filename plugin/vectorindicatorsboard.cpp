@@ -50,8 +50,8 @@ VectorIndicatorsBoard::~VectorIndicatorsBoard()
 // Call at first!
 /**
  * @brief VectorIndicatorsBoard::setValuesDescriptions
- * @param mvd MultiMap: Measured Value Name -> MeasuredValueDescription structure
- * @return true|false
+ * @param mvd MultiMap: Measured Value Name -> MeasuredValueDescription structure.
+ * @return true|false.
  */
 bool VectorIndicatorsBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {

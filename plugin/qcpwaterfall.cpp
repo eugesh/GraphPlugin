@@ -44,8 +44,10 @@ void QCPWaterfall::setSize(const QSize &size, double defVal)
 
 /**
  * @brief QCPWaterfall::addData
- * @param vector row r column
- * @param orient horizontal or vertical
+ * @param timestamp X axis, scalar.
+ * @param yVec Y axis, QList.
+ * @param zVec Z axis, QList.
+ * @param orient orientation, Horizontal or Vertical.
  */
 void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const QList<double> &zVec, Qt::Orientation orient)
 {
@@ -106,20 +108,28 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
 
     rescaleAxes();
 }
-
+/**
+ * @brief QCPWaterfall::clearData
+ * Clears data from custom plot area and ring buffer. Doesn't resize QCPColorMap.
+ */
 void QCPWaterfall::clearData()
 {
+    data()->fill(NAN);
     m_timeVector.clear();
     m_lastColumnIndex = 0;
     m_lastRowIndex = 0;
 }
 
+/**
+ * @brief QCPWaterfall::clearAll
+ * Clears all data and sets size to (0,0).
+ */
 void QCPWaterfall::clearAll()
 {
     data()->clear();
 }
 
-/*
+/**
      gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
     ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
     ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)
@@ -133,7 +143,6 @@ void QCPWaterfall::clearAll()
     ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
     ,gpHues
  */
-
 const QStringList GradientNames = {"Grayscale", "Hot", "Cold", "Night", "Candy", "Geo", "Ion", "Thermal", "Polar", "Spectrum", "Jet", "Hues"};
 
 /**
@@ -172,6 +181,10 @@ QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
 
 }
 
+/**
+ * @brief QCPWaterfallScale::setGradient
+ * @param preset
+ */
 void QCPWaterfallScale::setGradient(const QCPColorGradient::GradientPreset &preset)
 {
     QCPColorGradient gradient(preset);

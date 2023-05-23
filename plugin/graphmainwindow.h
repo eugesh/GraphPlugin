@@ -11,28 +11,38 @@ namespace Ui {
 class GraphMainWindow;
 }
 
-// Unique ID of measured value
+/**
+ * @brief The valID struct
+ * Unique ID of measured value.
+ */
 struct valID {
-    // Number of channel
+    //! Number of channel (for multichannel devices).
     int chNumber;
-    // Name of physical quantity
+    //! Name of physical quantity.
     QString name;
 };
 
-// Unique ID of graph figure
+/**
+ * @brief The GraphID struct
+ * Uniqe ID of any graph figure placed on the plotting area.
+ */
 struct GraphID {
+    //! Name of graph.
     QString graphName;
-    // Number of channel
+    //! Number of channel (for multichannel devices).
     int chNumber;
-    // Names of axes
+    //! Name of X axis
     QString xName;
+    //! Name of Y axis
     QString yName;
+    //! Name of Z axis
     QString zName;
 };
 
 class GraphPluginConfig;
 class QCPWaterfall;
 
+//! Necessary for GraphID comparison, e.g. in sorting operation or placing into QMap.
 inline bool operator<(const GraphID &g1, const GraphID &g2)
 {
     if (g1.chNumber != g2.chNumber)

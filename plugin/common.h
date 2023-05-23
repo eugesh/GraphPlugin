@@ -69,37 +69,40 @@ enum GraphType {
 
 /**
  * @brief The GraphProperties struct
- * Properties of
+ * Common properties of 5 types of graphs:
+ * - Scatter graph, X(Y);
+ * - Polar graph, Ro(Phi);
+ * - Parametric graph, X(t), Y(t);
+ * - Integral graph, Yi+1 = Yi-1 + Yi;
+ * - Color map, X is t, Y and Z is colored.
  */
 struct GraphProperties {
-    QString name;
-    QString x_name;
-    QString y_name;
+    QString name; //! Name of graph.
+    QString x_name; //! Name of measured value of X axis.
+    QString y_name; //! Name of measured value of Y axis.
     QString z_name; //! For color maps and waterfalls.
-    QString x_title;
-    QString y_title;
-    QString z_title;
-    QString x_unit;
-    QString y_unit;
-    QString z_unit;
-    QString x_phisical_quantity;
-    QString y_phisical_quantity;
-    QString z_phisical_quantity;
+    QString x_title; //! Title of X axis.
+    QString y_title; //! Title of Y axis.
+    QString z_title; //! Title of Z axis.
+    QString x_unit; //! Measurement unit of X axis.
+    QString y_unit; //! Measurement unit of Y axis.
+    QString z_unit; //! Measurement unit of Z axis.
+    QString x_phisical_quantity; //! Physical quantity of X axis.
+    QString y_phisical_quantity; //! Physical quantity of Y axis.
+    QString z_phisical_quantity; //! Physical quantity of Z axis.
     GraphDir x_dir; //! Direction of X axis.
     GraphDir y_dir; //! Direction of Y axis.
     unsigned int total_N; //! Total number of stored points.
-    unsigned int last_N_limit; //! For SHOW_LAST_N update method
+    unsigned int last_N_limit; //! For SHOW_LAST_N update method.
     GraphUpdateMode update_mode; //! See \link GraphUpdateMode \endlink.
-    GraphScaleType x_scale;
-    GraphScaleType y_scale;
-    GraphScaleType z_scale;
-    QVector<int> channels; // e.g. 1, 2, 3, 4
-    QColor color;
-    GraphType graphType;
-    QCPColorGradient::GradientPreset colorScale;
-    QString indexName;
-    // bool is_parametric = false;
-    // bool is_integral = false;
+    GraphScaleType x_scale; //! Type of scale of X axis.
+    GraphScaleType y_scale; //! Type of scale of Y axis.
+    GraphScaleType z_scale; //! Type of scale of Z axis.
+    QVector<int> channels; //! e.g. 1, 2, 3, 4
+    QColor color; //! Color of graph's curve (except "Color maps").
+    GraphType graphType; //! Type of graph.
+    QCPColorGradient::GradientPreset colorScale; //! Gradient type of Color map (for Color maps only).
+    QString indexName; //! Measured value name, which is an index for Color Maps.
 };
 
 QString ColorToNameConverter(const QColor &color);

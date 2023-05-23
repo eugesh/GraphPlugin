@@ -39,31 +39,58 @@ GraphPluginConfig::GraphPluginConfig(const QString &pathToUnits, const QString &
     readAuxUnits(pathToUnits);
 }
 
+/**
+ * @brief GraphPluginConfig::measurementUnits
+ * @return multimap "Physical Value Name" <-> "Unit of measurement" (<-> is multiple to multiple relation)
+ */
 QMultiMap<QString, MeasUnit> GraphPluginConfig::measurementUnits() const
 {
     return m_measUnits;
 }
 
+/**
+ * @brief GraphPluginConfig::measurementUnits
+ * @param name "Physical Value Name"
+ * @return list of "Units of measurement" for given "Physical Value Name"
+ */
 QList<MeasUnit> GraphPluginConfig::measurementUnits(const QString &name) const
 {
     return m_measUnits.values(name);
 }
 
+/**
+ * @brief GraphPluginConfig::auxMeasUnits
+ * @param physValName
+ * @return
+ */
 QList<QMultiMap<QString, QVariant>> GraphPluginConfig::auxMeasUnits(const QString &physValName) const
 {
     return m_measUnits.values(physValName);
 }
 
+/**
+ * @brief GraphPluginConfig::physicalValuesNames
+ * @return list of physical quantity names
+ */
 QStringList GraphPluginConfig::physicalValuesNames() const
 {
     return m_measUnits.uniqueKeys();
 }
 
+/**
+ * @brief GraphPluginConfig::prefixes
+ * @return map prefixe name -> struct SIPrefix.
+ */
 QMap<QString, SIPrefix> GraphPluginConfig::prefixes() const
 {
     return m_prefixes;
 }
 
+/**
+ * @brief GraphPluginConfig::readPrefixes
+ * @param pathToJSON path to JSON file with prefixes descriptions.
+ * @return true|false
+ */
 bool GraphPluginConfig::readPrefixes(const QString &pathToJSON)
 {
     QFile loadFile(pathToJSON);
@@ -122,6 +149,7 @@ QVariant GraphPluginConfig::getProperty(const QString &physQuantName, const QStr
     return {};
 }
 
+// Reads JSON with auxiliary measurement units
 bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
 {
     QFile loadFile(pathToJSON);
@@ -197,6 +225,11 @@ bool GraphPluginConfig::readAuxUnits(const QString &pathToJSON)
     return true;
 }
 
+/**
+ * @brief GraphPluginConfig::getMultipliers
+ * @param physQuantityName name of Physical quantity.
+ * @return map
+ */
 QMap<QString, double> GraphPluginConfig::getMultipliers(const QString &physQuantityName) const
 {
     QMap<QString, double> map;
@@ -210,6 +243,11 @@ QMap<QString, double> GraphPluginConfig::getMultipliers(const QString &physQuant
     return map;
 }
 
+/**
+ * @brief GraphPluginConfig::getMultipliersWithPrefixes
+ * @param physQuantityName name of Physical quantity, e.g. "metre".
+ * @return map "measurement unit with prefixes" -> multiplier. E.g. {"mm->0.001", "cm->0.01", "m->1", "km->1000"} etc.
+ */
 QMap<QString, double> GraphPluginConfig::getMultipliersWithPrefixes(const QString &physQuantityName) const
 {
     QMap<QString, double> map;
@@ -228,6 +266,12 @@ QMap<QString, double> GraphPluginConfig::getMultipliersWithPrefixes(const QStrin
     return map;
 }
 
+/**
+ * @brief GraphPluginConfig::getOffsets
+ * @param physQuantityName name of Physical quantity, e.g. "metre".
+ * @return map "measurement unit" -> offset from main unit,
+ * e.g. {"celsius->-273.15", "fahrenheit->-459.67, "kelvin->0"}.
+ */
 QMap<QString, double> GraphPluginConfig::getOffsets(const QString &physQuantityName) const
 {
     QMap<QString, double> map;

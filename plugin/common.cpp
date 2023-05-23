@@ -217,9 +217,9 @@ QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &ty
 
  /**
   * @brief loadConfigJSON
-  *
-  * @param pathToJSON path to JSON file.
-  * @return
+  * Reads JSON file with Measured Values descriptions.
+  * @param pathToJSON path to JSON file (e.g. "plugin_config.json").
+  * @return multimap "Measured Value name" -> "struct MeasuredValueDescription".
   */
  QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
  {
@@ -240,8 +240,9 @@ QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &ty
 
      for (int i = 0; i < valuesArray.size(); ++i) {
          QJsonObject valueObject = valuesArray[i].toObject();
+         // Time is always the first coloumn of history table.
          if (valueObject["name"].toString().contains("time", Qt::CaseInsensitive))
-             continue;
+             continue; // Skip time, it is not "value to measure".
 
          MeasuredValueDescription mvdesc_struct;
          mvdesc_struct.name = valueObject["name"].toString();
