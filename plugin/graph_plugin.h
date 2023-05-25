@@ -69,6 +69,8 @@ struct GraphProperties;
 struct MeasuredValueDescription;
 class QTableView;
 
+using namespace Graph;
+
 class GraphPlugin : public QObject, GraphInterface
 {
     Q_OBJECT
@@ -98,8 +100,8 @@ public:
     virtual void setUpdateable(bool isUpdateable = true) override;
 
 public slots:
-    void onAddNewPlot(const QString &customPlotName, const GraphProperties &prop);
-    void onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop);
+    void onAddNewPlot(const QString &customPlotName, const Graph::GraphProperties &prop);
+    void onAddNewVectorIndicator(const QString &customPlotName, const Graph::GraphProperties &prop);
 
 private:
     // Values types, measurement units
@@ -146,7 +148,7 @@ private:
     // Data config
     int m_ringBufferSize;
     // Meas Value Name <-> Description
-    QMap<QString, QMultiMap<QString, MeasuredValueDescription>> m_measValDescMap;
+    QMap<QString, QMultiMap<QString, Graph::MeasuredValueDescription>> m_measValDescMap;
     // Table name --> Meas Values Names
     QMultiMap<QString, QString> m_tableMeasValNames;
     //!< Unique Names of values

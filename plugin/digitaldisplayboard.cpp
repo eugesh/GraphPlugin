@@ -1,4 +1,3 @@
-#include "common.h"
 #include "digitaldisplayboard.h"
 #include "digitalboarditem.h"
 #include "graph_interface.h"
@@ -10,6 +9,8 @@
 #include <QDockWidget>
 #include <QStandardPaths>
 #include <QSettings>
+
+using namespace Graph;
 
 /**
  * @brief DigitalDisplayBoard::DigitalDisplayBoard
@@ -129,7 +130,7 @@ void DigitalDisplayBoard::closeEvent(QCloseEvent *event)
  * @param mvd map "Measured Value name" -> "struct MeasuredValueDescription".
  * @return true|false.
  */
-bool DigitalDisplayBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
+bool DigitalDisplayBoard::setValuesDescriptions(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
 

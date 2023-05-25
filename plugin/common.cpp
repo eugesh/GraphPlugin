@@ -7,15 +7,17 @@
 #include <QJsonObject>
 #include <QMap>
 
+using namespace Graph;
+
 /**
  * @brief nameToColorConverter
- * Color short name to Qt namespace colors types
+ * Color short name to Qt namespace colors types.
  * @param name supporeted names of colors: black, light gray, dark gray,
  * dark blue, dark red, dark green, dark Magenta, dark yellow, dark cyan,
- * blue, red, green, magenta, yellow, cyan
+ * blue, red, green, magenta, yellow, cyan.
  * @return
  */
-QColor nameToColorConverter(const QString &name)
+QColor Graph::nameToColorConverter(const QString &name)
 {
     if (name.contains("black", Qt::CaseInsensitive))
         return Qt::black;
@@ -62,7 +64,7 @@ QColor nameToColorConverter(const QString &name)
     return QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
 }
 
- QString ColorToNameConverter(const QColor &color)
+ QString Graph::ColorToNameConverter(const QColor &color)
  {
     switch (color.rgb()) {
     case Qt::black:
@@ -102,7 +104,7 @@ QColor nameToColorConverter(const QString &name)
     }
 }
 
-GraphType nameToGraphTypeConverter(const QString &name)
+GraphType Graph::nameToGraphTypeConverter(const QString &name)
 {
     if (name.contains("scatter", Qt::CaseInsensitive))
         return GraphType::GraphScatter;
@@ -119,7 +121,7 @@ GraphType nameToGraphTypeConverter(const QString &name)
     return GraphType::GraphScatter;
 }
 
-QString graphTypeToNameConverter(const GraphType &type)
+QString Graph::graphTypeToNameConverter(const GraphType &type)
 {
     switch (type) {
     case GraphScatter:
@@ -137,8 +139,9 @@ QString graphTypeToNameConverter(const GraphType &type)
     }
 }
 
-/**
- * enum GradientPreset { gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
+/*
+ * @brief The GradientPreset enum
+ *                   gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
                     ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
                     ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)
                     ,gpNight     ///< Continuous lightness from black over weak blueish colors to white (suited for non-biased data representation)
@@ -151,7 +154,7 @@ QString graphTypeToNameConverter(const GraphType &type)
                     ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
                     ,gpHues
  */
-QCPColorGradient::GradientPreset nameToColorScaleTypeConverter(const QString &name)
+QCPColorGradient::GradientPreset Graph::nameToColorScaleTypeConverter(const QString &name)
 {
     if (name.contains("grayscale", Qt::CaseInsensitive))
         return QCPColorGradient::gpGrayscale;
@@ -182,7 +185,7 @@ QCPColorGradient::GradientPreset nameToColorScaleTypeConverter(const QString &na
     return QCPColorGradient::gpJet;
 }
 
-QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &type)
+QString Graph::colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &type)
 {
     switch (type) {
     case QCPColorGradient::gpGrayscale:
@@ -221,7 +224,7 @@ QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &ty
   * @param pathToJSON path to JSON file (e.g. "plugin_config.json").
   * @return multimap "Measured Value name" -> "struct MeasuredValueDescription".
   */
- QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON)
+ QMultiMap<QString, MeasuredValueDescription> Graph::loadConfigJSON(const QString &pathToJSON)
  {
      QFile loadFile(pathToJSON);
 

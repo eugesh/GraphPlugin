@@ -10,6 +10,8 @@
 #include <QKeyEvent>
 #include <QMenu>
 
+using namespace Graph;
+
 /**
  * @brief GraphTableView::GraphTableView
  * Table View for dock window with history of received packets.
@@ -89,7 +91,7 @@ void GraphTableView::setConfig(GraphPluginConfig *config)
  * @brief GraphTableView::setMeasValues
  * @param mvd multimap Measuring Value Name <-> Description
  */
-void GraphTableView::setMeasValues(const QMultiMap<QString, MeasuredValueDescription> &mvd)
+void GraphTableView::setMeasValues(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd)
 {
     m_measValuesDesc = mvd;
     if (! m_addPlotDialog) {
@@ -202,9 +204,9 @@ void GraphTableView::placeOnVectorIndicator()
  * @return graph property struct with name, y_name and y_title correspoding to the physical quantity,
  * the rest fields are default.
  */
-GraphProperties GraphTableView::graphPropertiesFromSelectedColoumn(const QString &physicalQuantityName) const
+Graph::GraphProperties GraphTableView::graphPropertiesFromSelectedColoumn(const QString &physicalQuantityName) const
 {
-    GraphProperties prop;
+    Graph::GraphProperties prop;
 
     prop.name = m_measValuesDesc.value(physicalQuantityName).name; // m_measValuesDesc.value(physicalQuantityName).desc_ru;
     prop.x_dir = GraphDir::RIGHT;

@@ -61,13 +61,13 @@ class GraphMainWindow : public QMainWindow
 
 public:
     explicit GraphMainWindow(const QString &pathToJSON, QWidget *parent = nullptr);
-    explicit GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent = nullptr);
+    explicit GraphMainWindow(const QString &name, const Graph::GraphProperties &properties, QWidget *parent = nullptr);
     ~GraphMainWindow();
 
     bool loadCSV();
     QString nameTr() const;
     void setConfig(GraphPluginConfig *config);
-    bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
+    bool setValuesDescriptions(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd);
     void setUpdateAble(bool isUpdateable);
 
 public slots:
@@ -78,7 +78,7 @@ public slots:
     void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
     void add2dData(const QList<MeasuredValue> &val);
-    void addGraph(const GraphProperties &prop);
+    void addGraph(const Graph::GraphProperties &prop);
     void onRemoveJSON();
 
 signals:
@@ -89,14 +89,14 @@ private:
     void createCustomPlot(const QString &name);
     bool readJSON(const QString &path);
     bool saveJSON(const QString &path) const;
-    static GraphProperties parseJsonObject(const QJsonObject &plotObject);
+    static Graph::GraphProperties parseJsonObject(const QJsonObject &plotObject);
     bool removeJSON() const;
     // bool applyProperties();
     void addGraph(const QString &name);
     void addXYGraph(const QString &name);
     void addParametricGraph(const QString &name);
     void addWaterfallGraph(const QString &name);
-    void addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop);
+    void addWaterfallGraph(QCustomPlot *cplot, const Graph::GraphProperties &prop);
     void addAdditionalWaterfallGraph(const QString &name);
     void removeWaterfallGraph(const QString &name);
     void saveCSV(const QString &name) const;
@@ -121,7 +121,7 @@ private:
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     QMultiMap<QString, QString> m_valueNameYX;
     // Graph name -> properties
-    QMultiMap<QString, GraphProperties> m_properties;
+    QMultiMap<QString, Graph::GraphProperties> m_properties;
     QString m_JSONPath;
     QString m_CSVPath;
     QString m_ImagePath;
@@ -130,7 +130,7 @@ private:
     // Is there any changes in JSON files
     bool m_hasUpdate = false;
     GraphPluginConfig *m_config;
-    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, Graph::MeasuredValueDescription> m_measValDescMap;
     QMap<QString, QString> m_auxPlotsMap;
     bool m_isUpdatable = true;
 };

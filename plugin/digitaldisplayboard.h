@@ -1,6 +1,7 @@
 #ifndef DIGITALDISPLAYBOARD_H
 #define DIGITALDISPLAYBOARD_H
 
+#include "common.h"
 #include "graph_interface.h"
 
 #include <QMainWindow>
@@ -24,7 +25,7 @@ public:
     ~DigitalDisplayBoard() override;
 
     // Call at first!
-    bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
+    bool setValuesDescriptions(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd);
     void setConfig(GraphPluginConfig *config);
 
     // Apply the last custom settings
@@ -45,7 +46,7 @@ private:
     Ui::DigitalDisplayBoard *ui;
 
     GraphPluginConfig *m_config;
-    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, Graph::MeasuredValueDescription> m_measValDescMap;
     QMap<QString, DigitalBoardItem*> m_items;
     QMap<QString, QDockWidget*> m_itemsDocks;
     QList<QString> m_activeSensorsNames;

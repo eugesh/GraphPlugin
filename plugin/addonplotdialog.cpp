@@ -1,8 +1,9 @@
 #include "addonplotdialog.h"
-#include "common.h"
 #include "graphmainwindow.h"
 #include "graphpluginconfig.h"
 #include "ui_addonplotdialog.h"
+
+using namespace Graph;
 
 /**
  * @brief AddOnPlotDialog::AddOnPlotDialog
@@ -66,7 +67,7 @@ void AddOnPlotDialog::setConfig(GraphPluginConfig *config)
  * @brief AddOnPlotDialog::setMeasValDesc
  * @param mvd multimap Measuring Value Name <-> Measuring Value's Description
  */
-void AddOnPlotDialog::setMeasValDesc(const QMultiMap<QString, MeasuredValueDescription> &mvd)
+void AddOnPlotDialog::setMeasValDesc(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd)
 {
     m_measValuesDesc = mvd;
 
@@ -77,7 +78,7 @@ void AddOnPlotDialog::setMeasValDesc(const QMultiMap<QString, MeasuredValueDescr
     }
 
     // Add "time"
-    MeasuredValueDescription timeVal;
+    Graph::MeasuredValueDescription timeVal;
     timeVal.desc = "time";
     timeVal.desc_ru = tr("время");
     timeVal.name = "time";
@@ -87,7 +88,7 @@ void AddOnPlotDialog::setMeasValDesc(const QMultiMap<QString, MeasuredValueDescr
     ui->xNameComboBox->addItem("time");
 }
 
-void AddOnPlotDialog::setGraphProperties(const GraphProperties &defaultProp)
+void AddOnPlotDialog::setGraphProperties(const Graph::GraphProperties &defaultProp)
 {
 
 }
@@ -114,7 +115,7 @@ void AddOnPlotDialog::setTitle(const QString& name)
  * @brief AddOnPlotDialog::setProp
  * @param prop \link GraphProperties \endlink
  */
-void AddOnPlotDialog::setProp(const GraphProperties &prop)
+void AddOnPlotDialog::setProp(const Graph::GraphProperties &prop)
 {
     ui->customPltNameLineEdit->setText(prop.name);
     ui->graphNameLineEdit->clear();
@@ -157,9 +158,9 @@ void AddOnPlotDialog::setProp(const GraphProperties &prop)
     ui->colorComboBox->setCurrentText(ColorToNameConverter(prop.color));
 }
 
-GraphProperties AddOnPlotDialog::getProp() const
+Graph::GraphProperties AddOnPlotDialog::getProp() const
 {
-    GraphProperties prop;
+    Graph::GraphProperties prop;
 
     prop.name = ui->graphNameLineEdit->text();
     prop.x_name = ui->xNameComboBox->currentText();
@@ -177,7 +178,7 @@ GraphProperties AddOnPlotDialog::getProp() const
     prop.update_mode = ui->updateModeCbBox->currentText().contains(tr("Отображать все")) ? GraphUpdateMode::SHOW_ALL : GraphUpdateMode::SHOW_LAST_N;
     prop.x_scale = ui->xScaleTypeCbBox->currentText().contains(tr("Линейная")) ? GraphScaleType::LIN : GraphScaleType::LOG;
     prop.y_scale = ui->yScaleTypeCbBox->currentText().contains(tr("Линейная")) ? GraphScaleType::LIN : GraphScaleType::LOG;
-    prop.color = nameToColorConverter(ui->colorComboBox->currentText());
+    prop.color = Graph::nameToColorConverter(ui->colorComboBox->currentText());
     prop.graphType = static_cast<GraphType> (ui->graphTypeCbBox->currentIndex());
     // prop.is_parametric = ui->parametricCurveCheckBox->isChecked();
     // prop.is_integral = ui->integrateCheckBox->isChecked();
