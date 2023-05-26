@@ -10,8 +10,8 @@
 namespace Graph {
 
 enum GraphPluginMode {
-    GRAPH_DATA_SYNCH,         //!< Data represents one packet, every value arrives synchronously (Telemetry packet mode)
-    GRAPH_DATA_ASYNC          //!< Values arrives asynchronously () // Not implemented yet
+    GRAPH_DATA_SYNCH,         //!< Data represents one packet, every value arrives synchronously (Telemetry packet mode).
+    GRAPH_DATA_ASYNC          //!< Values arrives asynchronously (). // Not implemented yet
 };
 
 enum : int {
@@ -37,7 +37,7 @@ struct MeasuredValueDescription {
 
 /**
  * @brief The GraphDir enum
- * X and Y axis direction (e.g. RIGHT to X and UP for Y)
+ * X and Y axis direction (e.g. RIGHT to X and UP for Y).
  */
 enum GraphDir {
     LEFT,
@@ -48,7 +48,7 @@ enum GraphDir {
 
 /**
  * @brief The GraphUpdateMode enum
- * Graph update method
+ * Graph update method.
  */
 enum GraphUpdateMode {
     SHOW_ALL, /*! Show all points  */
@@ -104,7 +104,7 @@ struct GraphProperties {
     QColor color; //! Color of graph's curve (except "Color maps").
     GraphType graphType; //! Type of graph.
     QCPColorGradient::GradientPreset colorScale; //! Gradient type of Color map (for Color maps only).
-    QString indexName; //! Measured value name, which is an index for Color Maps.w
+    QString indexName; //! Measured value name, which is an index for Color Maps.
 };
 
 QString ColorToNameConverter(const QColor &color);

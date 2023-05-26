@@ -73,7 +73,12 @@ void VectorIndicatorsBoard::setConfig(GraphPluginConfig *config)
     m_config = config;
 }
 
-// Apply the last custom settings
+/**
+ * @brief VectorIndicatorsBoard::initFromJSON
+ * Initialization.
+ * @param pathToJSON path to JSON file.
+ * @return
+ */
 bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
 {
     bool is_ok = readJSON(pathToJSON);
@@ -81,6 +86,11 @@ bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
     return is_ok && restoreBoardGeometry();
 }
 
+/**
+ * @brief VectorIndicatorsBoard::addNewIndicator
+ * Add new arrow-dial indicator.
+ * @param prop indicator properties. The same as for graphs.
+ */
 void VectorIndicatorsBoard::addNewIndicator(const Graph::GraphProperties &prop)
 {
     auto *item = new VectorIndicatorWidget(prop.name, this);
@@ -97,12 +107,16 @@ void VectorIndicatorsBoard::addNewIndicator(const Graph::GraphProperties &prop)
 
     m_xyMap.insert(prop.x_name, prop.y_name);
     m_namePropMap.insert(prop.name, prop);
-    //QPair<QString, QString> xy = qMakePair<QString, QString> (const_cast<QString>(prop).x_name, const_cast<QString>(prop).y_name);
     Graph::GraphProperties prop_tmp = prop;
     std::pair<QString, QString> xy = std::make_pair(prop_tmp.x_name, prop_tmp.y_name);
     m_xyNameMap.insert(xy, prop.name);
 }
 
+/**
+ * @brief VectorIndicatorsBoard::addData
+ * Update indicator with current data.
+ * @param vals list of \link MeasuredValue \endlink.
+ */
 void VectorIndicatorsBoard::addData(const QList<MeasuredValue> &vals)
 {
     for (auto xval : vals) {

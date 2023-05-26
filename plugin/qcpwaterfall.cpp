@@ -129,7 +129,7 @@ void QCPWaterfall::clearAll()
     data()->clear();
 }
 
-/**
+/*
      gpGrayscale  ///< Continuous lightness from black to white (suited for non-biased data representation)
     ,gpHot       ///< Continuous lightness from black over firey colors to white (suited for non-biased data representation)
     ,gpCold      ///< Continuous lightness from black over icey colors to white (suited for non-biased data representation)

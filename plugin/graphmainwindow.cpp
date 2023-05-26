@@ -220,6 +220,12 @@ GraphProperties GraphMainWindow::parseJsonObject(const QJsonObject &plotObject)
     return properties;
 }
 
+/**
+ * @brief GraphMainWindow::readJSON
+ * Reads descriptions of graphs.
+ * @param path path to JSON file with graphs description.
+ * @return
+ */
 bool GraphMainWindow::readJSON(const QString &path)
 {
     m_JSONPath = path;

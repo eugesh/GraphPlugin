@@ -97,12 +97,12 @@ public:
 
     virtual ~GraphInterface() = default;
     // virtual QObject* getObject() = 0;
-    /*! Method for adding some measured data to plugin's storage */
+    /*! Method for adding some measured data to plugin's storage. */
     virtual void addData(const MeasuredValue &value) = 0;
     virtual QToolBar* toolBar() const = 0;
     /*! List of Graph Plugin dock windows. */
     virtual QList<QDockWidget*> dockWindows() const = 0;
-    /*! Takes pointer to MainWindow */
+    /*! Takes pointer to MainWindow. */
     virtual void setMainWindow(QMainWindow*) = 0;
     /*! Load configuration JSONs. Must be called it after setMainWindow. */
     virtual bool loadJSONs(QStringList subdirsNames = {}) = 0;
