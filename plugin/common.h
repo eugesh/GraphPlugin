@@ -7,6 +7,8 @@
 #include <QColor>
 #include <QVector>
 
+namespace Graph {
+
 enum GraphPluginMode {
     GRAPH_DATA_SYNCH,         //!< Data represents one packet, every value arrives synchronously (Telemetry packet mode).
     GRAPH_DATA_ASYNC          //!< Values arrives asynchronously (). // Not implemented yet
@@ -23,14 +25,14 @@ enum : int {
  *
  */
 struct MeasuredValueDescription {
-    QString name;
-    QString desc;
-    QString desc_ru;
-    QString physQuant;
-    QString unit;
-    QString unit_rus;
-    QString symbol;
-    QString symbol_rus;
+    QString name; //! Name of measured value.
+    QString desc; //! Description.
+    QString desc_ru; //! Description in Russian.
+    QString physQuant; //! Physical quantity.
+    QString unit; // Measurement unit.
+    QString unit_rus; // // Measurement unit in Russian.
+    QString symbol; // Short name of Measurement unit, e.g. [m].
+    QString symbol_rus; // Short name of Measurement unit in Russian, e.g. [м].
 };
 
 /**
@@ -55,8 +57,8 @@ enum GraphUpdateMode {
 };
 
 enum GraphScaleType {
-    LIN,
-    LOG
+    LIN, //! Linear scale
+    LOG //! Logarithmic scale
 };
 
 enum GraphType {
@@ -102,15 +104,17 @@ struct GraphProperties {
     QColor color; //! Color of graph's curve (except "Color maps").
     GraphType graphType; //! Type of graph.
     QCPColorGradient::GradientPreset colorScale; //! Gradient type of Color map (for Color maps only).
-    QString indexName; //! Measured value name, which is an index for Color Maps.
+    QString indexName; //! Measured value name, which is an index for Color Maps.w
 };
 
 QString ColorToNameConverter(const QColor &color);
 QColor nameToColorConverter(const QString &name);
 GraphType nameToGraphTypeConverter(const QString &name);
 QString graphTypeToNameConverter(const GraphType &type);
-QMultiMap<QString, MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON);
+QMultiMap<QString, Graph::MeasuredValueDescription> loadConfigJSON(const QString &pathToJSON);
 QCPColorGradient::GradientPreset nameToColorScaleTypeConverter(const QString &name);
 QString colorScaleTypeToNameConverter(const QCPColorGradient::GradientPreset &type);
+
+};
 
 #endif // COMMON_H

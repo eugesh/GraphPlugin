@@ -1,4 +1,3 @@
-#include "common.h"
 #include "graphpluginconfig.h"
 #include "vectorindicatorsboard.h"
 #include "vectorindicatorwidget.h"
@@ -17,6 +16,8 @@
 #ifndef M_PI
 #define M_PI		3.14159265358979323846
 #endif
+
+using namespace Graph;
 
 /**
  * @brief VectorIndicatorsBoard::VectorIndicatorsBoard
@@ -53,7 +54,7 @@ VectorIndicatorsBoard::~VectorIndicatorsBoard()
  * @param mvd MultiMap: Measured Value Name -> MeasuredValueDescription structure.
  * @return true|false.
  */
-bool VectorIndicatorsBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
+bool VectorIndicatorsBoard::setValuesDescriptions(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
 
@@ -90,7 +91,7 @@ bool VectorIndicatorsBoard::initFromJSON(const QString &pathToJSON)
  * Add new arrow-dial indicator.
  * @param prop indicator properties. The same as for graphs.
  */
-void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
+void VectorIndicatorsBoard::addNewIndicator(const Graph::GraphProperties &prop)
 {
     auto *item = new VectorIndicatorWidget(prop.name, this);
     item->setWindowTitle(prop.name);
@@ -106,7 +107,7 @@ void VectorIndicatorsBoard::addNewIndicator(const GraphProperties &prop)
 
     m_xyMap.insert(prop.x_name, prop.y_name);
     m_namePropMap.insert(prop.name, prop);
-    GraphProperties prop_tmp = prop;
+    Graph::GraphProperties prop_tmp = prop;
     std::pair<QString, QString> xy = std::make_pair(prop_tmp.x_name, prop_tmp.y_name);
     m_xyNameMap.insert(xy, prop.name);
 }
@@ -191,7 +192,7 @@ bool VectorIndicatorsBoard::readJSON(const QString &path)
 
     for (int i = 0; i < widgetsArray.size(); ++i) {
         QJsonObject indicatorObject = widgetsArray[i].toObject();
-        GraphProperties properties;
+        Graph::GraphProperties properties;
         properties.name = indicatorObject["name"].toString();
         properties.x_name = indicatorObject["phi_name"].toString();
         properties.y_name = indicatorObject["mag_name"].toString();

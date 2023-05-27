@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QMap>
 
+#include "common.h"
+
 namespace Ui {
 class AddOnPlotDialog;
 }
@@ -22,12 +24,12 @@ public:
     ~AddOnPlotDialog();
 
     void setConfig(GraphPluginConfig *config);
-    void setGraphProperties(const GraphProperties &defaultProp);
-    void setMeasValDesc(const QMultiMap<QString, MeasuredValueDescription> &mvd);
+    void setGraphProperties(const Graph::GraphProperties &defaultProp);
+    void setMeasValDesc(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd);
 
     QString getCustomPlotName() const;
-    GraphProperties getProp() const;
-    void setProp(const GraphProperties &prop);
+    Graph::GraphProperties getProp() const;
+    void setProp(const Graph::GraphProperties &prop);
     void setTitle(const QString& name);
 
     QVector<int> channels() const;
@@ -35,7 +37,7 @@ public:
 private:
     Ui::AddOnPlotDialog *ui;
     GraphPluginConfig *m_config;
-    QMultiMap<QString, MeasuredValueDescription> m_measValuesDesc;
+    QMultiMap<QString, Graph::MeasuredValueDescription> m_measValuesDesc;
 };
 
 #endif // ADDONPLOTDIALOG_H

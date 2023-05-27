@@ -8,6 +8,8 @@
 #include <QMap>
 #include <QString>
 
+using namespace Graph;
+
 namespace Ui {
 class VectorIndicatorsBoard;
 }
@@ -26,7 +28,7 @@ public:
     ~VectorIndicatorsBoard();
 
     // Call at first!
-    bool setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd);
+    bool setValuesDescriptions(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd);
     void setConfig(GraphPluginConfig *config);
 
     // Apply the last custom settings
@@ -38,7 +40,7 @@ protected:
 
 public slots:
     void addData(const QList<MeasuredValue> &vals);
-    void addNewIndicator(const GraphProperties &prop);
+    void addNewIndicator(const Graph::GraphProperties &prop);
     void onSaveJsonAs();
     void onRemoveJson();
 
@@ -57,16 +59,16 @@ private:
     QString m_JSONPath;
     bool m_hasUpdate;
     GraphPluginConfig *m_config;
-    QMultiMap<QString, MeasuredValueDescription> m_measValDescMap;
+    QMultiMap<QString, Graph::MeasuredValueDescription> m_measValDescMap;
     QMap<QString, VectorIndicatorWidget*> m_items;
     // Key - abscissa, value - widget with vector indicator
     QMap<QString, QDockWidget*> m_itemsDocks;
     QList<QString> m_activeSensorsNames;
     // Key - abscissa, value - ordinate
     QMap<QString, QString> m_xyMap;
-    QMap<QString, GraphProperties> m_namePropMap;
+    QMap<QString, Graph::GraphProperties> m_namePropMap;
     QMap<std::pair<QString, QString>, QString> m_xyNameMap;
-    QMap<QString, GraphProperties> m_properties;
+    QMap<QString, Graph::GraphProperties> m_properties;
     int m_autoHideTimeout = -1;
 };
 

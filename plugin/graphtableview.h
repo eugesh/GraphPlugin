@@ -17,14 +17,14 @@ public:
     explicit GraphTableView(QWidget *parent = nullptr);
     void setModel(QAbstractItemModel *model) final; // ToDo: place to constructor
     void setConfig(GraphPluginConfig *config); // ToDo: place to constructor
-    void setMeasValues(const QMultiMap<QString, MeasuredValueDescription> &mvd);
+    void setMeasValues(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd);
 
 protected:
     void keyPressEvent(QKeyEvent *event) final;
 
 signals:
-    void createNewGraph(const QString &customPlotName, const GraphProperties &prop);
-    void createNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop);
+    void createNewGraph(const QString &customPlotName, const Graph::GraphProperties &prop);
+    void createNewVectorIndicator(const QString &customPlotName, const Graph::GraphProperties &prop);
 
 protected slots:
     void copyColumn();
@@ -33,11 +33,11 @@ protected slots:
     void placeOnVectorIndicator();
 
 private:
-    GraphProperties graphPropertiesFromSelectedColoumn(const QString &name) const;
+    Graph::GraphProperties graphPropertiesFromSelectedColoumn(const QString &name) const;
 
 private:
     AddOnPlotDialog *m_addPlotDialog = nullptr;
-    QMultiMap<QString, MeasuredValueDescription> m_measValuesDesc;
+    QMultiMap<QString, Graph::MeasuredValueDescription> m_measValuesDesc;
     // Config
     GraphPluginConfig *m_config = nullptr;
     // Header's view column index, on which context menu activated

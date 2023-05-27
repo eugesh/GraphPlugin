@@ -14,6 +14,8 @@
 #include <QTableView>
 #include <QToolBar>
 
+using namespace Graph;
+
 //   configs/{[deviceName]|si}/{config|graph}
 static const char* allConfigsFolder = "configs";
 /*static const char* adcpConfigsFolder = "adcp";
@@ -268,7 +270,7 @@ bool GraphPlugin::saveGraphPluginGeometry(const QString &suffix)
  */
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON, const QString &tableName)
 {
-    auto map = loadConfigJSON(pathToJSON);
+    auto map = Graph::loadConfigJSON(pathToJSON);
     // m_measValDescMap.unite(map);
     m_measValDescMap.insert(tableName, map);
 
@@ -366,7 +368,7 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
 {
     m_digitalBoard = new DigitalDisplayBoard();
     m_digitalBoard->setConfig(m_config);
-    QMultiMap<QString, MeasuredValueDescription> allDescMap;
+    QMultiMap<QString, Graph::MeasuredValueDescription> allDescMap;
     if (tableName.isEmpty()) {
         for (auto map : m_measValDescMap)
             allDescMap.unite(map);
@@ -403,7 +405,7 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_vectorIndicatorsBoard = new VectorIndicatorsBoard();
 
     m_vectorIndicatorsBoard->setConfig(m_config);
-    QMultiMap<QString, MeasuredValueDescription> allDescMap;
+    QMultiMap<QString, Graph::MeasuredValueDescription> allDescMap;
     for (auto map : m_measValDescMap)
         allDescMap.unite(map);
     m_vectorIndicatorsBoard->setValuesDescriptions(allDescMap);
@@ -441,7 +443,7 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
     dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
     GraphMainWindow *graphWindow = new GraphMainWindow(pathToJSON, m_mainWindow);
     graphWindow->setConfig(m_config);
-    QMultiMap<QString, MeasuredValueDescription> allDescMap;
+    QMultiMap<QString, Graph::MeasuredValueDescription> allDescMap;
     for (auto map : m_measValDescMap)
         allDescMap.unite(map);
     graphWindow->setValuesDescriptions(allDescMap);
@@ -512,7 +514,7 @@ void GraphPlugin::setMainWindow(QMainWindow *mw)
  * @param customPlotName name of custom plot area
  * @param prop graph properties \link GraphProperties \endlink
  */
-void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphProperties &prop)
+void GraphPlugin::onAddNewPlot(const QString &customPlotName, const Graph::GraphProperties &prop)
 {
     if (m_graphsMainWins.contains(customPlotName)) {
         m_graphsMainWins[customPlotName]->addGraph(prop);
@@ -522,7 +524,7 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
 
         GraphMainWindow *graphWindow = new GraphMainWindow(customPlotName, prop, m_mainWindow);
         graphWindow->setConfig(m_config);
-        QMultiMap<QString, MeasuredValueDescription> allDescMap;
+        QMultiMap<QString, Graph::MeasuredValueDescription> allDescMap;
         for (auto &map : m_measValDescMap)
             allDescMap.unite(map);
         graphWindow->setValuesDescriptions(allDescMap);
@@ -544,7 +546,7 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
  * @param customPlotName
  * @param prop
  */
-void GraphPlugin::onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop)
+void GraphPlugin::onAddNewVectorIndicator(const QString &customPlotName, const Graph::GraphProperties &prop)
 {
     if (m_vectorIndicatorsBoard)
         m_vectorIndicatorsBoard->addNewIndicator(prop);

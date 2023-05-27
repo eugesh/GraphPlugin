@@ -3,6 +3,8 @@
 #include "qcpwaterfall.h"
 #include "ui_graphmainwindow.h"
 
+using namespace Graph;
+
 /**
  * @brief GraphMainWindow::GraphMainWindow
  * Window for graphs placement. Content and layout is stored in JSON file.
@@ -204,9 +206,9 @@ GraphProperties GraphMainWindow::parseJsonObject(const QJsonObject &plotObject)
                     plotObject["y_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
     properties.z_scale = plotObject["z_scale"].toString().contains(tr("лог"), Qt::CaseInsensitive) ||
                     plotObject["z_scale"].toString().contains(tr("log"), Qt::CaseInsensitive) ? GraphScaleType::LOG : GraphScaleType::LIN;
-    properties.color = nameToColorConverter(plotObject["color"].toString());
-    properties.graphType = nameToGraphTypeConverter(plotObject["graph_type"].toString());
-    properties.colorScale = nameToColorScaleTypeConverter(plotObject["color_scale"].toString());
+    properties.color = Graph::nameToColorConverter(plotObject["color"].toString());
+    properties.graphType = Graph::nameToGraphTypeConverter(plotObject["graph_type"].toString());
+    properties.colorScale = Graph::nameToColorScaleTypeConverter(plotObject["color_scale"].toString());
             // static_cast<GraphType> (plotObject["graph_type"].toInt());
     // properties.is_parametric = plotObject["is_parametric"].toBool();
     // properties.is_integral = plotObject["is_integral"].toBool();

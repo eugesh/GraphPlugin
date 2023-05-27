@@ -9,6 +9,8 @@
 #include "common.h"
 #include "graph_interface.h"
 
+using namespace Graph;
+
 class GraphPluginTableModel : public QAbstractTableModel
 {
     Q_OBJECT
