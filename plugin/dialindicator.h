@@ -11,6 +11,7 @@ class DialIndicator : public QDial
 public:
     explicit DialIndicator(QWidget *parent = nullptr);
 
+protected:
     void mousePressEvent(QMouseEvent *me) override;
     void mouseMoveEvent(QMouseEvent *me) override;
     void mouseReleaseEvent(QMouseEvent *me) override;

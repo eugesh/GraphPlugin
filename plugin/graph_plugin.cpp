@@ -24,6 +24,11 @@ static const char* pluginConfigsFolder = "config";
 static const char* SIConfigsFolder = "configs/si";
 static const char* arrayIndicatorsJson = "indicatorsBoard.json";
 
+/**
+ * @brief GraphPlugin::GraphPlugin
+ * Implementation of \link GraphInterface \endlink.
+ * @param mw pointer to QMainWindow
+ */
 GraphPlugin::GraphPlugin(QMainWindow *mw) : QObject(mw)
   , m_mainWindow(mw)
 {
@@ -99,6 +104,12 @@ QString GraphPlugin::aboutInfo()
     return QString("%1.%2.%3").arg(GRAPH_PLUGIN_VERSION_MAJOR).arg(GRAPH_PLUGIN_VERSION_MINOR).arg(GRAPH_PLUGIN_VERSION_PATCH);
 }
 
+/**
+ * @brief GraphPlugin::loadJSONs
+ * Loads all configurations saved in JSON files.
+ * @param subdirsNames names of folders to llok for JSON files.
+ * @return true|false
+ */
 bool GraphPlugin::loadJSONs(QStringList subdirsNames)
 {
     // Load SI units and prefixes
@@ -124,7 +135,7 @@ bool GraphPlugin::loadJSONs(QStringList subdirsNames)
                 loadValuesJSON(path, dirName.toUpper());
 
                 // Read all JSON files with Graph Plot Windows descriptions
-                auto graphsDirName = QString("%1/%2/%3/").arg(allConfigsFolder).arg(dirName).arg(graphConfigsFolder);
+                auto graphsDirName = QString("%1/%2/%3").arg(allConfigsFolder).arg(dirName).arg(graphConfigsFolder);
                 QDir graphConfigsDir(graphsDirName);
                 for (auto name : graphConfigsDir.entryList({"*.json"})) {
                     auto path = QString("%1/%2").arg(graphsDirName).arg(name);
@@ -248,6 +259,13 @@ bool GraphPlugin::saveGraphPluginGeometry(const QString &suffix)
     return true;
 }
 
+/**
+ * @brief GraphPlugin::loadValuesJSON
+ * Reads JSON file with Measured Values descriptions for some history table.
+ * @param pathToJSON path to JSON (e.g. "plugin_config.json").
+ * @param tableName name of the history table.
+ * @return true|false.
+ */
 bool GraphPlugin::loadValuesJSON(const QString &pathToJSON, const QString &tableName)
 {
     auto map = loadConfigJSON(pathToJSON);
@@ -270,6 +288,11 @@ bool GraphPlugin::loadSI(const QString &pathToJSON)
     return true;
 }
 
+/**
+ * @brief GraphPlugin::getValuesNames
+ * @param tableName name of the history table.
+ * @return list of Measured Values names.
+ */
 QStringList GraphPlugin::getValuesNames(const QString &tableName) const
 {
     return m_measValDescMap.value(tableName).uniqueKeys();
@@ -277,8 +300,8 @@ QStringList GraphPlugin::getValuesNames(const QString &tableName) const
 
 /**
  * @brief GraphPlugin::getDescriptionsTr
- * @param tableName
- * @return список описаний на текущем языке
+ * @param tableName name of history table.
+ * @return список описаний на текущем языке.
  */
 QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
 {
@@ -290,6 +313,13 @@ QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
     return descs;
 }
 
+/**
+ * @brief GraphPlugin::loadTableJSON
+ * Initialization of history table's model/view (see MVC).
+ * @param pathToJSON unused.
+ * @param tableName name of table.
+ * @return true|false.
+ */
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableName)
 {
     // GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(tableName), getValuesNames(tableName), m_synchMode, this);
@@ -310,26 +340,28 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     m_tableViewMap.insert(tableName, tableView);
     m_tableDockMap.insert(tableName, tableDock);
 
-    for (auto graphMainWindow : m_graphsMainWins.keys()) {
-        /*for (auto key : m_tableModelMap.keys()) {
-            connect(m_tableModelMap.value(key), &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
-            connect(m_tableModelMap.value(key), &GraphPluginTableModel::packetFormed, m_tableViewMap.value(key), &QAbstractItemView::scrollToBottom);
-        }*/
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::addData);
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[graphMainWindow], &GraphMainWindow::add2dData);
+    for (auto mwName : m_graphsMainWins.keys()) {
+        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::addData);
+        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::add2dData);
         connect(tableModel, &GraphPluginTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
     }
 
-    connect (tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
-    connect (tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
+    connect(tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
+    connect(tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
 
     if (m_vectorIndicatorsBoard)
         connect(tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
-        // for (auto tableModel : m_tableModelMap.values())
 
     return true;
 }
 
+/**
+ * @brief GraphPlugin::loadSensorsMonitorJSON
+ * Initialization of LCD indicators board.
+ * @param pathToJSON unused.
+ * @param tableName name of history table.
+ * @return true|false.
+ */
 bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QString &tableName)
 {
     m_digitalBoard = new DigitalDisplayBoard();
@@ -357,6 +389,11 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
     return true;
 }
 
+/**
+ * @brief GraphPlugin::loadVectorIndicatorsJSON
+ * @param pathToJSON path to JSON configuration file ("indicatorsBoard.json").
+ * @return true|false.
+ */
 bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
 {
     QFileInfo info(pathToJSON);
@@ -393,12 +430,11 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     return true;
 }
 
-/*bool GraphPlugin::saveGraphJSON(const QString &pathToJSON)
-{
-
-    return true;
-}*/
-
+/**
+ * @brief GraphPlugin::loadGraphJSON
+ * @param pathToJSON path to JSON file (e.g. "configs/devicename/graphs/graphname.json").
+ * @return true|false.
+ */
 bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 {
     QDockWidget *dock_widget = new QDockWidget(m_mainWindow);
@@ -471,6 +507,11 @@ void GraphPlugin::setMainWindow(QMainWindow *mw)
     m_mainWindow = mw;
 }
 
+/**
+ * @brief GraphPlugin::onAddNewPlot
+ * @param customPlotName name of custom plot area
+ * @param prop graph properties \link GraphProperties \endlink
+ */
 void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphProperties &prop)
 {
     if (m_graphsMainWins.contains(customPlotName)) {
@@ -482,7 +523,7 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
         GraphMainWindow *graphWindow = new GraphMainWindow(customPlotName, prop, m_mainWindow);
         graphWindow->setConfig(m_config);
         QMultiMap<QString, MeasuredValueDescription> allDescMap;
-        for (auto map : m_measValDescMap)
+        for (auto &map : m_measValDescMap)
             allDescMap.unite(map);
         graphWindow->setValuesDescriptions(allDescMap);
 
@@ -493,12 +534,16 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const GraphPropert
 
         m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 
-        for (auto tableModel : m_tableModelMap)
+        for (auto &tableModel : m_tableModelMap)
             connect(tableModel, &GraphPluginTableModel::packetFormed, graphWindow, &GraphMainWindow::addData);
-        // connect(m_tableModel, &GraphPluginTableModel::packetFormed, graphWindow, &GraphMainWindow::addData);
     }
 }
 
+/**
+ * @brief GraphPlugin::onAddNewVectorIndicator
+ * @param customPlotName
+ * @param prop
+ */
 void GraphPlugin::onAddNewVectorIndicator(const QString &customPlotName, const GraphProperties &prop)
 {
     if (m_vectorIndicatorsBoard)

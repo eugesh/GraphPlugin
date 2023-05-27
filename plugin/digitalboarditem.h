@@ -16,9 +16,9 @@ public:
     explicit DigitalBoardItem(const QString &name, const QString &mainUnit, const QMap<QString, double> &measUnitsMult, const QMap<QString,
                               double> &measUnitsOffsets, QWidget *parent = nullptr);
     ~DigitalBoardItem();
-
     void setCurrentValue(double val);
 
+private:
     void updateValue();
 
 private:

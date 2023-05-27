@@ -71,7 +71,24 @@ class QDockWidget;
 class QMainWindow;
 class QToolBar;
 
-//! [0]
+/**
+ * @brief The GraphInterface class
+ * Abstract interface of the Graph Plugin.
+ * Graph Plugin is a plugin for app based on QMainWindow or some child of it.
+ * Graph Plugin takes pointer to QMainWindow and places Dock Windows and toolbars on DockWidgetArea.
+ * Uses QSettings to store states and geometry of elements.
+ * The Graph Plugin may be used in applications oriented to work with some sensor(s), which is(are) sending
+ * some packet of measuring values periodically.
+ * The main idea of the Plugin is reusability of some popular widgets:
+ * - graph plot area;
+ * - tables with history of received packets;
+ * - indicators, e.g. LcdNumber or Dials - any widgets which could placed in Dock Windows;
+ * - toolbar.
+ * Graph Plugin has flexible interface. It takes data value by value and updates GUI
+ * when full packet is formed. Size of packet must be given and may be changed at runtime.
+ * The only assumption now that packet data is going sequentially, without gaps.
+ *
+ */
 class GraphInterface
 {
 public:
@@ -80,19 +97,27 @@ public:
 
     virtual ~GraphInterface() = default;
     // virtual QObject* getObject() = 0;
+    /*! Method for adding some measured data to plugin's storage. */
     virtual void addData(const MeasuredValue &value) = 0;
     virtual QToolBar* toolBar() const = 0;
+    /*! List of Graph Plugin dock windows. */
     virtual QList<QDockWidget*> dockWindows() const = 0;
+    /*! Takes pointer to MainWindow. */
     virtual void setMainWindow(QMainWindow*) = 0;
-    // Call it after setMainWindow
+    /*! Load configuration JSONs. Must be called it after setMainWindow. */
     virtual bool loadJSONs(QStringList subdirsNames = {}) = 0;
+    /*! Save Graph Plugin geometry with QSettings. */
     virtual bool saveGraphPluginGeometry(const QString &suffix = "") = 0;
     virtual QString aboutInfo() = 0;
-    // Change size of packet at runtime
+    /*! Size of  You may change size of packet at runtime. */
     virtual void setPacketSize(int size, const QString tableName = "") = 0;
+    /*! Current packet size. */
     virtual int packetSize(const QString tableName = "") const = 0;
+    /*! Get all measured values names. */
     virtual QStringList getValuesNames(const QString &tableName = "") const = 0;
+    /*! Clear all data on graphs, tables, indicators. */
     virtual void clearAll() = 0;
+    /*! "setUpdateable" property allows put data into plugin without updating GUI (e.g. load some project recorede in the past). */
     virtual void setUpdateable(bool isUpdateable = true) = 0;
 
 //signals:
@@ -107,5 +132,4 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GraphInterface, GraphInterface_iid)
 QT_END_NAMESPACE
 
-//! [0]
 #endif

@@ -11,6 +11,11 @@
 #include <QStandardPaths>
 #include <QSettings>
 
+/**
+ * @brief DigitalDisplayBoard::DigitalDisplayBoard
+ * Board with mainwindow to store dockable windows with LCD indicators.
+ * @param parent parent widget, optional.
+ */
 DigitalDisplayBoard::DigitalDisplayBoard(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::DigitalDisplayBoard)
@@ -36,6 +41,7 @@ void DigitalDisplayBoard::setConfig(GraphPluginConfig *config)
     m_config = config;
 }
 
+// Reads QSettings to restore states and geometry of dockable subwindows.
 bool DigitalDisplayBoard::restoreBoardGeometry()
 {
     // auto configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
@@ -80,7 +86,7 @@ bool DigitalDisplayBoard::restoreBoardGeometry()
     return is_ok;
 }
 
-
+// Saves states and geometry of dockable subwindows to QSettings.
 bool DigitalDisplayBoard::saveBoardGeometry()
 {
     QDir lay_dir(m_layoutIniFile);
@@ -118,6 +124,11 @@ void DigitalDisplayBoard::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
+/**
+ * @brief DigitalDisplayBoard::setValuesDescriptions
+ * @param mvd map "Measured Value name" -> "struct MeasuredValueDescription".
+ * @return true|false.
+ */
 bool DigitalDisplayBoard::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
@@ -127,13 +138,17 @@ bool DigitalDisplayBoard::setValuesDescriptions(const QMultiMap<QString, Measure
     return true;
 }
 
+/**
+ * @brief DigitalDisplayBoard::initFromJSON
+ * @param pathToJSON
+ * @return
+ */
 bool DigitalDisplayBoard::initFromJSON(const QString &pathToJSON)
 {
     for (auto name : m_activeSensorsNames) {
         auto desc = m_measValDescMap.value(name);
 
         auto title = desc.desc_ru;
-        //m_config->auxMeasUnits(m_measValDescMap[name].physQuant)["name_ru"].toString();
 
         auto *item = new DigitalBoardItem(title,
                                           desc.symbol_rus,

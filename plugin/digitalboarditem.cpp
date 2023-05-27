@@ -7,6 +7,7 @@
 static const double EPS = 0e-10;
 /**
  * @brief DigitalBoardItem::DigitalBoardItem
+ * LCD indicator and combobox with list of measuring units.
  * @param name name of item;
  * @param mainUnit unit of the measuring value;
  * @param measUnitsMult multiplier;
@@ -58,6 +59,10 @@ DigitalBoardItem::DigitalBoardItem(const QString &name, const QString &mainUnit,
     });
 }
 
+/**
+ * @brief DigitalBoardItem::setCurrentValue
+ * @param val set current value to display on LCD indicator.
+ */
 void DigitalBoardItem::setCurrentValue(double val)
 {
     val -= m_fixedOffset;

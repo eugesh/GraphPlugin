@@ -12,6 +12,13 @@ double estimatePeriod(QVector<uint64_t> tsVec)
     return sum / (tsVec.size() - 1);
 }
 
+/**
+ * @brief QCPWaterfall::QCPWaterfall
+ * Extention of QCPColorMap for QCustomPlot. ToDo: move to QCustomPlot repository.
+ * Implements ring buffer to allow user \link addData \endlink "infinitely".
+ * @param keyAxis the same as in QCPColorMap.
+ * @param valueAxis the same as in QCPColorMap.
+ */
 QCPWaterfall::QCPWaterfall(QCPAxis *keyAxis, QCPAxis *valueAxis)
     : QCPColorMap(keyAxis, valueAxis)
 {
@@ -37,8 +44,10 @@ void QCPWaterfall::setSize(const QSize &size, double defVal)
 
 /**
  * @brief QCPWaterfall::addData
- * @param vector row r column
- * @param orient horizontal or vertical
+ * @param timestamp X axis, scalar.
+ * @param yVec Y axis, QList.
+ * @param zVec Z axis, QList.
+ * @param orient orientation, Horizontal or Vertical.
  */
 void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const QList<double> &zVec, Qt::Orientation orient)
 {
@@ -99,14 +108,22 @@ void QCPWaterfall::addData(uint64_t timestamp, const QList<double> &yVec, const 
 
     rescaleAxes();
 }
-
+/**
+ * @brief QCPWaterfall::clearData
+ * Clears data from custom plot area and ring buffer. Doesn't resize QCPColorMap.
+ */
 void QCPWaterfall::clearData()
 {
+    data()->fill(NAN);
     m_timeVector.clear();
     m_lastColumnIndex = 0;
     m_lastRowIndex = 0;
 }
 
+/**
+ * @brief QCPWaterfall::clearAll
+ * Clears all data and sets size to (0,0).
+ */
 void QCPWaterfall::clearAll()
 {
     data()->clear();
@@ -126,9 +143,14 @@ void QCPWaterfall::clearAll()
     ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
     ,gpHues
  */
-
 const QStringList GradientNames = {"Grayscale", "Hot", "Cold", "Night", "Candy", "Geo", "Ion", "Thermal", "Polar", "Spectrum", "Jet", "Hues"};
 
+/**
+ * @brief QCPWaterfallScale::QCPWaterfallScale
+ * Extention of QCPColorScale for QCustomPlot. ToDo: move to QCustomPlot repository.
+ * Additional feature - Context Menu with list of QCPColorGradient::GradientPreset fields
+ * @param parentPlot the same as in QCPColorScale.
+ */
 QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
     : QCPColorScale(parentPlot)
 {
@@ -159,6 +181,10 @@ QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
 
 }
 
+/**
+ * @brief QCPWaterfallScale::setGradient
+ * @param preset
+ */
 void QCPWaterfallScale::setGradient(const QCPColorGradient::GradientPreset &preset)
 {
     QCPColorGradient gradient(preset);

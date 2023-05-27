@@ -3,6 +3,12 @@
 #include "qcpwaterfall.h"
 #include "ui_graphmainwindow.h"
 
+/**
+ * @brief GraphMainWindow::GraphMainWindow
+ * Window for graphs placement. Content and layout is stored in JSON file.
+ * @param path2JSON path to JSON file with
+ * @param parent parent widget.
+ */
 GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -12,7 +18,13 @@ GraphMainWindow::GraphMainWindow(const QString &path2JSON, QWidget *parent) :
     readJSON(path2JSON);
 }
 
-// Auxilliary constructor
+/**
+ * @brief GraphMainWindow::GraphMainWindow
+ * Auxilliary constructor.
+ * @param name Main title of graphs.
+ * @param properties properties of graphs.
+ * @param parent parent widget.
+ */
 GraphMainWindow::GraphMainWindow(const QString &name, const GraphProperties &properties, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GraphMainWindow)
@@ -62,31 +74,27 @@ GraphMainWindow::~GraphMainWindow()
     delete ui;
 }
 
+/**
+ * @brief GraphMainWindow::setConfig
+ * @param config pointer to \link GraphPluginConfig \endlink
+ */
 void GraphMainWindow::setConfig(GraphPluginConfig *config)
 {
     m_config = config;
 }
 
+/**
+ * @brief GraphMainWindow::clearAll
+ * Clear all data from any graphs, color maps and history tables.
+ */
 void GraphMainWindow::clearAll()
 {
     // ui->customPlot->plotLayout()->clear();
 
     for (auto map : m_valueColorMap) {
-        //map->data()->clear();
-        // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
-        /*QCPMarginGroup *marginGroup = new QCPMarginGroup(cplot);
-        cplot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-        colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-
-        // rescale the key (x) and value (y) axes so the whole color map is visible:
-        cplot->rescaleAxes();*/
-        // map->data()->setSize(map->data()->keySize(), map->data()->valueSize());
-        // map->rescaleDataRange();
-        //delete map;
-        map->data()->fill(NAN);
+        map->clearData();
         map->rescaleAxes();
         map->rescaleDataRange();
-        map->clearData();
     }
 
     for (auto graph : m_valueGraphMap) {
@@ -124,6 +132,12 @@ void GraphMainWindow::setUpdateAble(bool isUpdateable)
 }
 
 // ToDo: change on Add. Add necessary descriptions only.
+/**
+ * @brief GraphMainWindow::setValuesDescriptions
+ *
+ * @param mvd
+ * @return
+ */
 bool GraphMainWindow::setValuesDescriptions(const QMultiMap<QString, MeasuredValueDescription> &mvd)
 {
     m_measValDescMap = mvd;
@@ -149,6 +163,10 @@ void GraphMainWindow::createCustomPlot(const QString &name)
     ui->customPlot->plotLayout()->addElement(0, 0, title);
 }
 
+/**
+ * @brief GraphMainWindow::nameTr
+ * @return name of graphs plot area
+ */
 QString GraphMainWindow::nameTr() const
 {
     if (ui->customPlot)
@@ -200,6 +218,12 @@ GraphProperties GraphMainWindow::parseJsonObject(const QJsonObject &plotObject)
     return properties;
 }
 
+/**
+ * @brief GraphMainWindow::readJSON
+ * Reads descriptions of graphs.
+ * @param path path to JSON file with graphs description.
+ * @return
+ */
 bool GraphMainWindow::readJSON(const QString &path)
 {
     m_JSONPath = path;
@@ -224,7 +248,6 @@ bool GraphMainWindow::readJSON(const QString &path)
     //QString name = loadDoc.object()["name"].toObject()["name"].toString();
     //name = loadDoc["name"]["name"].toString();
 
-    // QJsonArray plotsArray = loadDoc.object()["plots"].toArray();
     QJsonArray plotsArray = loadDoc["plots"].toArray();
 
     for (int i = 0; i < plotsArray.size(); ++i) {
@@ -235,7 +258,6 @@ bool GraphMainWindow::readJSON(const QString &path)
         addGraph(properties.name);
 
         if (plotObject.contains("additional_plots")) {
-            // m_auxPlotsMap.insertMulti(properties.name, plotObject.value("additional_plots").toString());
             QJsonArray auxPlotsArray = plotObject["additional_plots"].toArray();
             for (int i = 0; i < auxPlotsArray.size(); ++i) {
                 QJsonObject auxPlotObject = auxPlotsArray[i].toObject();
@@ -640,6 +662,11 @@ void GraphMainWindow::addGraph(const GraphProperties &prop)
     return true;
 }*/
 
+/**
+ * @brief GraphMainWindow::loadCSV
+ * Load graphs data stored as CSV. Not implemented yet.
+ * @return true|false.
+ */
 bool GraphMainWindow::loadCSV()
 {
 
@@ -733,6 +760,13 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, QV
         alignColorMaps();
 }
 
+/**
+ * @brief GraphMainWindow::updateColorMaps
+ * @param gid
+ * @param timestamp
+ * @param x
+ * @param y
+ */
 void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, const QMap<int, double> &x, const QMap<int, double> &y)
 {
     QCPWaterfall *colorMap = nullptr;
@@ -904,6 +938,8 @@ void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
                             for (MeasuredValue val_index : packet) {
                                 if (val_index.name.toUpper() == indexName.toUpper()) {
                                     for (int i = 0; i < val_index.value.toList().size(); ++i) {
+                                        // ToDo: get rid of "index". This is not flexible solution.
+                                        // Just: index = val_index.value.toList().size() - i; //!?
                                         int index = val_index.value.toList()[i].toInt() - 1;
                                         double y = val1.value.toList()[i].toDouble();
                                         double z = val2.value.toList()[i].toDouble();

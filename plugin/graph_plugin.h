@@ -80,13 +80,10 @@ public:
     explicit GraphPlugin(QMainWindow *mw = nullptr);
     ~GraphPlugin() override;
 
-    //!<
     virtual void addData(const MeasuredValue &value) override;
-    //!<
     virtual QToolBar *toolBar() const override;
     //!< All QDockWidgets which must be added to superior MainWindow
     virtual QList<QDockWidget*> dockWindows() const override;
-    //!<
     virtual void setMainWindow(QMainWindow *mw) override;
 
     bool loadJSONs(QStringList subdirsNames = {}) override;
@@ -115,8 +112,6 @@ private:
     bool loadTableJSON(const QString &pathToJSON, const QString &tableName = "");
     bool loadSensorsMonitorJSON(const QString &pathToJSON, const QString &tableName = "");
     bool loadVectorIndicatorsJSON(const QString &pathToJSON);
-
-    // bool saveGraphJSON(const QString &pathToJSON);
 
     bool restoreGraphPluginGeometry(const QString &suffix = "");
     QStringList getDescriptionsTr(const QString &tableName = "") const;
@@ -158,9 +153,9 @@ private:
     QList<QString> m_valueNames;
     //!< Values descriptions
     QList<QString> m_valueDescs;
-
     GraphPluginMode m_synchMode = GRAPH_DATA_SYNCH;
-    QString m_layoutIniFile = "layout/default.ini"; // Optional ini file to save subwindows state
+    // Optional ini file to save subwindows states and geometry
+    QString m_layoutIniFile = "layout/default.ini";
 };
 
 #endif
