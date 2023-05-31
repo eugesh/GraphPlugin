@@ -547,7 +547,7 @@ void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphPropertie
     cplot->yAxis->setRangeReversed(true);
 
     QCPWaterfall *colorMap = new QCPWaterfall(cplot->xAxis, cplot->yAxis);
-    int nx = 256;
+    int nx = prop.total_N;
     int ny = 16;
     colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
 
@@ -776,7 +776,7 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, co
     if (!colorMap)
         return;
 
-    if (colorMap->data()->valueSize() < x.size())
+    if (colorMap->data()->valueSize() != x.size())
         colorMap->data()->setValueSize(x.size());
 
     QString name;
