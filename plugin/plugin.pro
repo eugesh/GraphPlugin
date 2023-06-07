@@ -44,6 +44,7 @@ HEADERS += \
     dialindicator.h \
     digitalboarditem.h \
     digitaldisplayboard.h \
+    ehmath.h \
     graph_plugin.h \
     graphmainwindow.h \
     graphpluginconfig.h \
