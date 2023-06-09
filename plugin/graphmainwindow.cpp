@@ -92,7 +92,6 @@ void GraphMainWindow::setConfig(GraphPluginConfig *config)
 void GraphMainWindow::clearAll()
 {
     // ui->customPlot->plotLayout()->clear();
-
     for (auto map : m_valueColorMap) {
         map->clearData();
         map->rescaleAxes();

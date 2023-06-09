@@ -62,7 +62,7 @@
 class DigitalDisplayBoard;
 class GraphMainWindow;
 class GraphPluginConfig;
-class GraphPluginTableModel;
+class GraphTableModel;
 class GraphTableView;
 class VectorIndicatorsBoard;
 struct GraphProperties;
@@ -130,7 +130,7 @@ private:
     // Table name -> Table Dock
     QMap<QString, QDockWidget*> m_tableDockMap;
     // Table name -> Table Model
-    QMap<QString, GraphPluginTableModel*> m_tableModelMap;
+    QMap<QString, GraphTableModel*> m_tableModelMap;
     // Table name -> Table View
     QMap<QString, GraphTableView*> m_tableViewMap;
 

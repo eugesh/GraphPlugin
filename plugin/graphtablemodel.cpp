@@ -1,8 +1,8 @@
 #include "graphpluginconfig.h"
-#include "graphplugintablemodel.h"
+#include "graphtablemodel.h"
 
 
-GraphPluginTableModel::GraphPluginTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode, QObject *parent) :
+GraphTableModel::GraphTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode, QObject *parent) :
     QAbstractTableModel(parent),
     m_coloumnNames(QStringList() << "time" << names),
     m_coloumnTitles(QStringList() << tr("Время") << titles),
@@ -14,7 +14,7 @@ GraphPluginTableModel::GraphPluginTableModel(const QStringList &titles, const QS
     // m_coloumnNames << "time" << "pressure" << "temperature" << "velocity";
 }
 
-void GraphPluginTableModel::appendValue(const MeasuredValue &val)
+void GraphTableModel::appendValue(const MeasuredValue &val)
 {
     // Add value to data map
     m_dataMap.insertMulti(val.timestamp, val);
@@ -40,14 +40,14 @@ void GraphPluginTableModel::appendValue(const MeasuredValue &val)
     }
 }
 
-void GraphPluginTableModel::addRow(const QList<MeasuredValue> &packet)
+void GraphTableModel::addRow(const QList<MeasuredValue> &packet)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
     endInsertRows();
 }
 
-void GraphPluginTableModel::clear()
+void GraphTableModel::clear()
 {
     beginResetModel();
 
@@ -57,14 +57,14 @@ void GraphPluginTableModel::clear()
     endResetModel();
 }
 
-int GraphPluginTableModel::columnCount(const QModelIndex &parent) const
+int GraphTableModel::columnCount(const QModelIndex &parent) const
 {
     // return m_packetSize + 1; // + Timestamp
     // return m_coloumnNames.size();
     return parent.isValid() ? 0 : m_coloumnNames.size();
 }
 
-QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
+QVariant GraphTableModel::data(const QModelIndex &index, int role) const
 {
     int col = index.column();
     int row = index.row();
@@ -114,7 +114,7 @@ QVariant GraphPluginTableModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QVariant GraphPluginTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant GraphTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (section < 0 || section >= m_coloumnTitles.size())
         return {};
@@ -148,7 +148,7 @@ QVariant GraphPluginTableModel::headerData(int section, Qt::Orientation orientat
     return {};
 }
 
-int GraphPluginTableModel::rowCount(const QModelIndex &parent) const
+int GraphTableModel::rowCount(const QModelIndex &parent) const
 {
     // return m_timeStamps.size();
     return parent.isValid() ? 0 : m_timeStamps.size();

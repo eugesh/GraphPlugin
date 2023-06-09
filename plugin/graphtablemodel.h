@@ -1,5 +1,5 @@
-#ifndef GRAPHPLUGINTABLEMODEL_H
-#define GRAPHPLUGINTABLEMODEL_H
+#ifndef GRAPHTABLEMODEL_H
+#define GRAPHTABLEMODEL_H
 
 #include <QAbstractItemModel>
 #include <QObject>
@@ -11,12 +11,12 @@
 
 using namespace Graph;
 
-class GraphPluginTableModel : public QAbstractTableModel
+class GraphTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
     // GraphPluginTableModel(GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
-    explicit GraphPluginTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
+    explicit GraphTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
 
     void setPacketSize(int n) { m_packetSize = n; }
     int packetSize() const { return m_packetSize; }
@@ -53,4 +53,4 @@ private:
     int m_ringBufferSize = 3000;
 };
 
-#endif // GRAPHPLUGINTABLEMODEL_H
+#endif // GRAPHTABLEMODEL_H

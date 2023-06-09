@@ -3,7 +3,7 @@
 #include "graph_plugin.h"
 #include "graphmainwindow.h"
 #include "graphpluginconfig.h"
-#include "graphplugintablemodel.h"
+#include "graphtablemodel.h"
 #include "graphtableview.h"
 #include "vectorindicatorsboard.h"
 
@@ -325,7 +325,7 @@ QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
 bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableName)
 {
     // GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(tableName), getValuesNames(tableName), m_synchMode, this);
-    GraphPluginTableModel *tableModel = new GraphPluginTableModel(getValuesNames(tableName), getValuesNames(tableName), m_synchMode, this);
+    GraphTableModel *tableModel = new GraphTableModel(getValuesNames(tableName), getValuesNames(tableName), m_synchMode, this);
     tableModel->setPacketSize(m_measValDescMap.value(tableName).size());
     GraphTableView *tableView = new GraphTableView(m_mainWindow);
     tableView->setModel(tableModel);
@@ -343,16 +343,16 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     m_tableDockMap.insert(tableName, tableDock);
 
     for (auto mwName : m_graphsMainWins.keys()) {
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::addData);
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::add2dData);
-        connect(tableModel, &GraphPluginTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
+        connect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::addData);
+        connect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::add2dData);
+        connect(tableModel, &GraphTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
     }
 
     connect(tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
     connect(tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
 
     if (m_vectorIndicatorsBoard)
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
+        connect(tableModel, &GraphTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -386,7 +386,7 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
     for (auto tableModel : m_tableModelMap.values())
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
+        connect(tableModel, &GraphTableModel::packetFormed, m_digitalBoard, &DigitalDisplayBoard::addData);
 
     return true;
 }
@@ -427,7 +427,7 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_vectorIndictorsDock);
 
     for (auto tableModel : m_tableModelMap.values())
-        connect(tableModel, &GraphPluginTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
+        connect(tableModel, &GraphTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
 }
@@ -537,7 +537,7 @@ void GraphPlugin::onAddNewPlot(const QString &customPlotName, const Graph::Graph
         m_mainWindow->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dock_widget);
 
         for (auto &tableModel : m_tableModelMap)
-            connect(tableModel, &GraphPluginTableModel::packetFormed, graphWindow, &GraphMainWindow::addData);
+            connect(tableModel, &GraphTableModel::packetFormed, graphWindow, &GraphMainWindow::addData);
     }
 }
 

@@ -30,8 +30,8 @@ SOURCES += \
     graph_plugin.cpp \
     graphmainwindow.cpp \
     graphpluginconfig.cpp \
-    graphplugintablemodel.cpp \
     ../QCustomPlot/qcustomplot.cpp \
+    graphtablemodel.cpp \
     graphtableview.cpp \
     graphtoolbar.cpp \
     qcpwaterfall.cpp \
@@ -48,8 +48,8 @@ HEADERS += \
     graph_plugin.h \
     graphmainwindow.h \
     graphpluginconfig.h \
-    graphplugintablemodel.h \
     ../QCustomPlot/qcustomplot.h \
+    graphtablemodel.h \
     graphtableview.h \
     graphtoolbar.h \
     qcpwaterfall.h \
