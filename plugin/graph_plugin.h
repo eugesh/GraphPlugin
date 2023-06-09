@@ -103,6 +103,9 @@ public slots:
     void onAddNewPlot(const QString &customPlotName, const Graph::GraphProperties &prop);
     void onAddNewVectorIndicator(const QString &customPlotName, const Graph::GraphProperties &prop);
 
+signals:
+    void packetFormed(const QList<MeasuredValue> &val);
+
 private:
     // Values types, measurement units
     bool loadValuesJSON(const QString &pathToJSON, const QString &tableName = "");

@@ -351,6 +351,8 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     connect(tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
     connect(tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
 
+    connect(tableModel, &GraphTableModel::packetFormed, this, &GraphPlugin::packetFormed);
+
     if (m_vectorIndicatorsBoard)
         connect(tableModel, &GraphTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
