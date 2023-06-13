@@ -61,7 +61,6 @@ struct MeasuredValue {
     QString name; //!< Уникальное имя измеряемого параметра (velocity, time, temperature, pressure)
     int SI_to_current_mult = 1; //!< Коэффициент преобразования в единицу СИ, по умолчанию 1. [current / SI]
     int SI_to_current_shift = 0; //!< Сдвиг при преобразовании в единицу СИ, по умолчанию 0. [current - SI]
-    // double value; //!< Измеренное значение
     QVariant value; //!< Измеренное значение или вектор значений (QVariantList)
     int channel; //!< Номер канала устройства
     bool is_valid = true;
@@ -92,8 +91,9 @@ class QToolBar;
 class GraphInterface
 {
 public:
-    // GraphInterface(QObject *parent = nullptr) {}
+    // GraphInterface(QObject *parent = nullptr) : QObject(parent) {}
     // GraphInterface(QMainWindow *parent = nullptr) {}
+    virtual QObject *getObject() = 0;
 
     virtual ~GraphInterface() = default;
     // virtual QObject* getObject() = 0;
@@ -117,7 +117,7 @@ public:
     virtual QStringList getValuesNames(const QString &tableName = "") const = 0;
     /*! Clear all data on graphs, tables, indicators. */
     virtual void clearAll() = 0;
-    /*! "setUpdateable" property allows put data into plugin without updating GUI (e.g. load some project recorede in the past). */
+    /*! "setUpdateable" property allows put data into plugin without updating GUI (e.g. load some project recorded in the past). */
     virtual void setUpdateable(bool isUpdateable = true) = 0;
 
 //signals:

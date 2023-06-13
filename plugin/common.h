@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include "qcustomplot.h"
+#include "../QCustomPlot/qcustomplot.h"
 
 #include <qnamespace.h>
 #include <QColor>

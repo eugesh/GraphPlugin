@@ -4,7 +4,7 @@
 #include <QAbstractItemModel>
 #include <QObject>
 #include <QStringList>
-#include <qcustomplot.h>
+#include "qcustomplot.h"
 
 #include "common.h"
 #include "graph_interface.h"
@@ -29,12 +29,14 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    void setName(const QString &name) { m_name = name; }
+    QString getName() const { return m_name; }
 
 public slots:
     void appendValue(const MeasuredValue &val);
 
 signals:
-    // Signal emitted when packet is formed
+    //!< Signal emitted when packet is formed.
     void packetFormed(const QList<MeasuredValue> &val);
 
 private:
@@ -51,6 +53,7 @@ private:
     QStringList m_coloumnTitles;
     GraphPluginMode m_syncMode = GRAPH_DATA_SYNCH;
     int m_ringBufferSize = 3000;
+    QString m_name;
 };
 
 #endif // GRAPHTABLEMODEL_H

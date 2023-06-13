@@ -326,6 +326,7 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
 {
     // GraphPluginTableModel *tableModel = new GraphPluginTableModel(getDescriptionsTr(tableName), getValuesNames(tableName), m_synchMode, this);
     GraphTableModel *tableModel = new GraphTableModel(getValuesNames(tableName), getValuesNames(tableName), m_synchMode, this);
+    tableModel->setName(tableName);
     tableModel->setPacketSize(m_measValDescMap.value(tableName).size());
     GraphTableView *tableView = new GraphTableView(m_mainWindow);
     tableView->setModel(tableModel);
@@ -351,12 +352,19 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     connect(tableView, &GraphTableView::createNewGraph, this, &GraphPlugin::onAddNewPlot);
     connect(tableView, &GraphTableView::createNewVectorIndicator, this, &GraphPlugin::onAddNewVectorIndicator);
 
-    connect(tableModel, &GraphTableModel::packetFormed, this, &GraphPlugin::packetFormed);
+    connect(tableModel, &GraphTableModel::packetFormed, this, &GraphPlugin::onPacketFormed);
 
     if (m_vectorIndicatorsBoard)
         connect(tableModel, &GraphTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
 
     return true;
+}
+
+void GraphPlugin::onPacketFormed(const QList<MeasuredValue> &val)
+{
+    auto modelPtr = qobject_cast<GraphTableModel*>(sender());
+
+    emit packetFormed(val, modelPtr->getName());
 }
 
 /**

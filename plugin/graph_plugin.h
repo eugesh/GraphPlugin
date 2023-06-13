@@ -80,6 +80,7 @@ class GraphPlugin : public QObject, GraphInterface
 public:
     //!< May be created from QMainWindow only
     explicit GraphPlugin(QMainWindow *mw = nullptr);
+    QObject *getObject() override { return this; }
     ~GraphPlugin() override;
 
     virtual void addData(const MeasuredValue &value) override;
@@ -95,7 +96,7 @@ public:
 
     virtual void setPacketSize(int size, const QString tableName = "") override;
     virtual int packetSize(const QString tableName = "") const override;
-    virtual QStringList getValuesNames(const QString &tableName = "") const override;
+    virtual QStringList getValuesNames(const QString &tableName) const override;
     virtual void clearAll() override;
     virtual void setUpdateable(bool isUpdateable = true) override;
 
@@ -103,8 +104,11 @@ public slots:
     void onAddNewPlot(const QString &customPlotName, const Graph::GraphProperties &prop);
     void onAddNewVectorIndicator(const QString &customPlotName, const Graph::GraphProperties &prop);
 
+private slots:
+    void onPacketFormed(const QList<MeasuredValue> &val);
+
 signals:
-    void packetFormed(const QList<MeasuredValue> &val);
+    void packetFormed(const QList<MeasuredValue> &val, const QString &tableName);
 
 private:
     // Values types, measurement units
