@@ -33,6 +33,7 @@ struct MeasuredValueDescription {
     QString unit_rus; // // Measurement unit in Russian.
     QString symbol; // Short name of Measurement unit, e.g. [m].
     QString symbol_rus; // Short name of Measurement unit in Russian, e.g. [м].
+    int index; // Index in table
 };
 
 /**

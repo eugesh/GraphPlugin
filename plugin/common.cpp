@@ -256,6 +256,7 @@ QString Graph::colorScaleTypeToNameConverter(const QCPColorGradient::GradientPre
          mvdesc_struct.unit_rus = valueObject["measure_unit_rus"].toString();
          mvdesc_struct.symbol = valueObject["symbol"].toString();
          mvdesc_struct.symbol_rus = valueObject["symbol_rus"].toString();
+         mvdesc_struct.index = valueObject["index"].toInt();
          measValDescMap.insert(mvdesc_struct.name, mvdesc_struct);
      }
 

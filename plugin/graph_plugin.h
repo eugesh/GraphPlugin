@@ -153,11 +153,10 @@ private:
     // Data Dispatcher
     //!< Timestamp -> value, one key - multiple values
     // Data config
-    int m_ringBufferSize;
-    // Meas Value Name <-> Description
+    // Table name -> Meas Value Name <-> Description
     QMap<QString, QMultiMap<QString, Graph::MeasuredValueDescription>> m_measValDescMap;
     // Table name --> Meas Values Names
-    QMultiMap<QString, QString> m_tableMeasValNames;
+    // QMultiMap<QString, QString> m_tableMeasValNames;
     //!< Unique Names of values
     QList<QString> m_valueNames;
     //!< Values descriptions

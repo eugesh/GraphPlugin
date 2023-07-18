@@ -274,8 +274,8 @@ bool GraphPlugin::loadValuesJSON(const QString &pathToJSON, const QString &table
     // m_measValDescMap.unite(map);
     m_measValDescMap.insert(tableName, map);
 
-    for (auto key : map.keys())
-        m_tableMeasValNames.insert(tableName, key);
+    // for (auto &key : map.keys())
+       // m_tableMeasValNames.insert(tableName, key);
 
     return static_cast<bool>(map.count());
 }
