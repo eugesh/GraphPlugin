@@ -256,7 +256,7 @@ bool GraphMainWindow::readJSON(const QString &path)
         auto properties = parseJsonObject(plotObject);
 
         m_properties.insert(properties.name, properties);
-        addGraph(properties.name);
+        auto cmGid = addGraph(properties.name);
 
         if (plotObject.contains("additional_plots")) {
             QJsonArray auxPlotsArray = plotObject["additional_plots"].toArray();
@@ -264,7 +264,8 @@ bool GraphMainWindow::readJSON(const QString &path)
                 QJsonObject auxPlotObject = auxPlotsArray[i].toObject();
                 auto auxPlotProperties = parseJsonObject(auxPlotObject);
                 m_properties.insert(auxPlotProperties.name, auxPlotProperties);
-                addGraph(auxPlotProperties.name);
+                auto graphGid = addGraph(auxPlotProperties.name);
+                m_valueAdditionalGraphMap.insert(cmGid.first(), graphGid.first());
             }
         }
     }
@@ -419,9 +420,10 @@ void GraphMainWindow::saveImage(const QString &name) const
     ui->customPlot->saveJpg(name);
 }
 
-void GraphMainWindow::addXYGraph(const QString &name)
+QList<GraphID> GraphMainWindow::addXYGraph(const QString &name)
 {
     auto prop = m_properties.value(name);
+    QList<GraphID> allGraphs;
 
     int chNum = 1;
     for (auto ch : prop.channels) {
@@ -477,10 +479,11 @@ void GraphMainWindow::addXYGraph(const QString &name)
         m_valueGraphMap.insert(gid, graph);
         // m_valueGraphMap.insert(yx, graph);
         chNum++;
+        allGraphs.append(gid);
     }
 }
 
-void GraphMainWindow::addParametricGraph(const QString &name)
+GraphID GraphMainWindow::addParametricGraph(const QString &name)
 {
     auto prop = m_properties.value(name);
 
@@ -509,6 +512,8 @@ void GraphMainWindow::addParametricGraph(const QString &name)
     m_valueCurveMap.insert(gid, newParametricCurve);
     newParametricCurve->setScatterStyle(
         QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(ui->customPlot->plottableCount() + 1)));
+
+    return gid;
 }
 
 void GraphMainWindow::removeWaterfallGraph(const QString &name)
@@ -525,19 +530,19 @@ void GraphMainWindow::removeWaterfallGraph(const QString &name)
     m_valueNameYX.remove(graphId.yName, graphId.zName);
 }
 
-void GraphMainWindow::addWaterfallGraph(const QString &name)
+GraphID GraphMainWindow::addWaterfallGraph(const QString &name)
 {
     auto prop = m_properties.value(name);
 
     if (! m_valueNameYX.isEmpty()) {
-        addAdditionalWaterfallGraph(name);
-        return;
+        return addAdditionalWaterfallGraph(name);
+
     } else {
-        addWaterfallGraph(ui->customPlot, prop);
+        return addWaterfallGraph(ui->customPlot, prop);
     }
 }
 
-void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop)
+GraphID GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop)
 {
     cplot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
     cplot->axisRect()->setupFullAxesBox(true);
@@ -600,9 +605,11 @@ void GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphPropertie
 
     m_valueColorMap.insert(gid, colorMap);
     m_valueNameYX.insert(prop.y_name, prop.z_name);
+
+    return gid;
 }
 
-void GraphMainWindow::addAdditionalWaterfallGraph(const QString &name)
+GraphID GraphMainWindow::addAdditionalWaterfallGraph(const QString &name)
 {
     auto prop = m_properties.value(name);
 
@@ -611,35 +618,33 @@ void GraphMainWindow::addAdditionalWaterfallGraph(const QString &name)
 
     m_customPlotList.append(customPlot2);
 
-    addWaterfallGraph(customPlot2, prop);
+    return addWaterfallGraph(customPlot2, prop);
 }
 
-void GraphMainWindow::addGraph(const QString &name)
+QList<GraphID> GraphMainWindow::addGraph(const QString &name)
 {
     if (!m_properties.contains(name))
-        return;
+        return {};
 
     auto prop = m_properties.value(name);
 
     switch (prop.graphType) {
     case GraphScatter:
-        addXYGraph(name);
-        break;
+        return addXYGraph(name);
     case GraphParametric:
-        addParametricGraph(name);
-        break;
+        return {addParametricGraph(name)};
     case GraphIntegral:
-        addParametricGraph(name);
-        break;
+        return {addParametricGraph(name)};
     case GraphColorMap:
-        addWaterfallGraph(name);
-        break;
+        return {addWaterfallGraph(name)};
+    case GraphPolar:
+        return {};
     }
 
     // Additional plots
-    if (m_auxPlotsMap.contains(name)) {
+    /*if (m_auxPlotsMap.contains(name)) {
         addXYGraph(name);
-    }
+    }*/
 
     /* if (prop.is_parametric) {
         addParametricGraph(name);
@@ -648,13 +653,13 @@ void GraphMainWindow::addGraph(const QString &name)
     }*/
 }
 
-void GraphMainWindow::addGraph(const GraphProperties &prop)
+QList<GraphID> GraphMainWindow::addGraph(const GraphProperties &prop)
 {
     m_properties.insertMulti(prop.name, prop);
 
     m_hasUpdate = true;
 
-    addGraph(prop.name);
+    return addGraph(prop.name);
 }
 
 /*bool GraphMainWindow::applyProperties()

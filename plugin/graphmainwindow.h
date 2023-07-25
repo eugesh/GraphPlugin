@@ -78,7 +78,7 @@ public slots:
     void saveImageDialog();
     void addData(const QList<MeasuredValue> &val);
     void add2dData(const QList<MeasuredValue> &val);
-    void addGraph(const Graph::GraphProperties &prop);
+    QList<GraphID> addGraph(const Graph::GraphProperties &prop);
     void onRemoveJSON();
 
 signals:
@@ -92,12 +92,12 @@ private:
     static Graph::GraphProperties parseJsonObject(const QJsonObject &plotObject);
     bool removeJSON() const;
     // bool applyProperties();
-    void addGraph(const QString &name);
-    void addXYGraph(const QString &name);
-    void addParametricGraph(const QString &name);
-    void addWaterfallGraph(const QString &name);
-    void addWaterfallGraph(QCustomPlot *cplot, const Graph::GraphProperties &prop);
-    void addAdditionalWaterfallGraph(const QString &name);
+    QList<GraphID> addGraph(const QString &name);
+    QList<GraphID> addXYGraph(const QString &name);
+    GraphID addParametricGraph(const QString &name);
+    GraphID addWaterfallGraph(const QString &name);
+    GraphID addWaterfallGraph(QCustomPlot *cplot, const Graph::GraphProperties &prop);
+    GraphID addAdditionalWaterfallGraph(const QString &name);
     void removeWaterfallGraph(const QString &name);
     void saveCSV(const QString &name) const;
     void saveImage(const QString &name) const;
@@ -117,6 +117,7 @@ private:
     // Parametric curves (x, y, t)
     QMap<GraphID, QCPCurve*> m_valueCurveMap;
     QMap<GraphID, QCPWaterfall*> m_valueColorMap;
+    QMap<GraphID, GraphID> m_valueAdditionalGraphMap;
     QList<QCustomPlot*> m_customPlotList;
     //!< Name of value name of X as key and value name of Y as value, one-multiple
     QMultiMap<QString, QString> m_valueNameYX;
@@ -131,7 +132,7 @@ private:
     bool m_hasUpdate = false;
     GraphPluginConfig *m_config;
     QMultiMap<QString, Graph::MeasuredValueDescription> m_measValDescMap;
-    QMap<QString, QString> m_auxPlotsMap;
+    // QMap<QString, QString> m_auxPlotsMap;
     bool m_isUpdatable = true;
 };
 
