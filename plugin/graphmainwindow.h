@@ -93,7 +93,7 @@ private:
     bool removeJSON() const;
     // bool applyProperties();
     QList<GraphID> addGraph(const QString &name);
-    QList<GraphID> addXYGraph(const QString &name);
+    QList<GraphID> addXYGraph(const QString &name, QCustomPlot *cplot = nullptr);
     GraphID addParametricGraph(const QString &name);
     GraphID addWaterfallGraph(const QString &name);
     GraphID addWaterfallGraph(QCustomPlot *cplot, const Graph::GraphProperties &prop);
@@ -113,10 +113,11 @@ private:
     QSharedPointer<QCPAxisTickerDateTime> m_ticker;
     QString m_pathToCSV;
     //!< Value descriptor, pointer to Graph
-    QMap<GraphID, QCPGraph*> m_valueGraphMap;
+    QMultiMap<GraphID, QCPGraph*> m_valueGraphMap;
     // Parametric curves (x, y, t)
     QMap<GraphID, QCPCurve*> m_valueCurveMap;
     QMap<GraphID, QCPWaterfall*> m_valueColorMap;
+    // Id of Colormap Graph -> id if Scatter Graph
     QMap<GraphID, GraphID> m_valueAdditionalGraphMap;
     QList<QCustomPlot*> m_customPlotList;
     //!< Name of value name of X as key and value name of Y as value, one-multiple

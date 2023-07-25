@@ -267,6 +267,11 @@ bool GraphMainWindow::readJSON(const QString &path)
                 auto graphGid = addGraph(auxPlotProperties.name);
                 m_valueAdditionalGraphMap.insert(cmGid.first(), graphGid.first());
             }
+        } else if (!m_valueAdditionalGraphMap.empty()) {
+            for (auto &graphId : m_valueAdditionalGraphMap.values()) {
+                auto graphGid = addXYGraph(graphId.graphName, m_customPlotList.last());
+                m_valueAdditionalGraphMap.insert(cmGid.first(), graphGid.first());
+            }
         }
     }
 
@@ -420,49 +425,52 @@ void GraphMainWindow::saveImage(const QString &name) const
     ui->customPlot->saveJpg(name);
 }
 
-QList<GraphID> GraphMainWindow::addXYGraph(const QString &name)
+QList<GraphID> GraphMainWindow::addXYGraph(const QString &name, QCustomPlot *cplot)
 {
+    if (!cplot)
+        cplot = ui->customPlot;
+
     auto prop = m_properties.value(name);
     QList<GraphID> allGraphs;
 
     int chNum = 1;
-    for (auto ch : prop.channels) {
+    for (auto &ch : prop.channels) {
 
-        QCPGraph *graph = ui->customPlot->addGraph(ui->customPlot->xAxis, ui->customPlot->yAxis);
+        QCPGraph *graph = cplot->addGraph(cplot->xAxis, cplot->yAxis);
         QString graphSubTitle = name;
         if (prop.channels.count() > 1) {
             if (! graphSubTitle.isEmpty())
                 graphSubTitle += tr(", ");
             graphSubTitle += tr("канал %1").arg(ch);
         }
-        ui->customPlot->graph()->setName(graphSubTitle);
-        ui->customPlot->graph()->setLineStyle(QCPGraph::lsLine);
-        ui->customPlot->graph()->setScatterStyle(
-            QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(ui->customPlot->graphCount() + 1)));
+        cplot->graph()->setName(graphSubTitle);
+        cplot->graph()->setLineStyle(QCPGraph::lsLine);
+        cplot->graph()->setScatterStyle(
+            QCPScatterStyle(static_cast<QCPScatterStyle::ScatterShape>(cplot->graphCount() + 1)));
 
-        ui->customPlot->xAxis->setLabel(prop.x_title);
+        cplot->xAxis->setLabel(prop.x_title);
 
         if (prop.x_phisical_quantity.contains("time", Qt::CaseInsensitive)) {
             m_ticker = QSharedPointer<QCPAxisTickerDateTime>::create();
             // m_ticker->setDateTimeFormat("hh:mm:ss\nzzz");
             m_ticker->setDateTimeFormat(QLatin1String("hh:mm:ss"));
             //mDateTimeFormat(QLatin1String("hh:mm:ss\ndd.MM.yy")),
-            ui->customPlot->xAxis->setTicker(m_ticker);
-            ui->customPlot->xAxis->setTickLabels(true);
+            cplot->xAxis->setTicker(m_ticker);
+            cplot->xAxis->setTickLabels(true);
             m_ticker->setTickStepStrategy(QCPAxisTicker::tssMeetTickCount);
         }
 
-        ui->customPlot->yAxis->setLabel(prop.y_title);
-        ui->customPlot->legend->setVisible(true);
+        cplot->yAxis->setLabel(prop.y_title);
+        cplot->legend->setVisible(true);
 
         QPen graphPen;
         // graphPen.setColor(QColor(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10));
         graphPen.setColor(prop.color);
         graphPen.setWidthF(1);
-        ui->customPlot->graph()->setPen(graphPen);
-        ui->customPlot->replot();
-        ui->customPlot->graph()->setAdaptiveSampling(true);
-        ui->customPlot->graph()->setMaxCount(m_properties.value(name).total_N);
+        cplot->graph()->setPen(graphPen);
+        cplot->replot();
+        cplot->graph()->setAdaptiveSampling(true);
+        cplot->graph()->setMaxCount(m_properties.value(name).total_N);
         // m_valueNameXY.insertMulti(m_properties[name].x_name, m_properties[name].y_name);
         m_valueNameYX.insertMulti(prop.y_name, prop.x_name);
 
@@ -476,11 +484,13 @@ QList<GraphID> GraphMainWindow::addXYGraph(const QString &name)
         gid.xName = prop.x_name;
         gid.yName = prop.y_name;
         // QMap<graphID, QCPGraph*> m_valueGraphMap;
-        m_valueGraphMap.insert(gid, graph);
+        m_valueGraphMap.insertMulti(gid, graph);
         // m_valueGraphMap.insert(yx, graph);
         chNum++;
         allGraphs.append(gid);
     }
+
+    return allGraphs;
 }
 
 GraphID GraphMainWindow::addParametricGraph(const QString &name)
@@ -536,7 +546,6 @@ GraphID GraphMainWindow::addWaterfallGraph(const QString &name)
 
     if (! m_valueNameYX.isEmpty()) {
         return addAdditionalWaterfallGraph(name);
-
     } else {
         return addWaterfallGraph(ui->customPlot, prop);
     }
@@ -686,15 +695,17 @@ void GraphMainWindow::loadCSVdialog()
 
 void GraphMainWindow::updateGraphs(const GraphID& gid, double x, double y)
 {
-    QCPGraph *graph = nullptr;
-    graph = m_valueGraphMap.value(gid);
-    if (!graph)
-        return;
+    auto graphs = m_valueGraphMap.values(gid);
 
-    auto name = graph->name();
-    graph->addData(x, y);
-    if (m_properties.value(name).update_mode == SHOW_ALL && m_isUpdatable)
-        graph->rescaleAxes();
+    for (auto graph : graphs) {
+        if (!graph)
+            continue;
+
+        auto name = graph->name();
+        graph->addData(x, y);
+        if (m_properties.value(name).update_mode == SHOW_ALL && m_isUpdatable)
+            graph->rescaleAxes();
+    }
 }
 
 void GraphMainWindow::updateCurves(const GraphID& gid, uint64_t timestamp, double x, double y)
