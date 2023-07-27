@@ -108,6 +108,9 @@ private:
     void alignColorMaps();
     void updateAll();
 
+private slots:
+    void contextMenuRequest(const QPoint &pt);
+
 private:
     Ui::GraphMainWindow *ui;
     QSharedPointer<QCPAxisTickerDateTime> m_ticker;

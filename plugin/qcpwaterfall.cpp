@@ -160,6 +160,9 @@ QCPWaterfallScale::QCPWaterfallScale(QCustomPlot *parentPlot)
         [this] (const QPoint &pos) {
         QMenu contextMenu(tr("Context menu"), static_cast<QWidget*>(this->parentPlot()));
 
+        if (this->selectTest(pos, false) < 0)
+            return;
+
         QList<QAction*> actVector;
         for (int i = 0; i < QCPColorGradient::gpHues; ++i) {
             actVector.push_back(new QAction(GradientNames[i], this));

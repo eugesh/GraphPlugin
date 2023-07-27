@@ -56,6 +56,10 @@ void GraphMainWindow::commonInit()
     connect(ui->actionRemoveJSON, &QAction::triggered, this, &GraphMainWindow::onRemoveJSON);
 
     m_customPlotList.append(ui->customPlot);
+
+    // setup policy and connect slot for context menu popup:
+    ui->customPlot->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->customPlot, &QWidget::customContextMenuRequested, this, &GraphMainWindow::contextMenuRequest);
 }
 
 GraphMainWindow::~GraphMainWindow()
@@ -74,6 +78,30 @@ GraphMainWindow::~GraphMainWindow()
     }
 
     delete ui;
+}
+
+void GraphMainWindow::contextMenuRequest(const QPoint &pos)
+{
+    QMenu *menu = new QMenu(this);
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+
+    if (ui->customPlot->legend->selectTest(pos, false) >= 0) { // Сontext menu on legend requested
+        menu->addAction(tr("Убрать легенду"), this, [this]() {
+            ui->customPlot->legend->setVisible(false);
+            ui->customPlot->replot();
+        });
+    } else if (ui->customPlot->axisRect()->selectTest(pos, false) >= 0 ) { // general context menu on graphs requested
+        menu->addAction(tr("Вернуть легенду"), this, [this]() {
+            ui->customPlot->legend->setVisible(true);
+            ui->customPlot->replot();
+        });
+        /*if (ui->customPlot->selectedGraphs().size() > 0)
+            menu->addAction("Remove selected graph", this, SLOT(removeSelectedGraph()));
+        if (ui->customPlot->graphCount() > 0)
+            menu->addAction("Remove all graphs", this, SLOT(removeAllGraphs()));*/
+    }
+
+    menu->popup(ui->customPlot->mapToGlobal(pos));
 }
 
 /**
