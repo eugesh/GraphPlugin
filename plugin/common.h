@@ -20,6 +20,24 @@ enum : int {
     PhysQuantRole = Qt::UserRole + 3
 };
 
+enum MeasValDescEnum {
+    MEAS_VAL_NAME,
+    MEAS_VAL_DESC,
+    MEAS_VAL_DESC_RU,
+    MEAS_VAL_PHYS_QUANTITY,
+    MEAS_VAL_UNIT,
+    MEAS_VAL_UNIT_RU,
+    MEAS_VAL_SYMBOL,
+    MEAS_VAL_SYMBOL_RU,
+    MEAS_VAL_TYPE,
+    MEAS_VAL_VALUES,
+    MEAS_VAL_INDEX
+};
+
+static QStringList MeasuredValueDescNames =
+{"name", "description", "description_ru", "quantity",
+ "unit", "unit_ru", "symbol", "symbol_ru", "type", "values", "index"};
+
 /**
  * @brief The MeasuredValueDescription struct
  *
