@@ -337,13 +337,14 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     tableDock->setWidget(tableView);
     tableDock->setObjectName("GraphTableViewDock");
     tableDock->toggleViewAction()->setText(tr("Таблица ") + tableName);
+    tableDock->setWindowTitle(tr("%1").arg(tableName));
     m_mainWindow->addDockWidget(Qt::LeftDockWidgetArea, tableDock);
 
     m_tableModelMap.insert(tableName, tableModel);
     m_tableViewMap.insert(tableName, tableView);
     m_tableDockMap.insert(tableName, tableDock);
 
-    for (auto mwName : m_graphsMainWins.keys()) {
+    for (auto &mwName : m_graphsMainWins.keys()) {
         connect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::addData);
         connect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::add2dData);
         connect(tableModel, &GraphTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
@@ -392,7 +393,8 @@ bool GraphPlugin::loadSensorsMonitorJSON(const QString &pathToJSON, const QStrin
     m_boardDock->setAllowedAreas(Qt::AllDockWidgetAreas);
     m_boardDock->setWidget(m_digitalBoard);
     m_boardDock->setObjectName("DigitalDisplayBoardDock");
-    m_boardDock->toggleViewAction()->setText(tr("Цифровые индикаторы ") + tableName);
+    m_boardDock->toggleViewAction()->setText(tr("Цифровые индикаторы %1").arg(tableName));
+    m_boardDock->setWindowTitle(tr("Цифровые индикаторы %1").arg(tableName));
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_boardDock);
 
     for (auto tableModel : m_tableModelMap.values())
@@ -432,6 +434,7 @@ bool GraphPlugin::loadVectorIndicatorsJSON(const QString &pathToJSON)
     m_vectorIndictorsDock->setWidget(m_vectorIndicatorsBoard);
     m_vectorIndictorsDock->setObjectName("VectorIndicatorsDock");
     m_vectorIndictorsDock->toggleViewAction()->setText(tr("Стрелочные индикаторы"));
+    m_vectorIndictorsDock->setWindowTitle(tr("%1").arg(tr("Стрелочные индикаторы")));
     //m_vectorIndicatorsBoard->setAutoDisableOnIdle(1000);
 
     m_mainWindow->addDockWidget(Qt::TopDockWidgetArea, m_vectorIndictorsDock);
@@ -467,6 +470,7 @@ bool GraphPlugin::loadGraphJSON(const QString &pathToJSON)
 
     dock_widget->setWidget(graphWindow);
     dock_widget->setObjectName(tr("%1%2").arg(graphWindow->objectName(), "Dock"));
+    dock_widget->setWindowTitle(tr("%1").arg(graphWindow->plotName()));
 
     m_graphsDocks.insert(graphWindow->nameTr(), dock_widget);
     m_graphsMainWins.insert(graphWindow->nameTr(), graphWindow);

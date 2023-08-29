@@ -69,6 +69,8 @@ public:
     void setConfig(GraphPluginConfig *config);
     bool setValuesDescriptions(const QMultiMap<QString, Graph::MeasuredValueDescription> &mvd);
     void setUpdateAble(bool isUpdateable);
+    QString plotName() const { return m_plotName; }
+    void setPlotName(const QString &name) { m_plotName = name; }
 
 public slots:
     void clearAll();
