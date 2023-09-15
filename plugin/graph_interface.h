@@ -119,6 +119,7 @@ public:
     virtual void clearAll() = 0;
     /*! "setUpdateable" property allows put data into plugin without updating GUI (e.g. load some project recorded in the past). */
     virtual void setUpdateable(bool isUpdateable = true) = 0;
+    virtual void setDoPlotGraphs(bool doPlotGraphs = true) = 0;
 
 //signals:
     //void newDockWindow(QDockWidget*);

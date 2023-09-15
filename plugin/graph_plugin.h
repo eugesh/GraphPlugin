@@ -99,6 +99,7 @@ public:
     virtual QStringList getValuesNames(const QString &tableName) const override;
     virtual void clearAll() override;
     virtual void setUpdateable(bool isUpdateable = true) override;
+    virtual void setDoPlotGraphs(bool doPlotGraphs = true) override;
 
 public slots:
     void onAddNewPlot(const QString &customPlotName, const Graph::GraphProperties &prop);
@@ -164,6 +165,8 @@ private:
     GraphPluginMode m_synchMode = GRAPH_DATA_SYNCH;
     // Optional ini file to save subwindows states and geometry
     QString m_layoutIniFile = "layout/default.ini";
+    // Show data on plots or not
+    bool m_doPlotGraph = true;
 };
 
 #endif

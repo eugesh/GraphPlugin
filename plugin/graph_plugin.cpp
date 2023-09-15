@@ -78,6 +78,42 @@ void GraphPlugin::setUpdateable(bool isUpdateable)
         graphWin->setUpdateAble(isUpdateable);
 }
 
+void GraphPlugin::setDoPlotGraphs(bool doPlotGraphs)
+{
+    m_doPlotGraph = doPlotGraphs;
+
+    if (doPlotGraphs) {
+        for (auto key : m_tableModelMap.keys()) {
+            auto tableModel = m_tableModelMap.value(key);
+            auto tableView = m_tableViewMap.value(key);
+
+            for (auto &mwName : m_graphsMainWins.keys()) {
+                connect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::addData, Qt::UniqueConnection);
+                connect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::add2dData, Qt::UniqueConnection);
+                connect(tableModel, &GraphTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom, Qt::UniqueConnection);
+            }
+
+            if (m_vectorIndicatorsBoard)
+                connect(tableModel, &GraphTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData, Qt::UniqueConnection);
+        }
+    } else {
+        for (auto key : m_tableModelMap.keys()) {
+            auto tableModel = m_tableModelMap.value(key);
+            auto tableView = m_tableViewMap.value(key);
+
+            for (auto &mwName : m_graphsMainWins.keys()) {
+                disconnect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::addData);
+                disconnect(tableModel, &GraphTableModel::packetFormed, m_graphsMainWins[mwName], &GraphMainWindow::add2dData);
+                disconnect(tableModel, &GraphTableModel::packetFormed, tableView, &QAbstractItemView::scrollToBottom);
+            }
+
+            if (m_vectorIndicatorsBoard)
+                disconnect(tableModel, &GraphTableModel::packetFormed, m_vectorIndicatorsBoard, &VectorIndicatorsBoard::addData);
+        }
+    }
+
+}
+
 void GraphPlugin::clearAll()
 {
     for (auto model : m_tableModelMap)
@@ -309,7 +345,7 @@ QStringList GraphPlugin::getDescriptionsTr(const QString &tableName) const
 {
     QStringList descs;
 
-    for (auto valDesc : m_measValDescMap.value(tableName).values())
+    for (auto &valDesc : m_measValDescMap.value(tableName).values())
         descs << valDesc.desc_ru;
 
     return descs;
@@ -361,6 +397,9 @@ bool GraphPlugin::loadTableJSON(const QString &pathToJSON, const QString &tableN
     return true;
 }
 
+/*
+ * To CSV logger
+ */
 void GraphPlugin::onPacketFormed(const QList<MeasuredValue> &val)
 {
     auto modelPtr = qobject_cast<GraphTableModel*>(sender());
