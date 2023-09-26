@@ -178,8 +178,8 @@ void GraphMainWindow::createCustomPlot(const QString &name)
 {
     setWindowTitle(name);
 
-    ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
-                                    QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom | Q_CP::iSelectAxes |
+                                    Q_CP::iSelectLegend | Q_CP::iSelectPlottables);
 
     //ui->customPlot->xAxis->setRange(2e-5, 6e-5);
     //ui->customPlot->yAxis->setRange(-2, 2);
@@ -581,7 +581,7 @@ GraphID GraphMainWindow::addWaterfallGraph(const QString &name)
 
 GraphID GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop)
 {
-    cplot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
+    cplot->setInteractions(Q_CP::iRangeDrag|Q_CP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
     cplot->axisRect()->setupFullAxesBox(true);
     cplot->xAxis->setLabel(prop.x_title);
     cplot->yAxis->setLabel(prop.y_title);
@@ -626,8 +626,8 @@ GraphID GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphProper
 
     // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
     QCPMarginGroup *marginGroup = new QCPMarginGroup(cplot);
-    cplot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-    colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+    cplot->axisRect()->setMarginGroup(Q_CP::msBottom|Q_CP::msTop, marginGroup);
+    colorScale->setMarginGroup(Q_CP::msBottom|Q_CP::msTop, marginGroup);
 
     // rescale the key (x) and value (y) axes so the whole color map is visible:
     cplot->rescaleAxes();
