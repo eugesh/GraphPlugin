@@ -943,7 +943,7 @@ void GraphMainWindow::addData(const QList<MeasuredValue> &packet)
 void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
 {
     bool hasColormap = false;
-    for (auto prop : m_properties) {
+    for (auto &prop : m_properties) {
         if (prop.graphType == GraphColorMap)
             hasColormap = true;
     }
@@ -952,10 +952,10 @@ void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
         // For Color Maps only
         return;
 
-    for (MeasuredValue val1 : packet) {
+    for (auto &val1 : packet) {
         if (!val1.is_valid)
             continue;
-        for (QString val2_name : m_valueNameYX.values(val1.name)) {
+        for (QString &val2_name : m_valueNameYX.values(val1.name)) {
             // If X is time
             if (val2_name.contains("time")) {
                 GraphID gid;
@@ -982,7 +982,7 @@ void GraphMainWindow::add2dData(const QList<MeasuredValue> &packet)
                             QMap<int, double> yMap, zMap;
                             for (MeasuredValue val_index : packet) {
                                 if (val_index.name.toUpper() == indexName.toUpper()) {
-                                    for (int i = 0; i < val_index.value.toList().size(); ++i) {
+                                    for (int i = 0; i < val1.value.toList().size(); ++i) { // val_index.value.toList().size()
                                         // ToDo: get rid of "index". This is not flexible solution.
                                         // Just: index = val_index.value.toList().size() - i; //!?
                                         int index = val_index.value.toList()[i].toInt() - 1;
