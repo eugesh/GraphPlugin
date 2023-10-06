@@ -18,7 +18,7 @@ public:
     // GraphPluginTableModel(GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
     explicit GraphTableModel(const QStringList &titles, const QStringList &names, GraphPluginMode syncMode = GRAPH_DATA_SYNCH, QObject *parent = nullptr);
 
-    void setPacketSize(int n) { m_packetSize = n; }
+    void setPacketSize(int n);
     int packetSize() const { return m_packetSize; }
 
     void clear();
@@ -34,6 +34,7 @@ public:
 
 public slots:
     void appendValue(const MeasuredValue &val);
+    void checkIsPackedFormed();
 
 signals:
     //!< Signal emitted when packet is formed.

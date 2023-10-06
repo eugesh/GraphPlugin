@@ -14,6 +14,23 @@ GraphTableModel::GraphTableModel(const QStringList &titles, const QStringList &n
     // m_coloumnNames << "time" << "pressure" << "temperature" << "velocity";
 }
 
+void GraphTableModel::setPacketSize(int n)
+{
+    m_packetSize = n;
+    if (!m_timeStamps.isEmpty() && !m_dataMap.isEmpty())
+        checkIsPackedFormed();
+}
+
+void GraphTableModel::checkIsPackedFormed()
+{
+    // Check if packet is already formed
+    if (m_dataMap.values(m_timeStamps.last()).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
+        // addRow(m_dataMap.values(m_timeStamps.last()));
+        emit packetFormed(m_dataMap.values(m_timeStamps.last())); // To Plot
+        return;
+    }
+}
+
 void GraphTableModel::appendValue(const MeasuredValue &val)
 {
     // Add value to data map
@@ -32,7 +49,6 @@ void GraphTableModel::appendValue(const MeasuredValue &val)
     if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
         m_timeStamps.enqueue(val.timestamp);
 
-    // Check if packet is already formed
     if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
         addRow(m_dataMap.values(val.timestamp));
         emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
