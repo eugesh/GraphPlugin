@@ -816,7 +816,7 @@ void GraphMainWindow::updateColorMaps(const GraphID& gid, uint64_t timestamp, co
 {
     QCPWaterfall *colorMap = nullptr;
     colorMap = m_valueColorMap.value(gid);
-    if (!colorMap)
+    if (!colorMap || x.empty() || y.empty())
         return;
 
     if (colorMap->data()->valueSize() != x.size())
