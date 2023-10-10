@@ -87,13 +87,17 @@ void GraphMainWindow::contextMenuRequest(const QPoint &pos)
 
     if (ui->customPlot->legend->selectTest(pos, false) >= 0) { // Сontext menu on legend requested
         menu->addAction(tr("Убрать легенду"), this, [this]() {
-            ui->customPlot->legend->setVisible(false);
-            ui->customPlot->replot();
+            for (auto plot : m_customPlotList) {
+                plot->legend->setVisible(false);
+                plot->replot();
+            }
         });
     } else if (ui->customPlot->axisRect()->selectTest(pos, false) >= 0 ) { // general context menu on graphs requested
         menu->addAction(tr("Вернуть легенду"), this, [this]() {
-            ui->customPlot->legend->setVisible(true);
-            ui->customPlot->replot();
+            for (auto plot : m_customPlotList) {
+                plot->legend->setVisible(true);
+                plot->replot();
+            }
         });
         /*if (ui->customPlot->selectedGraphs().size() > 0)
             menu->addAction("Remove selected graph", this, SLOT(removeSelectedGraph()));
