@@ -24,9 +24,11 @@ void GraphTableModel::setPacketSize(int n)
 void GraphTableModel::checkIsPackedFormed()
 {
     // Check if packet is already formed
-    if (m_dataMap.values(m_timeStamps.last()).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
+    if (m_dataMap.values(m_timeStamps.last()).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH &&
+        m_lastSentTs != m_timeStamps.last()) {
         // addRow(m_dataMap.values(m_timeStamps.last()));
         emit packetFormed(m_dataMap.values(m_timeStamps.last())); // To Plot
+        m_lastSentTs = m_timeStamps.last();
         return;
     }
 }
@@ -49,9 +51,11 @@ void GraphTableModel::appendValue(const MeasuredValue &val)
     if (m_timeStamps.isEmpty() || m_timeStamps.last() != val.timestamp) // O(1)
         m_timeStamps.enqueue(val.timestamp);
 
-    if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH) {
+    if (m_dataMap.values(val.timestamp).size() == m_packetSize && m_syncMode == GRAPH_DATA_SYNCH &&
+        m_lastSentTs != val.timestamp) {
         addRow(m_dataMap.values(val.timestamp));
         emit packetFormed(m_dataMap.values(val.timestamp)); // To Plot
+        m_lastSentTs = val.timestamp;
         return;
     }
 }

@@ -50,6 +50,7 @@ private:
     //!< Timestamp -> value, one key - multiple values
     QMultiMap<uint64_t, MeasuredValue> m_dataMap;
     QQueue<uint64_t> m_timeStamps;
+    uint64_t m_lastSentTs = 0;
     QStringList m_coloumnNames;
     QStringList m_coloumnTitles;
     GraphPluginMode m_syncMode = GRAPH_DATA_SYNCH;

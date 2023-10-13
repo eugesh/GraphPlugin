@@ -489,7 +489,7 @@ void GraphPlugin::setMode(GraphPluginMode mode)
 
 void GraphPlugin::addData(const MeasuredValue &value)
 {
-    for (auto tableName : m_tableModelMap.keys()) {
+    for (auto &tableName : m_tableModelMap.keys()) {
         auto map = m_measValDescMap.value(tableName);
         if (map.contains(value.name)) {
             m_tableModelMap.value(tableName)->appendValue(value);
