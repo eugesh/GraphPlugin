@@ -99,7 +99,7 @@ QVariant GraphTableModel::data(const QModelIndex &index, int role) const
             return QDateTime::fromMSecsSinceEpoch(m_timeStamps[row]);
         }
         for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
-            if (val.name == name)
+            if (val.name == name) {
                 if (val.is_valid) {
                     if (val.value.type() == QVariant::List)
                         return val.value.toList().first();
@@ -108,6 +108,7 @@ QVariant GraphTableModel::data(const QModelIndex &index, int role) const
                 } else {
                     return "-";
                 }
+            }
     }
     case ClipboardTextRole:
         return {}; // ToDo
@@ -116,7 +117,7 @@ QVariant GraphTableModel::data(const QModelIndex &index, int role) const
             return QDateTime::fromMSecsSinceEpoch(m_timeStamps[row]);
         }
         for (MeasuredValue val : m_dataMap.values(m_timeStamps[row]))
-            if (val.name == name)
+            if (val.name == name) {
                 if (val.is_valid) {
                     if (val.value.type() == QVariant::List) {
                         auto valuesList = val.value.toList();
@@ -129,6 +130,7 @@ QVariant GraphTableModel::data(const QModelIndex &index, int role) const
                 } else {
                     return "-";
                 }
+            }
     default:
         return {};
     }
