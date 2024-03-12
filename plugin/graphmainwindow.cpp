@@ -583,6 +583,11 @@ GraphID GraphMainWindow::addWaterfallGraph(const QString &name)
     }
 }
 
+GraphID GraphMainWindow::addHairCombGraph(const QString &name)
+{
+
+}
+
 GraphID GraphMainWindow::addWaterfallGraph(QCustomPlot *cplot, const GraphProperties &prop)
 {
     cplot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming

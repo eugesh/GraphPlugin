@@ -99,6 +99,7 @@ private:
     GraphID addParametricGraph(const QString &name);
     GraphID addWaterfallGraph(const QString &name);
     GraphID addWaterfallGraph(QCustomPlot *cplot, const Graph::GraphProperties &prop);
+    GraphID addHairCombGraph(const QString &name);
     GraphID addAdditionalWaterfallGraph(const QString &name);
     void removeWaterfallGraph(const QString &name);
     void saveCSV(const QString &name) const;

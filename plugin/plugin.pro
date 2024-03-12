@@ -34,6 +34,7 @@ SOURCES += \
     graphtablemodel.cpp \
     graphtableview.cpp \
     graphtoolbar.cpp \
+    qcphaircomb.cpp \
     qcpwaterfall.cpp \
     vectorindicatorsboard.cpp \
     vectorindicatorwidget.cpp
@@ -52,6 +53,7 @@ HEADERS += \
     graphtablemodel.h \
     graphtableview.h \
     graphtoolbar.h \
+    qcphaircomb.h \
     qcpwaterfall.h \
     vectorindicatorsboard.h \
     vectorindicatorwidget.h
